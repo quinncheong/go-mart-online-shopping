@@ -1,7 +1,9 @@
 <template>
-  <HelloWorld />
+  <div class="home">
+    <Items />
+  </div>
 </template>
 
 <script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+import Items from "@/components/Items.vue";
 </script>
