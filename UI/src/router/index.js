@@ -12,6 +12,16 @@ const routes = [
 				component: () => import("@/views/ItemPage.vue"),
 			},
 			{
+				path: "/checkout",
+				name: "Checkout",
+				component: () => import("@/views/CheckoutPage.vue"),
+			},
+			{
+				path: "/cart",
+				name: "Cart",
+				component: () => import("@/views/CartPage.vue"),
+			},
+			{
 				path: "/about",
 				name: "About",
 				component: () => import("@/views/About.vue"),
