@@ -2,18 +2,28 @@ let cart = window.localStorage.getItem("cart");
 let numCartItems = window.localStorage.getItem("numCartItems");
 
 const state = {
-	cart: cart ? JSON.parse(cart) : [],
+	items: cart ? JSON.parse(cart) : [],
 	numCartItems: numCartItems ? JSON.parse(numCartItems) : 0,
 };
 
 const getters = {
-	getCart(state) {
-		return state.cart;
+	getItems(state) {
+		return state.items;
 	},
 	getNumCartItems(state) {
 		return state.numCartItems;
 	},
 };
+
+// Mutation types
+const ADD_ITEM_TO_CART = "ADD_ITEM_TO_CART";
+const REMOVE_ITEM_FROM_CART = "REMOVE_ITEM_FROM_CART";
+const INCREMENT_ITEM_CART_QUANTITY = "INCREMENT_ITEM_CART_QUANTITY";
+const DECREMENT_ITEM_CART_QUANTITY = "DECREMENT_ITEM_CART_QUANTITY";
+const DECREMENT_ITEM_STOCK = "DECREMENT_ITEM_STOCK";
+const INCREMENT_ITEM_STOCK = "INCREMENT_ITEM_STOCK";
+const SAVE_CART = "SAVE_CART";
+const CLEAR_CART = "CLEAR_CART";
 
 const actions = {
 	addItemToCart(context, item) {
@@ -108,18 +118,6 @@ const mutations = {
 		state.numCartItems = 0;
 	},
 };
-
-export const ADD_ITEM_TO_CART = "ADD_ITEM_TO_CART";
-export const REMOVE_ITEM_FROM_CART = "REMOVE_ITEM_FROM_CART";
-
-export const INCREMENT_ITEM_CART_QUANTITY = "INCREMENT_ITEM_CART_QUANTITY";
-export const DECREMENT_ITEM_CART_QUANTITY = "DECREMENT_ITEM_CART_QUANTITY";
-
-export const DECREMENT_ITEM_STOCK = "DECREMENT_ITEM_STOCK";
-export const INCREMENT_ITEM_STOCK = "INCREMENT_ITEM_STOCK";
-
-export const SAVE_CART = "SAVE_CART";
-export const CLEAR_CART = "CLEAR_CART";
 
 export default {
 	state,

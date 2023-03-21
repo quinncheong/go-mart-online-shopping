@@ -12,9 +12,9 @@
 		<v-div class="mt-10">
 			<v-row>
 				<v-col cols="4">
-					<v-card-title class="bold-30 mb-n5 ma-5"
-						>Shipping Information</v-card-title
-					>
+					<v-card-title class="bold-30 mb-n5 ma-5">
+						Shipping Information
+					</v-card-title>
 					<v-card class="rounded-xl ma-5">
 						<v-card-title>Name: {{ this.name }}</v-card-title>
 						<v-card-title>Email: {{ this.email }}</v-card-title>
@@ -60,14 +60,14 @@
 					<v-card class="d-flex flex-column rounded-xl">
 						<v-row>
 							<v-col class="text-left mx-3">
-								<v-card-subtitle class="medium-20"
-									>Total: ${{ item.total_price.toFixed(2) }}</v-card-subtitle
-								>
+								<v-card-subtitle class="medium-20">
+									Total: ${{ total_price.toFixed(2) }}
+								</v-card-subtitle>
 							</v-col>
 							<v-col class="text-right mx-3">
-								<v-btn class="ml-auto mt-2 buttons" rounded @click="placeOrder"
-									>Place Order</v-btn
-								>
+								<v-btn class="ml-auto mt-2 buttons" rounded @click="placeOrder">
+									Place Order
+								</v-btn>
 							</v-col>
 						</v-row>
 					</v-card>
@@ -117,7 +117,7 @@ export default {
 			{
 				item_id: "1",
 				item_name: "Test",
-				item_price: "10",
+				item_price: 10,
 				item_image: "https://i.imgur.com/9YQ9Z9r.jpg",
 				item_platform: "PC",
 				item_stock: "10",
@@ -221,7 +221,7 @@ export default {
 		getTotalPrice() {
 			this.total_price = 0;
 			this.cart.forEach((item) => {
-				this.total_price += item.item.item_price * item.quantity;
+				this.total_price += item.item_price * item.quantity;
 			});
 		},
 		getOrderDetails() {
@@ -236,7 +236,7 @@ export default {
 			setTimeout(() => this.$router.push("/"), 3000);
 		},
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.unsubscribeAuth();
 	},
 };
