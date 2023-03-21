@@ -15,9 +15,10 @@ import { registerPlugins } from "@/plugins";
 
 // CSS
 import "@/assets/fonts.css";
+import store from "./store";
 
 const app = createApp(App);
 
 registerPlugins(app);
-
+app.use(store);
 app.mount("#app");

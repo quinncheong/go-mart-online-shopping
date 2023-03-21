@@ -31,7 +31,7 @@ export default {
 	},
 	computed: {
 		getNumItems() {
-			// return this.$store.getters.getNumItemsInCart;
+			// return this.$store.getters.getNumCartItems;
 			return 30;
 		},
 	},
