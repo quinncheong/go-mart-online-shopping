@@ -4,7 +4,7 @@ phases:
   pre_build:
     commands:
       - ls 
-      - cd $CODEBUILD_SRC_DIR
+      - cd $CODEBUILD_SRC_DIR cd UI
       - ls
       - yarn install  
   build:
