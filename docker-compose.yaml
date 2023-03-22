@@ -18,61 +18,61 @@ services:
     ports:
       - "5003:5003"
 
-  ###################################
-  # Atomic Microservice: Order
-  ###################################
-  order:
-    build:
-      context: ./api/order
-      dockerfile: order.Dockerfile
-    image: quinncheong/order:1.0
-    restart: always
-    env_file:
-      - ".env"
-    ports:
-      - "5002:5002"
+  # ###################################
+  # # Atomic Microservice: Order
+  # ###################################
+  # order:
+  #   build:
+  #     context: ./api/order
+  #     dockerfile: order.Dockerfile
+  #   image: quinncheong/order:1.0
+  #   restart: always
+  #   env_file:
+  #     - ".env"
+  #   ports:
+  #     - "5002:5002"
 
-  ####################################
-  # Atomic Microservice: SMS
-  ####################################
-  sms:
-    build:
-      context: ./api/sms
-      dockerfile: sms.Dockerfile
-    image: quinncheong/sms:1.0
-    depends_on:
-      - rabbitmq
-    restart: always
-    env_file:
-      - ".env"
+  # ####################################
+  # # Atomic Microservice: SMS
+  # ####################################
+  # sms:
+  #   build:
+  #     context: ./api/sms
+  #     dockerfile: sms.Dockerfile
+  #   image: quinncheong/sms:1.0
+  #   depends_on:
+  #     - rabbitmq
+  #   restart: always
+  #   env_file:
+  #     - ".env"
 
-  ###################################
-  # Atomic Microservice: Place Order
-  ###################################
-  place_order:
-    build:
-      context: ./api/place_order
-      dockerfile: place_order.Dockerfile
-    image: quinncheong/place_order:1.0
-    depends_on:
-      - order
-      - sms
-      - rabbitmq
-    restart: always
-    env_file:
-      - ".env"
-    ports:
-      - "5100:5100"
+  # ###################################
+  # # Atomic Microservice: Place Order
+  # ###################################
+  # place_order:
+  #   build:
+  #     context: ./api/place_order
+  #     dockerfile: place_order.Dockerfile
+  #   image: quinncheong/place_order:1.0
+  #   depends_on:
+  #     - order
+  #     - sms
+  #     - rabbitmq
+  #   restart: always
+  #   env_file:
+  #     - ".env"
+  #   ports:
+  #     - "5100:5100"
 
-  ####################################
-  # RabbitMQ: The messaging broker   
-  ####################################
-  rabbitmq:
-    image: "rabbitmq:3-management"
-    hostname: is458-rabbit
-    restart: always
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes: 
-      - rabbitmq_data:/var/lib/rabbitmq
+  # ####################################
+  # # RabbitMQ: The messaging broker   
+  # ####################################
+  # rabbitmq:
+  #   image: "rabbitmq:3-management"
+  #   hostname: is458-rabbit
+  #   restart: always
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   volumes: 
+  #     - rabbitmq_data:/var/lib/rabbitmq
