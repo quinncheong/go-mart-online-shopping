@@ -3,7 +3,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - npm install --prefix /codebuild/output/src517721435/package.json
+      - npm install --prefix /codebuild/output/src517721435
       - npm install -g npm
       - yarn install
   build:
