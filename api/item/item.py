@@ -28,7 +28,7 @@ def get_items():
 @app.get("/item/<item_id>")
 def get_item_by_id(item_id: str = None):
     """
-    This function a specific item from the database,
+    This function gets a specific item from the database,
     querying by item_id
     """
     return item_controller.get_item(item_id)
