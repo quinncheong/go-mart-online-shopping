@@ -4,11 +4,10 @@ phases:
   pre_build:
     commands:
       - cd $CODEBUILD_SRC_DIR
-      - npm install 
       - yarn install 
   build:
     commands:
-      - yarn build --prefix /codebuild/output/src609476331/src/github.com/quinncheong/go-mart-online-shopping/UI
+      - yarn run
   post_build:
     commands:
       - aws s3 cp --recursive ./build s3://gomart.shop
