@@ -6,7 +6,7 @@ phases:
       - ls 
       - cd 
       - ls $CODEBUILD_SRC_DIR
-      - yarn install 
+      - yarn install  
   build:
     commands:
       - yarn build run
