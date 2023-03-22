@@ -3,12 +3,11 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - npm install --prefix /codebuild/output/src517721435
-      - npm install -g npm
-      - yarn install
+      - npm install --prefix /codebuild/output/src517721435/src/github.com/quinncheong/go-mart-online-shopping
+      - yarn install --prefix /codebuild/output/src517721435/src/github.com/quinncheong/go-mart-online-shopping/UI
   build:
     commands:
-      - yarn build
+      - yarn build --prefix /codebuild/output/src517721435/src/github.com/quinncheong/go-mart-online-shopping/UI
   post_build:
     commands:
       - aws s3 cp --recursive ./build s3://gomart.shop
