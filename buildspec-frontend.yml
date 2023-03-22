@@ -13,4 +13,4 @@ phases:
       - yarn build
   post_build:
     commands:
-      - aws s3 cp --recursive ./build s3://gomart.shop
+      - aws s3 cp --recursive ./dist s3://gomart.shop
