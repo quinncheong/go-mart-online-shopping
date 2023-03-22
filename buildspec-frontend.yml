@@ -2,14 +2,11 @@ version: 0.2
 
 phases:
   pre_build:
-  install:
     runtime-versions:
       nodejs: 16
     commands:
-      - ls 
       - cd $CODEBUILD_SRC_DIR
       - cd UI
-      - ls
       - yarn install  
   build:
     commands:
