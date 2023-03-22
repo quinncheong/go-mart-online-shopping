@@ -94,21 +94,21 @@ services:
       networks:
         - gomart-net
 
-    #######################################################
-    # make_payment: make_payment microservice
-    #######################################################
-    make_payment:
-      hostname: make_payment
-      build:
-        context: ./api/make_payment
-        dockerfile: make_payment.Dockerfile
-      image: thejustinnl/make_payment:1.0
-      ports:
-        - "8000:8000"
-      restart: always
-      environment:
-        PYTHONUNBUFFERED: 1
-        payment_URL: http://stripe_wrapper:5005/pay
+    # #######################################################
+    # # make_payment: make_payment microservice
+    # #######################################################
+    # make_payment:
+    #   hostname: make_payment
+    #   build:
+    #     context: ./api/make_payment
+    #     dockerfile: make_payment.Dockerfile
+    #   image: thejustinnl/make_payment:1.0
+    #   ports:
+    #     - "8000:8000"
+    #   restart: always
+    #   environment:
+    #     PYTHONUNBUFFERED: 1
+    #     payment_URL: http://stripe_wrapper:5005/pay
 
-      networks:
-        - gomart-net
+    #   networks:
+    #     - gomart-net
