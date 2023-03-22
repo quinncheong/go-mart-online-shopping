@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import Cart from "@/views/Cart.vue";
+import Cart from "@/components/Cart.vue";
 </script>
