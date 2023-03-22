@@ -3,6 +3,7 @@ version: "3.8"
 volumes:
   rabbitmq_data:
 
+
 services:
   ####################################
   # Atomic Microservice: Item
@@ -11,7 +12,7 @@ services:
     build:
       context: ./api/item
       dockerfile: item.Dockerfile
-    image: quinncheong/item:1.0
+    image: gomart/item:1.0
     restart: always
     env_file:
       - ".env"
@@ -25,7 +26,7 @@ services:
     build:
       context: ./api/order
       dockerfile: order.Dockerfile
-    image: quinncheong/order:1.0
+    image: gomart/order:1.0
     restart: always
     env_file:
       - ".env"
@@ -39,7 +40,7 @@ services:
     build:
       context: ./api/sms
       dockerfile: sms.Dockerfile
-    image: quinncheong/sms:1.0
+    image: gomart/sms:1.0
     depends_on:
       - rabbitmq
     restart: always
@@ -53,7 +54,7 @@ services:
     build:
       context: ./api/place_order
       dockerfile: place_order.Dockerfile
-    image: quinncheong/place_order:1.0
+    image: gomart/place_order:1.0
     depends_on:
       - order
       - sms
@@ -74,5 +75,40 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    volumes: 
+    volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+
+    ###################################
+    # stripe_wrapper: Microservice for communication to stripe
+    ###################################
+    stripe_wrapper:
+      hostname: stripe_wrapper
+      build:
+        context: ./api/stripe_wrapper
+        dockerfile: stripe_wrapper.Dockerfile
+      image: thejustinnl/stripe_wrapper:1.0
+      restart: always
+      environment:
+        PYTHONUNBUFFERED: 1
+
+      networks:
+        - gomart-net
+
+    #######################################################
+    # make_payment: make_payment microservice
+    #######################################################
+    make_payment:
+      hostname: make_payment
+      build:
+        context: ./api/make_payment
+        dockerfile: make_payment.Dockerfile
+      image: thejustinnl/make_payment:1.0
+      ports:
+        - "8000:8000"
+      restart: always
+      environment:
+        PYTHONUNBUFFERED: 1
+        payment_URL: http://stripe_wrapper:5005/pay
+
+      networks:
+        - gomart-net
