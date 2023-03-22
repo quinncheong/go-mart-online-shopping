@@ -6,6 +6,7 @@ from datetime import datetime
 REGION = os.environ.get("REGION")
 ACCESS_KEY = os.environ.get("ACCESS_KEY")
 SECRET_KEY = os.environ.get("SECRET_KEY")
+TABLE_NAME = "order"
 
 dynamodb = boto3.resource(
     "dynamodb",
@@ -14,7 +15,15 @@ dynamodb = boto3.resource(
     aws_secret_access_key=SECRET_KEY,
 )
 
-order_table = dynamodb.Table("order")
+connection = boto3.client(
+    "dynamodb", REGION, aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY
+)
+
+order_table = dynamodb.Table(TABLE_NAME)
+
+
+def get_num_items():
+    return connection.describe_table(TableName=TABLE_NAME)["Table"]["ItemCount"]
 
 
 def get_all_orders(esk={}):
@@ -29,7 +38,9 @@ def get_order(order_id=None):
 
     key = {"id": int(order_id)}
     res = order_table.get_item(Key=key)
-    return res["Item"] if res else None
+    if res and "Item" in res:
+        return res["Item"]
+    return None
 
 
 def get_orders_by_email(email):
@@ -37,21 +48,31 @@ def get_orders_by_email(email):
     return res
 
 
-def add_order(email, items_dict):
+def add_order(order):
     date = datetime.now().strftime("%b %d, %Y %H:%M:%S")
 
-    order_id = datetime.now().strftime("%s")
+    # order_id = datetime.now().strftime("%s")
+    response = order_table.scan(Select="COUNT")
+    order_id = response["Count"] + 1
 
-    with order_table.batch_writer() as batch:
-        for item_name, item_quantity in items_dict.items():
-            batch.put_item(
-                Item={
-                    "user_email": email,
-                    "order_date": str(date),
-                    "item_name": item_name,
-                    "item_quantity": item_quantity,
-                    "order_id": order_id,
-                }
-            )
-    res = order_table.query(KeyConditionExpression=Key("order_id").eq(order_id))
+    to_insert = {
+        "id": order_id,
+        "product_ids": order["product_ids"],
+    }
+
+    order_table.put_item(Item=to_insert)
+    res = order_table.query(KeyConditionExpression=Key("id").eq(order_id))
+
+    # with order_table.batch_writer() as batch:
+    #     for item_name, item_quantity in items_dict.items():
+    #         batch.put_item(
+    #             Item={
+    #                 "order_id": order_id,
+    #                 "user_email": email,
+    #                 "order_date": str(date),
+    #                 "item_name": item_name,
+    #                 "item_quantity": item_quantity,
+    #             }
+    #         )
+    # res = order_table.query(KeyConditionExpression=Key("id").eq(order_id))
     return res

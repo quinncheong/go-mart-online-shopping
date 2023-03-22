@@ -37,10 +37,11 @@ def create_order():
     """
     This function creates a new order in the database
     """
-    data = json.loads(request.get_json(force=True))
-    items_dict = data["items"]
+    data = request.get_json(force=True)
+    print(data)
+    # items_dict = data["items"]
 
-    res = order_controller.add_order(items_dict)
+    res = order_controller.add_order(data)
     if res["ResponseMetadata"]["HTTPStatusCode"] in range(200, 300):
         return (
             jsonify(
