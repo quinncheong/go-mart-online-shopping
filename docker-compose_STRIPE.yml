@@ -23,7 +23,7 @@ services:
       - gomart-net
 
   #######################################################
-  # malke_payment: make_payment microservice
+  # make_payment: make_payment microservice
   #######################################################
   make_payment:
     hostname: make_payment
