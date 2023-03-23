@@ -104,11 +104,11 @@ services:
         dockerfile: make_payment.Dockerfile
       image: thejustinnl/make_payment:1.0
       ports:
-        - "8000:8000"
+        - "5005:5005"
       restart: always
       environment:
         PYTHONUNBUFFERED: 1
-        payment_URL: http://stripe_wrapper:5005/pay
+        payment_URL: http://stripe_wrapper:5006/pay
 
       networks:
         - gomart-net
