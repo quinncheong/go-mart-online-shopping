@@ -15,6 +15,11 @@ app = Flask(__name__)
 CORS(app)
 
 
+@app.route("/")
+def health():
+    return "Stripe Wrapper Connected"
+
+
 # AJAX endpoint when `/pay` is called from client
 @app.route("/pay", methods=["POST"])
 def pay():
