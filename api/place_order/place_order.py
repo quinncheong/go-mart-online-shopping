@@ -2,11 +2,12 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from invokes import invoke_http
-
-# from send_sms import send_sms
 
 load_dotenv()
+
+import sqs_controller
+from invokes import invoke_http
+
 
 app = Flask(__name__)
 CORS(app)
@@ -38,7 +39,9 @@ def place_order():
         json=order_data,
     )
 
-    # if res["code"] in range(200, 300):
+    if res["code"] in range(200, 300):
+        sqs_controller.send_message_to_queue("Your order has been successful")
+
     #     message = f"Hi {data['user_name']}, your order was successfully placed!"
     #     data = {"body": message, "to": data["phone_number"]}
 
