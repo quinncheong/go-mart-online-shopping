@@ -50,20 +50,20 @@ services:
   # ###################################
   # # Atomic Microservice: Place Order
   # ###################################
-  # place_order:
-  #   build:
-  #     context: ./api/place_order
-  #     dockerfile: place_order.Dockerfile
-  #   image: gomart/place_order:1.0
-  #   depends_on:
-  #     - order
-  #     - sms
-  #     - rabbitmq
-  #   restart: always
-  #   env_file:
-  #     - ".env"
-  #   ports:
-  #     - "5100:5100"
+  place_order:
+    build:
+      context: ./api/place_order
+      dockerfile: place_order.Dockerfile
+    image: gomart/place_order:1.0
+    depends_on:
+      - order
+      # - sms
+      # - rabbitmq
+    restart: always
+    env_file:
+      - "./api/place_order/.env"
+    ports:
+      - "5002:5002"
 
   # ####################################
   # # RabbitMQ: The messaging broker   

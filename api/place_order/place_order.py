@@ -1,15 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-from os.path import join, dirname
 from dotenv import load_dotenv
-import requests
 from invokes import invoke_http
-import json
-from send_sms import send_sms
 
-dotenv_path = join(dirname(__file__), ".env")
-load_dotenv(dotenv_path)
+# from send_sms import send_sms
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -20,25 +17,33 @@ error_URL = os.environ.get("ERROR_URL")
 
 @app.route("/")
 def hello():
+    """
+    Health Check Endpoint
+    """
     return "Place Order connected"
 
 
 @app.route("/place-order", methods=["POST"])
 def place_order():
-    data = request.get_json()
+    body = request.get_json()
+
+    if "order_data" not in body:
+        return jsonify("Wrong Order Data"), 404
+
+    order_data = body["order_data"]
 
     res = invoke_http(
-        order_URL + "/add-order",
+        order_URL + "/order",
         method="POST",
-        json=data,
+        json=order_data,
     )
 
-    if res["code"] in range(200, 300):
-        message = f"Hi {data['user_name']}, your order was successfully placed!"
-        data = {"body": message, "to": data["phone_number"]}
+    # if res["code"] in range(200, 300):
+    #     message = f"Hi {data['user_name']}, your order was successfully placed!"
+    #     data = {"body": message, "to": data["phone_number"]}
 
-        sms_data = json.dumps(data)
-        msg_status = send_sms(sms_data)
+    # sms_data = json.dumps(data)
+    # msg_status = send_sms(sms_data)
 
     return jsonify(res), res["code"]
 
