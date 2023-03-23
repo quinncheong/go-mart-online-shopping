@@ -12,13 +12,13 @@ app = Flask(__name__)
 CORS(app)
 
 payment_URL = environ.get("payment_URL") or "http://localhost:5005/pay"
-read_booking_URL = (
-    environ.get("read_booking_URL") or "http://localhost:5002/read_booking"
-)
-update_booking_URL = (
-    environ.get("update_booking_URL") or "http://localhost:5002/update_booking"
-)
-email_URL = environ.get("email_URL") or "http://localhost:5008/sendVerificationEmail"
+# read_booking_URL = (
+#     environ.get("read_booking_URL") or "http://localhost:5002/read_booking"
+# )
+# update_booking_URL = (
+#     environ.get("update_booking_URL") or "http://localhost:5002/update_booking"
+# )
+# email_URL = environ.get("email_URL") or "http://localhost:5008/sendVerificationEmail"
 
 
 # @app.route("/getBookingInfo/", methods=['GET'])
@@ -29,6 +29,10 @@ email_URL = environ.get("email_URL") or "http://localhost:5008/sendVerificationE
 
 #     return bookingInfo
 
+# Healthcheck
+@app.route("/", methods=["GET"])
+def health_check():
+    return "make_payment connected"
 
 @app.route("/new_payment", methods=["POST"])
 def new_payment():

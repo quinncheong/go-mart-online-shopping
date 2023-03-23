@@ -8,7 +8,7 @@ RUN pip install -r requirements.txt
 
 COPY . /app
 
-EXPOSE 5005
+EXPOSE 5006
 
 ENTRYPOINT [ "python" ]
 
