@@ -7,8 +7,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 QUEUE_NAME = os.environ.get("QUEUE_NAME")
 DELETE_MESSAGE = True
 
-print(os.environ)
-
 sqs = boto3.resource(
     "sqs",
     region_name=REGION,
