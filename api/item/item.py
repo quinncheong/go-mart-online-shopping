@@ -3,7 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import item_controller
 
-load_dotenv("./.env")
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -28,7 +28,7 @@ def get_items():
 @app.get("/item/<item_id>")
 def get_item_by_id(item_id: str = None):
     """
-    This function a specific item from the database,
+    This function gets a specific item from the database,
     querying by item_id
     """
     return item_controller.get_item(item_id)
