@@ -31,7 +31,7 @@ services:
     env_file:
       - "./api/order/.env"
     ports:
-      - "5002:5002"
+      - "5007:5007"
 
   # ####################################
   # # Atomic Microservice: SMS
