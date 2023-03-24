@@ -8,6 +8,7 @@ ACCESS_KEY = os.environ.get("ACCESS_KEY")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 TABLE_NAME = "order"
 
+
 dynamodb = boto3.resource(
     "dynamodb",
     region_name=REGION,

@@ -1,44 +1,63 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-from os.path import join, dirname
 from dotenv import load_dotenv
-import requests
-from invokes import invoke_http
-import json
-from send_sms import send_sms
 
-dotenv_path = join(dirname(__file__), ".env")
-load_dotenv(dotenv_path)
+load_dotenv()
+
+import sqs_controller
+import stripe_controller
+from invokes import invoke_http
+
 
 app = Flask(__name__)
 CORS(app)
 
-order_URL = os.environ.get("ORDER_URL")
-error_URL = os.environ.get("ERROR_URL")
+ORDER_URL = os.environ.get("ORDER_URL")
+ERROR_URL = os.environ.get("ERROR_URL")
 
 
 @app.route("/")
 def hello():
+    """
+    Health Check Endpoint
+    """
     return "Place Order connected"
 
 
 @app.route("/place-order", methods=["POST"])
 def place_order():
-    data = request.get_json()
+    body = request.get_json()
+
+    if "order_data" not in body:
+        return jsonify("Wrong Order Data"), 404
+
+    if "payment_data" not in body:
+        return jsonify("Wrong Payment Data"), 404
+
+    payment_data = body["payment_data"]
+    payment_outcome = stripe_controller.make_payment(payment_data)
+
+    if payment_outcome["payment_status"] == "Failed":
+        return jsonify("Payment Failed"), 404
+
+    order_data = body["order_data"]
+    order_data["payment_id"] = payment_outcome["payment_id"]
 
     res = invoke_http(
-        order_URL + "/add-order",
+        ORDER_URL + "/order",
         method="POST",
-        json=data,
+        json=order_data,
     )
 
     if res["code"] in range(200, 300):
-        message = f"Hi {data['user_name']}, your order was successfully placed!"
-        data = {"body": message, "to": data["phone_number"]}
+        sqs_controller.send_message_to_queue("Your order has been successful")
 
-        sms_data = json.dumps(data)
-        msg_status = send_sms(sms_data)
+    #     message = f"Hi {data['user_name']}, your order was successfully placed!"
+    #     data = {"body": message, "to": data["phone_number"]}
+
+    # sms_data = json.dumps(data)
+    # msg_status = send_sms(sms_data)
 
     return jsonify(res), res["code"]
 

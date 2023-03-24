@@ -6,13 +6,23 @@ from flask_cors import CORS
 from flask import Flask, render_template, jsonify, request
 import json
 import stripe
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # This is your test secret API key.
-stripe.api_key = "sk_test_51KegmTDlqIwRfGLSQlbxGkVbDTOlUTPyXZd6vFmOFGtlctJbEW1nw6FZIosaUu8jTyvSCRCrgrdha4fuVNX4E8ta00aua1NuKC"
+stripe.api_key = os.environ.get("STRIPE_API_KEY")
 
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route("/")
+def health():
+    return "Stripe Wrapper Connected"
 
 
 # AJAX endpoint when `/pay` is called from client
@@ -30,7 +40,6 @@ def pay():
                 currency="sgd",
                 confirmation_method="manual",
                 confirm=True,
-                description=data["order_id"],
             )
         elif "payment_intent_id" in data:
             intent = stripe.PaymentIntent.confirm(data["payment_intent_id"])
@@ -38,6 +47,8 @@ def pay():
         # Display error on client
         app.logger.info(intent)
         return json.dumps({"error": e.user_message}), 200
+
+    print(intent)
 
     return generate_response(intent)
 
@@ -67,7 +78,6 @@ def generate_response(intent):
             json.dumps(
                 {
                     "success": True,
-                    "order_id": intent["description"],
                     "payment_id": intent["charges"]["data"][0]["id"],
                 }
             ),
