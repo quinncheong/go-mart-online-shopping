@@ -1,9 +1,5 @@
 version: "3.8"
 
-volumes:
-  rabbitmq_data:
-
-
 services:
   ####################################
   # Atomic Microservice: Item
@@ -15,7 +11,7 @@ services:
     image: gomart/item:1.0
     restart: always
     env_file:
-      - ".env"
+      - "./api/order/.env"
     ports:
       - "5003:5003"
 
@@ -29,23 +25,9 @@ services:
     image: gomart/order:1.0
     restart: always
     env_file:
-      - ".env"
+      - "./api/order/.env"
     ports:
-      - "5002:5002"
-
-  ####################################
-  # Atomic Microservice: SMS
-  ####################################
-  sms:
-    build:
-      context: ./api/sms
-      dockerfile: sms.Dockerfile
-    image: gomart/sms:1.0
-    depends_on:
-      - rabbitmq
-    restart: always
-    env_file:
-      - ".env"
+      - "5007:5007"
 
   ###################################
   # Atomic Microservice: Place Order
@@ -57,58 +39,43 @@ services:
     image: gomart/place_order:1.0
     depends_on:
       - order
-      - sms
-      - rabbitmq
+      # - sms
+      # - rabbitmq
     restart: always
     env_file:
-      - ".env"
+      - "./api/place_order/.env"
     ports:
-      - "5100:5100"
+      - "5002:5002"
 
-  ####################################
-  # RabbitMQ: The messaging broker   
-  ####################################
-  rabbitmq:
-    image: "rabbitmq:3-management"
-    hostname: is458-rabbit
+  ###################################
+  # stripe_wrapper: Microservice for communication to stripe
+  ###################################
+  stripe_wrapper:
+    build:
+      context: ./api/stripe_wrapper
+      dockerfile: stripe_wrapper.Dockerfile
+    image: gomart/stripe_wrapper:1.0
     restart: always
+    env_file:
+      - "./api/stripe_wrapper/.env"
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-
-    ###################################
-    # stripe_wrapper: Microservice for communication to stripe
-    ###################################
-    stripe_wrapper:
-      hostname: stripe_wrapper
-      build:
-        context: ./api/stripe_wrapper
-        dockerfile: stripe_wrapper.Dockerfile
-      image: thejustinnl/stripe_wrapper:1.0
-      restart: always
-      environment:
-        PYTHONUNBUFFERED: 1
-
-      networks:
-        - gomart-net
+    - "5006:5006"
 
     #######################################################
     # make_payment: make_payment microservice
     #######################################################
-    make_payment:
-      hostname: make_payment
-      build:
-        context: ./api/make_payment
-        dockerfile: make_payment.Dockerfile
-      image: thejustinnl/make_payment:1.0
-      ports:
-        - "5005:5005"
-      restart: always
-      environment:
-        PYTHONUNBUFFERED: 1
-        payment_URL: http://stripe_wrapper:5006/pay
+  #   make_payment:
+  #     hostname: make_payment
+  #     build:
+  #       context: ./api/make_payment
+  #       dockerfile: make_payment.Dockerfile
+  #     image: thejustinnl/make_payment:1.0
+  #     ports:
+  #       - "8000:8000"
+  #     restart: always
+  #     environment:
+  #       PYTHONUNBUFFERED: 1
+  #       payment_URL: http://stripe_wrapper:5005/pay
 
-      networks:
-        - gomart-net
+  #     networks:
+  #       - gomart-net
