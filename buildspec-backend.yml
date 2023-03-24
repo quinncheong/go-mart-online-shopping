@@ -19,7 +19,7 @@ phases:
 
 artifacts:
   files:
-    - '**/*'
+    - "**/*"
   discard-paths: yes
 
 docker:
@@ -27,4 +27,3 @@ docker:
   args:
     - AWS_DEFAULT_REGION=ap-southeast-1
     - ECR_REPOSITORY=gomartrepo
-

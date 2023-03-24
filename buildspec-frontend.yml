@@ -7,10 +7,10 @@ phases:
     commands:
       - cd $CODEBUILD_SRC_DIR
       - cd UI
-      - yarn install  
+      - yarn install
   build:
     commands:
       - yarn build
   post_build:
     commands:
-      - aws s3 cp --recursive ./dist s3://gomart-frontend-deployment-bucket
+      - aws s3 cp --recursive ./dist s3://gomartttt.store
