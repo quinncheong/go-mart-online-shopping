@@ -6,14 +6,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import sqs_controller
+import stripe_controller
 from invokes import invoke_http
 
 
 app = Flask(__name__)
 CORS(app)
 
-order_URL = os.environ.get("ORDER_URL")
-error_URL = os.environ.get("ERROR_URL")
+ORDER_URL = os.environ.get("ORDER_URL")
+ERROR_URL = os.environ.get("ERROR_URL")
 
 
 @app.route("/")
@@ -31,10 +32,20 @@ def place_order():
     if "order_data" not in body:
         return jsonify("Wrong Order Data"), 404
 
+    if "payment_data" not in body:
+        return jsonify("Wrong Payment Data"), 404
+
+    payment_data = body["payment_data"]
+    payment_outcome = stripe_controller.make_payment(payment_data)
+
+    if payment_outcome["payment_status"] == "Failed":
+        return jsonify("Payment Failed"), 404
+
     order_data = body["order_data"]
+    order_data["payment_id"] = payment_outcome["payment_id"]
 
     res = invoke_http(
-        order_URL + "/order",
+        ORDER_URL + "/order",
         method="POST",
         json=order_data,
     )

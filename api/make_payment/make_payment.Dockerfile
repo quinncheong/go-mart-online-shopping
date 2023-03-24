@@ -1,15 +1,6 @@
-FROM python:3.9-slim
-
-COPY ./requirements.txt /app/requirements.txt
-
-WORKDIR /app
-
-RUN pip install -r requirements.txt
-
-COPY . /app
-
-EXPOSE 5005
-
-ENTRYPOINT [ "python" ]
-
-CMD ["make_payment.py"]
+FROM python:3-slim
+WORKDIR /user/src/app
+COPY requirements.txt ./
+RUN python -m pip install --no-cache-dir -r requirements.txt
+COPY ./make_payment.py ./invokes.py ./
+CMD ["python", "./make_payment.py"]

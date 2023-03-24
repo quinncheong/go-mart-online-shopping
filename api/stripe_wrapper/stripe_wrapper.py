@@ -35,7 +35,6 @@ def pay():
                 currency="sgd",
                 confirmation_method="manual",
                 confirm=True,
-                description=data["order_id"],
             )
         elif "payment_intent_id" in data:
             intent = stripe.PaymentIntent.confirm(data["payment_intent_id"])
@@ -72,7 +71,6 @@ def generate_response(intent):
             json.dumps(
                 {
                     "success": True,
-                    "order_id": intent["description"],
                     "payment_id": intent["charges"]["data"][0]["id"],
                 }
             ),

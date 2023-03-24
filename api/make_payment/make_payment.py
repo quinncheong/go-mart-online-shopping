@@ -29,12 +29,14 @@ payment_URL = environ.get("payment_URL") or "http://localhost:5005/pay"
 
 #     return bookingInfo
 
+
 # Healthcheck
 @app.route("/", methods=["GET"])
 def health_check():
     return "make_payment connected"
 
-@app.route("/new_payment", methods=["POST"])
+
+@app.route("/new-payment", methods=["POST"])
 def new_payment():
     # retrieve post request from stripe payment intent form
     data = request.get_json()
