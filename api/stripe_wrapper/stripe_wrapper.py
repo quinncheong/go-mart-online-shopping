@@ -6,9 +6,14 @@ from flask_cors import CORS
 from flask import Flask, render_template, jsonify, request
 import json
 import stripe
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # This is your test secret API key.
-stripe.api_key = "sk_test_51KegmTDlqIwRfGLSQlbxGkVbDTOlUTPyXZd6vFmOFGtlctJbEW1nw6FZIosaUu8jTyvSCRCrgrdha4fuVNX4E8ta00aua1NuKC"
+stripe.api_key = os.environ.get("STRIPE_API_KEY")
 
 
 app = Flask(__name__)
@@ -42,6 +47,8 @@ def pay():
         # Display error on client
         app.logger.info(intent)
         return json.dumps({"error": e.user_message}), 200
+
+    print(intent)
 
     return generate_response(intent)
 
