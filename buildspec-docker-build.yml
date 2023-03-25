@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    - REPOSITORY_URI=public.ecr.aws/n1d3h0o8/gomart
-    - IMAGE_TAG=latest
+    REPOSITORY_URI: public.ecr.aws/n1d3h0o8/gomart
+    IMAGE_TAG: latest
 
 phases:
   install:
