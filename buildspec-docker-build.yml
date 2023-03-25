@@ -17,24 +17,24 @@ phases:
     commands:
       # Item Service
       - echo "Building api/item...";
-      - docker build -f item.Dockerfile -t gomart/item:latest api/item ;
+      - docker build -f api/item/item.Dockerfile -t gomart/item:latest api/item ;
       - docker tag gomart/item:latest $REPOSITORY_URI/item:latest ;
       - docker push $REPOSITORY_URI:$IMAGE_TAG ;
 
       # Order Service
       - echo "Building api/order...";
-      - docker build -f order.Dockerfile -t gomart/order:latest api/order ;
+      - docker build -f api/order/order.Dockerfile -t gomart/order:latest api/order ;
       - docker tag gomart/order:latest $REPOSITORY_URI/order:latest ;
       - docker push $REPOSITORY_URI:$IMAGE_TAG ;
 
       # Place Order Service
       - echo "Building api/place_order...";
-      - docker build -f place_order.Dockerfile -t gomart/place_order:latest api/place_order ;
+      - docker build -f api/place_order/place_order.Dockerfile -t gomart/place_order:latest api/place_order ;
       - docker tag gomart/place_order:latest $REPOSITORY_URI/place_order:latest ;
       - docker push $REPOSITORY_URI:$IMAGE_TAG ;
 
       # stripe_wrapper Service
       - echo "Building api/stripe_wrapper...";
-      - docker build -f stripe_wrapper.Dockerfile -t gomart/stripe_wrapper:latest api/stripe_wrapper ;
+      - docker build -f api/stripe_wrapper/stripe_wrapper.Dockerfile -t gomart/stripe_wrapper:latest api/stripe_wrapper ;
       - docker tag gomart/stripe_wrapper:latest $REPOSITORY_URI/stripe_wrapper:latest ;
       - docker push $REPOSITORY_URI:$IMAGE_TAG ;
