@@ -2,14 +2,10 @@ version: 0.2
 
 env:
   variables:
-    - REPOSITORY_URI=public.ecr.aws/n1d3h0o8/gomart
-    - IMAGE_TAG=latest
+    REPOSITORY_URI: public.ecr.aws/n1d3h0o8/gomart
+    IMAGE_TAG: latest
 
 phases:
-  install:
-    runtime-versions:
-      docker: 18
-
   pre_build:
     commands:
       - cd $CODEBUILD_SRC_DIR
@@ -19,11 +15,50 @@ phases:
 
   build:
     commands:
+      # Item Service
       - if git diff --quiet HEAD $(git merge-base origin/master HEAD) -- api/item; then
         echo "No changes in api/item. Skipping Docker build.";
+
         else
         echo "Changes detected in api/item. Building Docker image...";
         docker build -t gomart/item:latest api/item ;
         docker tag gomart/item:latest $REPOSITORY_URI/item:latest ;
-        docker push $REPOSITORY_URI:$IMAGE_TAG
+        docker push $REPOSITORY_URI:$IMAGE_TAG ;
+
+        fi
+
+      # Order Service
+      - if git diff --quiet HEAD $(git merge-base origin/master HEAD) -- api/order; then
+        echo "No changes in api/order. Skipping Docker build.";
+
+        else
+        echo "Changes detected in api/order. Building Docker image...";
+        docker build -t gomart/order:latest api/order ;
+        docker tag gomart/order:latest $REPOSITORY_URI/order:latest ;
+        docker push $REPOSITORY_URI:$IMAGE_TAG ;
+
+        fi
+
+      # Place Order Service
+      - if git diff --quiet HEAD $(git merge-base origin/master HEAD) -- api/place_order; then
+        echo "No changes in api/place_order. Skipping Docker build.";
+
+        else
+        echo "Changes detected in api/place_order. Building Docker image...";
+        docker build -t gomart/place_order:latest api/place_order ;
+        docker tag gomart/place_order:latest $REPOSITORY_URI/place_order:latest ;
+        docker push $REPOSITORY_URI:$IMAGE_TAG ;
+
+        fi
+
+      # stripe_wrapper Service
+      - if git diff --quiet HEAD $(git merge-base origin/master HEAD) -- api/stripe_wrapper; then
+        echo "No changes in api/stripe_wrapper. Skipping Docker build.";
+
+        else
+        echo "Changes detected in api/stripe_wrapper. Building Docker image...";
+        docker build -t gomart/stripe_wrapper:latest api/stripe_wrapper ;
+        docker tag gomart/stripe_wrapper:latest $REPOSITORY_URI/stripe_wrapper:latest ;
+        docker push $REPOSITORY_URI:$IMAGE_TAG ;
+
         fi
