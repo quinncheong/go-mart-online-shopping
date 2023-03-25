@@ -42,7 +42,6 @@ def create_order():
     """
     data = request.get_json(force=True)
     print(data)
-    # items_dict = data["items"]
 
     res = order_controller.add_order(data)
     if res["ResponseMetadata"]["HTTPStatusCode"] in range(200, 300):
