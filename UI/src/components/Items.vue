@@ -2,6 +2,7 @@
 	<div class="text-center">
 		<v-container fluid>
 			<v-row class="ma-5">
+				<!--  -->
 				<v-col
 					v-for="(item, i) in items"
 					:key="i"
@@ -21,10 +22,14 @@
 						<v-card-title @click="showItem(item.item_name)" class="cursor">
 							<v-spacer />
 							<div class="text-center">
-								<h3 v-text="item.item_name"></h3>
-								<p v-text="item.item_platform" class="medium-15 mb-n2"></p>
-								<p class="medium-15 mb-n5">
-									$<span v-text="Number(item.item_price).toFixed(2)"></span>
+								<h3>
+									{{ item.item_name }}
+								</h3>
+								<p class="medium-15 mb-n2">
+									{{ item.item_platform }}
+								</p>
+								<p class="medium-15 mb-n5 pt-1 pb-2">
+									${{ Number(item.item_price).toFixed(2) }}
 								</p>
 							</div>
 							<v-spacer />

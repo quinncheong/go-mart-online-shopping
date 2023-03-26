@@ -13,8 +13,10 @@
 				</v-toolbar-title>
 			</v-btn>
 			<v-spacer></v-spacer>
-			<v-badge overlap class="mx-5" color="#efcfda">
-				<span slot="badge" class="bold-15">{{ getNumItems }}</span>
+			<v-badge overlap class="mx-8" color="#efcfda">
+				<template v-slot:badge>
+					<span class="bold-15">{{ getNumItems }}</span>
+				</template>
 				<v-btn icon to="/cart">
 					<v-icon large color="#FFFFFF">mdi-cart</v-icon>
 				</v-btn>
