@@ -8,82 +8,88 @@
 		<amplify-sign-in slot="sign-in"></amplify-sign-in>
 
 	</amplify-authenticator> -->
-	<template>
-		<v-div class="mt-10">
-			<v-row>
-				<v-col cols="4">
-					<v-card-title class="bold-30 mb-n5 ma-5">
-						Shipping Information
-					</v-card-title>
-					<v-card class="rounded-xl ma-5">
-						<v-card-title>Name: {{ this.name }}</v-card-title>
-						<v-card-title>Email: {{ this.email }}</v-card-title>
-						<v-card-title>Number: {{ this.number }}</v-card-title>
-						<v-card-title>Address: {{ this.address }}</v-card-title>
-					</v-card>
-				</v-col>
-				<v-col cols="7">
-					<v-card-title class="bold-30 mb-n5 ma-5">Order Summary</v-card-title>
-					<v-card v-for="(item, i) in cart" :key="i" class="rounded-xl">
-						<v-row class="ma-5">
-							<v-col cols="2" class="d-flex flex-column">
-								<v-img
-									:src="item.item_image"
-									position="left"
-									contain
-									max-height="200px"
-									class="cursor"
-								>
-								</v-img>
-							</v-col>
-							<v-col class="d-flex flex-column">
-								<v-card-title class="bold-30 cursor">
-									{{ item.item_name }}
-								</v-card-title>
-								<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-									Platform:
-									<span v-text="item.item_platform"></span>
-								</v-card-subtitle>
-								<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-									$
-									<span class="ml-n1">
-										{{ Number(item.item_price).toFixed(2) }}
-									</span>
-								</v-card-subtitle>
-								<v-spacer></v-spacer>
-								<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-									Quantity: <span v-text="item.quantity" class="ml-n1"></span>
-								</v-card-subtitle>
-							</v-col>
-						</v-row>
-					</v-card>
-					<v-card class="d-flex flex-column rounded-xl">
-						<v-row>
-							<v-col class="text-left mx-3">
-								<v-card-subtitle class="medium-20">
-									Total: ${{ total_price.toFixed(2) }}
-								</v-card-subtitle>
-							</v-col>
-							<v-col class="text-right mx-3">
-								<v-btn class="ml-auto mt-2 buttons" rounded @click="placeOrder">
-									Place Order
-								</v-btn>
-							</v-col>
-						</v-row>
-					</v-card>
-				</v-col>
-			</v-row>
-		</v-div>
-		<v-snackbar v-model="snackbar.on">
-			{{ snackbar.message }}
-			<template v-slot:action="{ attrs }">
-				<v-btn color="white" text v-bind="attrs" @click="snackbar.on = false">
-					Close
-				</v-btn>
-			</template>
-		</v-snackbar>
-	</template>
+	<div class="mt-10">
+		<v-row>
+			<v-col cols="4">
+				<v-card-title class="bold-30 mb-n5 ma-5">
+					Shipping Information
+				</v-card-title>
+				<v-card class="rounded-xl ma-5">
+					<v-card-title>Name: {{ this.name }}</v-card-title>
+					<v-card-title>Email: {{ this.email }}</v-card-title>
+					<v-card-title>Number: {{ this.number }}</v-card-title>
+					<v-card-title>Address: {{ this.address }}</v-card-title>
+				</v-card>
+			</v-col>
+			<v-col cols="7">
+				<v-card-title class="bold-30 mb-n5 ma-5">Order Summary</v-card-title>
+				<v-card v-for="(item, i) in cart" :key="i" class="rounded-xl">
+					<v-row class="ma-5">
+						<v-col cols="2" class="d-flex flex-column">
+							<v-img
+								:src="item.item_image"
+								position="left"
+								contain
+								max-height="200px"
+								class="cursor"
+							>
+							</v-img>
+						</v-col>
+						<v-col class="d-flex flex-column">
+							<v-card-title class="bold-30 cursor">
+								{{ item.item_name }}
+							</v-card-title>
+							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
+								Platform:
+								<span v-text="item.item_platform"></span>
+							</v-card-subtitle>
+							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
+								$
+								<span class="ml-n1">
+									{{ Number(item.item_price).toFixed(2) }}
+								</span>
+							</v-card-subtitle>
+							<v-spacer></v-spacer>
+							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
+								Quantity: <span v-text="item.quantity" class="ml-n1"></span>
+							</v-card-subtitle>
+						</v-col>
+					</v-row>
+				</v-card>
+				<v-card class="d-flex flex-column rounded-xl">
+					<v-row class="ma-3">
+						<div id="card-element" class="m-4 p-3 border border-secondary rounded bg-white"><!--Stripe.js injects the Card Element--></div>
+					</v-row>
+					
+				</v-card>
+				<v-card class="d-flex flex-column rounded-xl">
+					<v-row>
+						<v-col class="text-left mx-3">
+							<v-card-subtitle class="medium-20">
+								Total: ${{ total_price.toFixed(2) }}
+							</v-card-subtitle>
+						</v-col>
+						<v-col class="text-right mx-3">
+							<v-btn class="ml-auto mt-2 buttons" rounded @click="placeOrder">
+								Place Order
+							</v-btn>
+						</v-col>
+					</v-row>
+				</v-card>
+			</v-col>
+		</v-row>
+	</div>
+	<v-snackbar v-model="snackbar.on">
+		{{ snackbar.message }}
+		<template v-slot:action="{ attrs }">
+			<v-btn color="white" text v-bind="attrs" @click="snackbar.on = false">
+				Close
+			</v-btn>
+		</template>
+	</v-snackbar>
 </template>
+
+
 
 <script>
 // import { onAuthUIStateChange } from "@aws-amplify/ui-components";
@@ -124,6 +130,18 @@ export default {
 			},
 		];
 		this.getTotalPrice();
+		
+		// Stripe
+
+		// Stripe2
+		const stripeplugin2 = document.createElement("script");
+		stripeplugin2.setAttribute(
+		"src",
+		"./src/store/modules/stripe_script.js"
+		);
+		stripeplugin2.async = true;
+		document.head.appendChild(stripeplugin2);
+
 	},
 	data() {
 		return {
@@ -233,11 +251,20 @@ export default {
 			}
 		},
 		activate() {
-			setTimeout(() => this.$router.push("/"), 3000);
+			// setTimeout(() => this.$router.push("/"), 3000);
 		},
 	},
 	beforeUnmount() {
-		this.unsubscribeAuth();
+		// this.unsubscribeAuth();
 	},
+	mounted() {
+		const stripeplugin = document.createElement("script");
+		stripeplugin.setAttribute(
+		"src",
+		"//js.stripe.com/v3/"
+		);
+		stripeplugin.async = false;
+		document.head.appendChild(stripeplugin);
+	}
 };
 </script>
