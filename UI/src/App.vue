@@ -13,6 +13,7 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 import NavigationBar from "@/components/NavigationBar.vue";
 import Items from "@/components/Items.vue";
+import Checkout from "@/components/Checkout.vue";
 </script>
 
 <script>
@@ -22,6 +23,7 @@ export default {
 		NavigationBar,
 		HelloWorld,
 		Items,
+		Checkout,
 	},
 };
 </script>

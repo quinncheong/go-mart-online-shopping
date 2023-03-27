@@ -2,49 +2,54 @@
 	<div class="text-center">
 		<v-container fluid>
 			<v-row class="ma-5">
+				<!--  -->
 				<v-col
-					v-for="(item, i) in items"
+					v-for="({ item_image, item_name, item_platform, item_price, item_stock }, i) in items"
 					:key="i"
 					:cols="4"
 					class="d-flex flex-column"
 				>
 					<v-card class="rounded-xl">
 						<v-img
-							:src="item.item_image"
+							:src="item_image"
 							class="white--text align-end cursor"
 							height="500px"
 							aspect-ratio="1"
 							contain
-							@click="showItem(item.item_name)"
+							@click="showItem(item_name)"
 						>
 						</v-img>
-						<v-card-title @click="showItem(item.item_name)" class="cursor">
+						<v-card-title @click="showItem(item_name)" class="cursor">
 							<v-spacer />
 							<div class="text-center">
-								<h3 v-text="item.item_name"></h3>
-								<p v-text="item.item_platform" class="medium-15 mb-n2"></p>
-								<p class="medium-15 mb-n5">
-									$<span v-text="Number(item.item_price).toFixed(2)"></span>
+								<h3>
+									{{ item_name }}
+								</h3>
+								<p class="medium-15 mb-n2">
+									{{ item_platform }}
+								</p>
+								<p class="medium-15 mb-n5 pt-1 pb-2">
+									${{ Number(item_price).toFixed(2) }}
 								</p>
 							</div>
 							<v-spacer />
 						</v-card-title>
 						<v-card-actions>
 							<v-btn
-								v-if="availableStock(item)"
+								v-if="availableStock(item_stock)"
 								class="mx-auto buttons"
 								rounded
 							>
 								<v-card-subtitle
 									class="white-15"
-									@click="handleAddToCart(item.item_name)"
+									@click="handleAddToCart(item_name)"
 									>Add to Cart</v-card-subtitle
 								>
 								<v-icon color="white">mdi-plus</v-icon>
 							</v-btn>
 							<v-card>
 								<v-card-subtitle
-									v-if="!availableStock(item)"
+									v-if="!availableStock(item_stock)"
 									rounded
 									class="mx-auto"
 									>Out of Stock</v-card-subtitle
@@ -258,8 +263,8 @@ export default {
 			this.snackbar.message = itemName;
 			this.snackbar.on = true;
 		},
-		availableStock(item) {
-			return item.item_stock > 1 ? true : false;
+		availableStock(item_stock) {
+			return item_stock > 1 ? true : false;
 		},
 	},
 	created() {
