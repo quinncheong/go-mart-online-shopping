@@ -9,7 +9,6 @@ phases:
   pre_build:
     commands:
       - cd $CODEBUILD_SRC_DIR
-      - git fetch --all
       - echo Logging in to Amazon ECR...
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n1d3h0o8
 
