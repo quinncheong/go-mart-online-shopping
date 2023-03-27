@@ -1,6 +1,6 @@
 <template>
 	<div class="text-center">
-		<v-container fluid>
+		<v-container fluid class="my-4">
 			<v-card v-if="isCartEmpty">
 				<v-card-title
 					><router-link :to="{ path: `/` }">
@@ -131,8 +131,8 @@ export default {
 			return this.cart.length > 0 ? false : true;
 		},
 	},
-	created() {
-		this.cart = this.$store.getters.getCart;
+	mounted() {
+		this.cart = this.$store.getters.getItems;
 		this.getTotalPrice();
 	},
 };
