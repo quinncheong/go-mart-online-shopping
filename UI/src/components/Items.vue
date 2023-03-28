@@ -4,7 +4,7 @@
 			<v-row class="ma-5">
 				<!--  -->
 				<v-col
-					v-for="({ item_image, item_name, item_platform, item_price, item_stock, recommended, recommended_picture }, i) in items"
+					v-for="({ id, item_image, item_name, item_platform, item_price, item_stock, recommended, recommended_picture }, i) in items"
 					:key="i"
 					:cols="4"
 					class="d-flex flex-column"
@@ -25,9 +25,9 @@
 							height="500px"
 							aspect-ratio="1"
 							contain
-							@click="showItem(item_name)"
+							@click="showItem(item_name, id)"
 						></v-img>
-						<v-card-title @click="showItem(item_name)" class="cursor">
+						<v-card-title @click="showItem(item_name, id)" class="cursor">
 							<v-spacer />
 							<div class="text-center">
 								<h3>
@@ -270,10 +270,10 @@ export default {
 					];
 				});
 		},
-		showItem(name) {
+		showItem(name, id) {
 			this.$router.push({
 				name: "Item",
-				query: { item_name: name },
+				query: { item_name: name, id },
 			});
 		},
 		// handlePageNext() {
