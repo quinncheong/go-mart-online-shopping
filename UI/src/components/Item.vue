@@ -75,7 +75,7 @@ export default {
 				item_name: "",
 				item_price: 0,
 				item_desc: "",
-				item_image: "@/assets/itemPlaceholder.jpg",
+				item_image: placeholder,
 				item_platform: "",
 				item_stock: 0,
 			},
