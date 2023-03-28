@@ -76,10 +76,12 @@ const mutations = {
 
 	[INCREMENT_ITEM_CART_QUANTITY](state, cartItem) {
 		cartItem.quantity += 1;
+		state.numCartItems += 1;
 	},
 
 	[DECREMENT_ITEM_CART_QUANTITY](state, cartItem) {
 		cartItem.quantity -= 1;
+		state.numCartItems -= 1;
 	},
 
 	[DECREMENT_ITEM_STOCK](state, item) {
