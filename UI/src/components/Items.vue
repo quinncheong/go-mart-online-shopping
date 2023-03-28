@@ -129,7 +129,7 @@ export default {
 	},
 	methods: {
 		getNumPages() {
-			const path = `${process.env.item_BaseURL}/get-num-items`;
+			const path = `${process.env.ITEM_BASEURL}/get-num-items`;
 			axios
 				.get(path)
 				.then((res) => {
@@ -142,7 +142,7 @@ export default {
 		},
 		getItemsByEsk(esk) {
 			console.log({ esk });
-			const path = `${process.env.item_BaseURL}/get-all-items`; // under "define" in vite.config.js
+			const path = `${process.env.ITEM_BASEURL}/get-all-items`; // under "define" in vite.config.js
 			axios
 				.post(path, esk)
 				.then((res) => {
