@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"; // eslint-disable-line
 
 export default {
 	name: "Cart",
