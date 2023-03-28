@@ -45,7 +45,7 @@ def get_all_items():
         print(esk)
         res = item_controller.get_all_items(esk)["Items"]
     else:
-        res = item_controller.get_all_items()["Items"]
+        res = item_controller.get_all_items()
 
     return res if res else "No items found/left"
 

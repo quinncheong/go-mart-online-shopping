@@ -103,14 +103,14 @@ export default {
 			total_pages: 0,
 			esk_list: [{ data: "empty" }],
 			items: [
-				{
-					item_name: "",
-					item_price: 0,
-					item_desc: "",
-					item_image: "",
-					item_platform: "",
-					item_stock: 0,
-				},
+						{
+							item_name: "Placeholder name",
+							item_price: 1,
+							item_desc: "Placeholder Desc",
+							item_image: placeholder,
+							item_platform: "",
+							item_stock: 100,
+						},
 			],
 			snackbar: {
 				on: false,
@@ -141,12 +141,12 @@ export default {
 		},
 		getItemsByEsk(esk) {
 			console.log(esk);
-			const path = "api/get-all-items";
+			const path = `${process.env.item_BaseURL}/get-all-items`; // under "define" in vite.config.js
 			axios
 				.post(path, esk)
 				.then((res) => {
 					console.log(res);
-					this.items = res.data;
+					this.items = res.data.Items;
 				})
 				.catch((error) => {
 					console.error(error);
@@ -269,7 +269,7 @@ export default {
 	},
 	created() {
 		this.getNumPages();
-		const esk = { data: "empty" };
+		const esk = {}; // { data: "empty" }
 		this.getItemsByEsk(esk);
 	},
 };

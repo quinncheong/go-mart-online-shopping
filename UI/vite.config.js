@@ -20,7 +20,11 @@ export default defineConfig({
 			},
 		}),
 	],
-	define: { "process.env": {} },
+	define: {
+		"process.env": {
+			item_BaseURL: "http://10.249.1.15:5003",
+		}
+	},
 	resolve: {
 		alias: {
 			"@": fileURLToPath(new URL("./src", import.meta.url)),
