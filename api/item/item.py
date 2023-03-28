@@ -43,7 +43,7 @@ def get_all_items():
         esk = data["esk"]
         print("hello")
         print(esk)
-        res = item_controller.get_all_items(esk)["Items"]
+        res = item_controller.get_all_items(esk)
     else:
         res = item_controller.get_all_items()
 
