@@ -2,13 +2,13 @@ let cart = window.localStorage.getItem("cart");
 let numCartItems = window.localStorage.getItem("numCartItems");
 
 const state = {
-	items: cart ? JSON.parse(cart) : [],
+	cart: cart ? JSON.parse(cart) : [],
 	numCartItems: numCartItems ? JSON.parse(numCartItems) : 0,
 };
 
 const getters = {
 	getItems(state) {
-		return state.items;
+		return state.cart;
 	},
 	getNumCartItems(state) {
 		return state.numCartItems;
@@ -27,9 +27,7 @@ const CLEAR_CART = "CLEAR_CART";
 
 const actions = {
 	addItemToCart(context, item) {
-		const cartItem = context.state.cart.find(
-			(item) => item.item.item_name === item.item_name
-		);
+		const cartItem = context.state.cart.find((i) => i.item.item_name === item.item_name);
 
 		if (!cartItem) {
 			context.commit(ADD_ITEM_TO_CART, item);
@@ -42,9 +40,7 @@ const actions = {
 	},
 
 	decrementItemInCartQuantity(context, item) {
-		const cartItem = context.state.cart.find(
-			(item) => item.item.item_name === item.item_name
-		);
+		const cartItem = context.state.cart.find((i) => i.item.item_name === item.item_name);
 
 		if (cartItem.quantity > 1) {
 			context.commit(DECREMENT_ITEM_CART_QUANTITY, cartItem, item);
@@ -57,9 +53,7 @@ const actions = {
 	},
 
 	incrementItemInCartQuantity(context, item) {
-		const cartItem = context.state.cart.find(
-			(item) => item.item.item_name === item.item_name
-		);
+		const cartItem = context.state.cart.find((i) => i.item.item_name === item.item_name);
 		context.commit(INCREMENT_ITEM_CART_QUANTITY, cartItem);
 		context.commit(DECREMENT_ITEM_STOCK, item);
 		context.commit(SAVE_CART);

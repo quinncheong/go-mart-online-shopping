@@ -9,7 +9,7 @@
 					</router-link>
 				</v-card-title>
 			</v-card>
-			<v-card v-for="(item, i) in cart" :key="i" class="rounded-xl">
+			<v-card v-for="(item, i) in cart" :key="i" class="rounded-xl my-3">
 				<v-row class="ma-5">
 					<v-col cols="2" class="d-flex flex-column">
 						<v-img
@@ -33,6 +33,7 @@
 							Platform:
 							<span v-text="item.item.item_platform"></span>
 						</v-card-subtitle>
+						<v-spacer></v-spacer>
 						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
 							$
 							<span
@@ -56,14 +57,14 @@
 				</v-row>
 			</v-card>
 			<v-card class="d-flex flex-column rounded-xl" v-if="!isCartEmpty">
-				<v-row>
+				<v-row class="align-center">
 					<v-col class="text-left mx-3">
 						<v-card-subtitle class="medium-20"
 							>Total: ${{ total_price.toFixed(2) }}</v-card-subtitle
 						>
 					</v-col>
-					<v-col class="text-right mx-3">
-						<v-btn class="ml-auto mt-2 buttons" rounded to="/checkout"
+					<v-col class="text-right mx-3 my-3">
+						<v-btn class="ml-auto buttons" rounded to="/checkout"
 							>Checkout</v-btn
 						>
 					</v-col>

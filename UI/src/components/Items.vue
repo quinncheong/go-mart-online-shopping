@@ -129,7 +129,7 @@ export default {
 	},
 	methods: {
 		getNumPages() {
-			const path = "api/get-num-items";
+			const path = `${process.env.item_BaseURL}/get-num-items`;
 			axios
 				.get(path)
 				.then((res) => {
@@ -141,16 +141,15 @@ export default {
 				});
 		},
 		getItemsByEsk(esk) {
-			console.log(esk);
+			console.log({ esk });
 			const path = `${process.env.item_BaseURL}/get-all-items`; // under "define" in vite.config.js
 			axios
 				.post(path, esk)
 				.then((res) => {
-					console.log(res.data.Items);
+					console.log({ Items: res.data.Items });
 					this.items = res.data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
 						id, item_name: ProductName, item_price: Price, item_desc: "Placeholder description", item_image: ImageLink, item_platform: "", item_stock: 100
 					}));
-					// this.items = res.data.Items;
 				})
 				.catch((error) => {
 					console.error(error);
@@ -260,9 +259,7 @@ export default {
 		//   this.getItemsByEsk(esk);
 		// },
 		handleAddToCart(itemName) {
-			const item = this.items.find(
-				(cartItem) => cartItem.item_name === itemName
-			);
+			const item = this.items.find(({ item_name }) => item_name === itemName);
 			this.$store.dispatch("addItemToCart", item);
 			this.snackbar.message = itemName;
 			this.snackbar.on = true;

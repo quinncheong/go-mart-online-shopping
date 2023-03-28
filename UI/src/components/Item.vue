@@ -84,7 +84,7 @@ export default {
 	methods: {
 		getItem() {
 			const payload = { key: { item_name: this.item_name } };
-			const path = `api/get-item`;
+			const path = `${process.env.item_BaseURL}/get-item`;
 			axios
 				.post(path, payload)
 				.then((res) => {
