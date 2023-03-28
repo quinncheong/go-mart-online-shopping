@@ -85,10 +85,10 @@ export default {
 		getItem() {
 			const payload = { key: { item_name: this.item_name } };
 			const path = `${process.env.ITEM_BASEURL}/get-item`;
-			fetch(`${process.env.ITEM_BASEURL}/get-item`, { method: "POST", body: payload, headers: { 'Content-Type': 'application/json' } }).then((res) => res.json()).then(console.log).catch(console.log)
 			axios
 				.post(path, payload)
 				.then((res) => {
+					console.log("res data item: ", res)
 					this.item = res.data.Item;
 				})
 				.catch((error) => {

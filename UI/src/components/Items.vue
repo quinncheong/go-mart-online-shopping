@@ -4,12 +4,21 @@
 			<v-row class="ma-5">
 				<!--  -->
 				<v-col
-					v-for="({ item_image, item_name, item_platform, item_price, item_stock }, i) in items"
+					v-for="({ item_image, item_name, item_platform, item_price, item_stock, recommended, recommended_picture }, i) in items"
 					:key="i"
 					:cols="4"
 					class="d-flex flex-column"
 				>
 					<v-card class="rounded-xl">
+						<v-container>
+							<v-img
+								:src="recommended_picture"
+								v-if="recommended"
+								class="cursor"
+								:width="80"
+								aspect-ratio="1"
+							></v-img>
+						</v-container>
 						<v-img
 							:src="item_image"
 							class="white--text align-end cursor"
@@ -17,8 +26,7 @@
 							aspect-ratio="1"
 							contain
 							@click="showItem(item_name)"
-						>
-						</v-img>
+						></v-img>
 						<v-card-title @click="showItem(item_name)" class="cursor">
 							<v-spacer />
 							<div class="text-center">
@@ -88,6 +96,7 @@
 <script>
 import axios from "axios";
 import placeholder from "@/assets/placeholder.jpg";
+import recommended_picture from "@/assets/recommended picture.png";
 
 axios.defaults.headers = {
 	"Content-Type": "application/json",
@@ -111,6 +120,8 @@ export default {
 					item_image: placeholder,
 					item_platform: "",
 					item_stock: 100,
+					recommended: true,
+					recommended_picture,
 				},
 			 */
 			snackbar: {
@@ -146,9 +157,11 @@ export default {
 			axios
 				.post(path, esk)
 				.then((res) => {
-					console.log({ Items: res.data.Items });
 					this.items = res.data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
-						id, item_name: ProductName, item_price: Price, item_desc: "Placeholder description", item_image: ImageLink, item_platform: "", item_stock: 100
+						id, item_name: ProductName, item_price: Price,
+						item_desc: "Placeholder description", item_image: ImageLink,
+						item_platform: "", item_stock: 100,
+						recommended: true, recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
 					}));
 				})
 				.catch((error) => {
@@ -161,6 +174,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -169,6 +184,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -177,6 +194,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -185,6 +204,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -193,6 +214,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -201,6 +224,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -209,6 +234,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -217,6 +244,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -225,6 +254,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -233,6 +264,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 					];
 				});

@@ -31,7 +31,8 @@ def get_item(item_id=None):
 
     key = {"id": str(item_id)}
     res = item_table.get_item(Key=key)
-    return res["Item"] if res else None
+    print("getItem", res)
+    return res if res else None
 
 
 def get_num_items():
