@@ -22,7 +22,7 @@ export default defineConfig({
 	],
 	define: {
 		"process.env": {
-			item_BaseURL: "http://10.249.1.15:5003",
+			item_BaseURL: "http://localhost:5003",
 		}
 	},
 	resolve: {

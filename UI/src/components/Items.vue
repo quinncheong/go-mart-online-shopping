@@ -102,16 +102,17 @@ export default {
 			items_per_page: 2,
 			total_pages: 0,
 			esk_list: [{ data: "empty" }],
-			items: [
-						{
-							item_name: "Placeholder name",
-							item_price: 1,
-							item_desc: "Placeholder Desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-						},
-			],
+			items: [],
+			/**
+			 * {
+					item_name: "Placeholder name",
+					item_price: 1,
+					item_desc: "Placeholder Desc",
+					item_image: placeholder,
+					item_platform: "",
+					item_stock: 100,
+				},
+			 */
 			snackbar: {
 				on: false,
 				item_name: "",
@@ -145,8 +146,11 @@ export default {
 			axios
 				.post(path, esk)
 				.then((res) => {
-					console.log(res);
-					this.items = res.data.Items;
+					console.log(res.data.Items);
+					this.items = res.data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
+						id, item_name: ProductName, item_price: Price, item_desc: "Placeholder description", item_image: ImageLink, item_platform: "", item_stock: 100
+					}));
+					// this.items = res.data.Items;
 				})
 				.catch((error) => {
 					console.error(error);

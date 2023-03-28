@@ -21,8 +21,8 @@ item_table = dynamodb.Table("itemDetails")
 
 def get_all_items(esk={}):
     if esk:
-        return item_table.scan(Limit=2, ExclusiveStartKey=esk)
-    return item_table.scan(Limit=2)
+        return item_table.scan(Limit=10, ExclusiveStartKey=esk)
+    return item_table.scan(Limit=10)
 
 
 def get_item(item_id=None):
