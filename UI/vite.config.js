@@ -20,7 +20,11 @@ export default defineConfig({
 			},
 		}),
 	],
-	define: { "process.env": {} },
+	define: {
+		"process.env": {
+			ITEM_BASEURL: "http://localhost:5003",
+		}
+	},
 	resolve: {
 		alias: {
 			"@": fileURLToPath(new URL("./src", import.meta.url)),

@@ -4,12 +4,21 @@
 			<v-row class="ma-5">
 				<!--  -->
 				<v-col
-					v-for="({ item_image, item_name, item_platform, item_price, item_stock }, i) in items"
+					v-for="({ item_image, item_name, item_platform, item_price, item_stock, recommended, recommended_picture }, i) in items"
 					:key="i"
 					:cols="4"
 					class="d-flex flex-column"
 				>
 					<v-card class="rounded-xl">
+						<v-container>
+							<v-img
+								:src="recommended_picture"
+								v-if="recommended"
+								class="cursor"
+								:width="80"
+								aspect-ratio="1"
+							></v-img>
+						</v-container>
 						<v-img
 							:src="item_image"
 							class="white--text align-end cursor"
@@ -17,8 +26,7 @@
 							aspect-ratio="1"
 							contain
 							@click="showItem(item_name)"
-						>
-						</v-img>
+						></v-img>
 						<v-card-title @click="showItem(item_name)" class="cursor">
 							<v-spacer />
 							<div class="text-center">
@@ -88,6 +96,7 @@
 <script>
 import axios from "axios";
 import placeholder from "@/assets/placeholder.jpg";
+import recommended_picture from "@/assets/recommended picture.png";
 
 axios.defaults.headers = {
 	"Content-Type": "application/json",
@@ -102,16 +111,19 @@ export default {
 			items_per_page: 2,
 			total_pages: 0,
 			esk_list: [{ data: "empty" }],
-			items: [
-				{
-					item_name: "",
-					item_price: 0,
-					item_desc: "",
-					item_image: "",
+			items: [],
+			/**
+			 * {
+					item_name: "Placeholder name",
+					item_price: 1,
+					item_desc: "Placeholder Desc",
+					item_image: placeholder,
 					item_platform: "",
-					item_stock: 0,
+					item_stock: 100,
+					recommended: true,
+					recommended_picture,
 				},
-			],
+			 */
 			snackbar: {
 				on: false,
 				item_name: "",
@@ -128,7 +140,7 @@ export default {
 	},
 	methods: {
 		getNumPages() {
-			const path = "api/get-num-items";
+			const path = `${process.env.ITEM_BASEURL}/get-num-items`;
 			axios
 				.get(path)
 				.then((res) => {
@@ -140,13 +152,17 @@ export default {
 				});
 		},
 		getItemsByEsk(esk) {
-			console.log(esk);
-			const path = "api/get-all-items";
+			console.log({ esk });
+			const path = `${process.env.ITEM_BASEURL}/get-all-items`; // under "define" in vite.config.js
 			axios
 				.post(path, esk)
 				.then((res) => {
-					console.log(res);
-					this.items = res.data;
+					this.items = res.data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
+						id, item_name: ProductName, item_price: Price,
+						item_desc: "Placeholder description", item_image: ImageLink,
+						item_platform: "", item_stock: 100,
+						recommended: true, recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
+					}));
 				})
 				.catch((error) => {
 					console.error(error);
@@ -158,6 +174,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -166,6 +184,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -174,6 +194,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -182,6 +204,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -190,6 +214,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -198,6 +224,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -206,6 +234,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -214,6 +244,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -222,6 +254,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 						{
 							item_name: "Test1",
@@ -230,6 +264,8 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
+							recommended: true,
+							recommended_picture,
 						},
 					];
 				});
@@ -256,9 +292,7 @@ export default {
 		//   this.getItemsByEsk(esk);
 		// },
 		handleAddToCart(itemName) {
-			const item = this.items.find(
-				(cartItem) => cartItem.item_name === itemName
-			);
+			const item = this.items.find(({ item_name }) => item_name === itemName);
 			this.$store.dispatch("addItemToCart", item);
 			this.snackbar.message = itemName;
 			this.snackbar.on = true;
@@ -269,7 +303,7 @@ export default {
 	},
 	created() {
 		this.getNumPages();
-		const esk = { data: "empty" };
+		const esk = {}; // { data: "empty" }
 		this.getItemsByEsk(esk);
 	},
 };
