@@ -81,16 +81,14 @@ export default {
 	},
 	methods: {
 		getItem() {
-			const payload = { key: this.id }; // should be in the form --> { key: 63 }
-			const path = `${process.env.ITEM_BASEURL}/get-item`;
+			const path = `${process.env.ITEM_BASEURL}/item/${this.id}`;
 			axios
-				.post(path, payload)
-				.then((res) => {
-					console.log("res data item: ", res)
-					const item = res.data.Item;
-					this.item_price = item.Price
+				.get(path)
+				.then(({ data }) => {
+					const { Item } = data;
+					this.item_price = Item.Price
 					this.item_desc = "Placeholder Description";
-					this.item_image = item.ImageLink;
+					this.item_image = Item.ImageLink;
 					this.item_platform = "Placeholder Platform";
 					this.item_stock = 100;
 				})

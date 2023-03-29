@@ -13,9 +13,9 @@
 						<v-container>
 							<v-img
 								:src="recommended_picture"
-								v-if="recommended"
+								v-show="recommended"
 								class="cursor"
-								:width="80"
+								:width="0"
 								aspect-ratio="1"
 							></v-img>
 						</v-container>
@@ -151,17 +151,20 @@ export default {
 					this.total_pages = 1;
 				});
 		},
-		getItemsByEsk(esk) {
-			console.log({ esk });
-			const path = `${process.env.ITEM_BASEURL}/get-all-items`; // under "define" in vite.config.js
+		getAllItems() {
+			const path = `${process.env.ITEM_BASEURL}/item/all`; // under "define" in vite.config.js
 			axios
-				.post(path, esk)
-				.then((res) => {
-					this.items = res.data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
-						id, item_name: ProductName, item_price: Price,
-						item_desc: "Placeholder description", item_image: ImageLink,
-						item_platform: "", item_stock: 100,
-						recommended: true, recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
+				.get(path)
+				.then(({ data }) => {
+					this.items = data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
+						id, item_name: ProductName,
+						item_price: Price,
+						item_desc: "Placeholder description",
+						item_image: ImageLink,
+						item_platform: "",
+						item_stock: 100,
+						recommended: true, // TODO: change recommended to get from back-end, and not be hard-coded
+						recommended_picture,
 					}));
 				})
 				.catch((error) => {
@@ -174,7 +177,7 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
-							recommended: true,
+							recommended: false,
 							recommended_picture,
 						},
 						{
@@ -184,7 +187,7 @@ export default {
 							item_image: placeholder,
 							item_platform: "",
 							item_stock: 100,
-							recommended: true,
+							recommended: false,
 							recommended_picture,
 						},
 						{
@@ -284,12 +287,12 @@ export default {
 		//     esk = { esk: { item_name: item_name } };
 		//     this.esk_list.push(esk);
 		//   }
-		//   this.getItemsByEsk(esk);
+		//   this.getAllItems(esk);
 		// },
 		// handlePagePrev() {
 		//   this.page -= 1;
 		//   let esk = this.esk_list[this.page];
-		//   this.getItemsByEsk(esk);
+		//   this.getAllItems(esk);
 		// },
 		handleAddToCart(itemName) {
 			const item = this.items.find(({ item_name }) => item_name === itemName);
@@ -303,8 +306,8 @@ export default {
 	},
 	created() {
 		this.getNumPages();
-		const esk = {}; // { data: "empty" }
-		this.getItemsByEsk(esk);
+		// const esk = {}; // { data: "empty" }
+		this.getAllItems();
 	},
 };
 </script>
