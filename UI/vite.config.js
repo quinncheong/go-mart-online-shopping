@@ -22,8 +22,9 @@ export default defineConfig({
 	],
 	define: {
 		"process.env": {
-			ITEM_BASEURL: "http://localhost:5003",
-		}
+			// ITEM_BASEURL: "http://localhost:5003",
+			ITEM_BASEURL: "https://api.gomartttt.store",
+		},
 	},
 	resolve: {
 		alias: {
