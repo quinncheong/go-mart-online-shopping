@@ -143,7 +143,7 @@ export default {
 				this.total_pages = 1;
 			}
 		},
-		async getItemsByEsk(esk) {
+		async getItemsByEsk(esk = {}) {
 			let items = await queryItemsByEsk(esk);
 			if (items) {
 				this.items = items.Items.map(
@@ -228,7 +228,7 @@ export default {
 	created() {
 		this.getNumPages();
 		// const esk = {}; // { data: "empty" }
-		this.getAllItems();
+		this.getItemsByEsk();
 	},
 };
 </script>
