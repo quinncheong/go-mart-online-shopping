@@ -15,7 +15,7 @@
 								:src="recommended_picture"
 								v-show="recommended"
 								class="cursor"
-								:width="0"
+								:width="80"
 								aspect-ratio="1"
 							></v-img>
 						</v-container>
@@ -98,9 +98,7 @@ import axios from "axios";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
 
-axios.defaults.headers = {
-	"Content-Type": "application/json",
-};
+axios.defaults.headers = { "Content-Type": "application/json" };
 
 export default {
 	name: "Items",
@@ -112,18 +110,6 @@ export default {
 			total_pages: 0,
 			esk_list: [{ data: "empty" }],
 			items: [],
-			/**
-			 * {
-					item_name: "Placeholder name",
-					item_price: 1,
-					item_desc: "Placeholder Desc",
-					item_image: placeholder,
-					item_platform: "",
-					item_stock: 100,
-					recommended: true,
-					recommended_picture,
-				},
-			 */
 			snackbar: {
 				on: false,
 				item_name: "",
@@ -157,7 +143,8 @@ export default {
 				.get(path)
 				.then(({ data }) => {
 					this.items = data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
-						id, item_name: ProductName,
+						id,
+						item_name: ProductName,
 						item_price: Price,
 						item_desc: "Placeholder description",
 						item_image: ImageLink,
@@ -169,108 +156,23 @@ export default {
 				})
 				.catch((error) => {
 					console.error(error);
-					this.items = [
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: false,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: false,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-					];
+					const item_placeholder = {
+						item_name: "Test1",
+						item_price: 1,
+						item_desc: "Test desc",
+						item_image: placeholder,
+						item_platform: "",
+						item_stock: 100,
+						recommended: false,
+						recommended_picture,
+					};
+					this.items = Array(10).fill(
+						item_placeholder, 0, 2,
+					).fill(
+						{ ...item_placeholder, recommended: true }, 2, 8,
+					).fill(
+						item_placeholder, 8,
+					);
 				});
 		},
 		showItem(name, id) {
