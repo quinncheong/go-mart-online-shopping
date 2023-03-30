@@ -6,52 +6,54 @@ import user_controller
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/")
+
+@app.route("v1/user/health")
 def hello():
-  return 'User connected'
+    return "User connected"
 
 
-@app.route("/create-password", methods=['POST'])
+@app.route("/create-password", methods=["POST"])
 def create_password():
-  data = request.get_json()
-  password = data['password']
+    data = request.get_json()
+    password = data["password"]
 
-  h = hashlib.new('sha256')
-  h.update(password.encode('utf8'))
+    h = hashlib.new("sha256")
+    h.update(password.encode("utf8"))
 
-  return h.hexdigest()
+    return h.hexdigest()
 
 
-@app.route("/login", methods=['POST'])
+@app.route("/login", methods=["POST"])
 def login():
-  data = request.get_json()
-  email = data['email']
-  password = data['password']
+    data = request.get_json()
+    email = data["email"]
+    password = data["password"]
 
-  res = user_controller.get_user_by_email(email)
+    res = user_controller.get_user_by_email(email)
 
-  h = hashlib.new('sha256')
-  h.update(password.encode('utf8'))
-  hashed = h.hexdigest()
+    h = hashlib.new("sha256")
+    h.update(password.encode("utf8"))
+    hashed = h.hexdigest()
 
-  if "Item" in res and res["Item"]["password"] == hashed:
-    return jsonify(
-      {
-        "code": 200,
-        "data": {
-          "user_address": res["Item"]["user_address"],
-          "user_name": res["Item"]["user_name"],
-        },
-      } 
-    ), 200
-  else:
-    return jsonify(
-      {
-        "code": 401,
-        "message": "Incorrect username and/or password"
-      }
-    ), 401
+    if "Item" in res and res["Item"]["password"] == hashed:
+        return (
+            jsonify(
+                {
+                    "code": 200,
+                    "data": {
+                        "user_address": res["Item"]["user_address"],
+                        "user_name": res["Item"]["user_name"],
+                    },
+                }
+            ),
+            200,
+        )
+    else:
+        return (
+            jsonify({"code": 401, "message": "Incorrect username and/or password"}),
+            401,
+        )
 
 
-if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=5001, debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001, debug=True)

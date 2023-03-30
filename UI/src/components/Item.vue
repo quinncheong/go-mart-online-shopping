@@ -4,12 +4,7 @@
 			<v-card class="d-flex flex-column rounded-xl">
 				<v-row class="ma-5">
 					<v-col cols="3" class="d-flex flex-column">
-						<v-img
-							:src="item_image"
-							position="left"
-							contain
-							max-height="500px"
-						>
+						<v-img :src="item_image" position="left" contain max-height="500px">
 						</v-img>
 					</v-col>
 					<v-col class="d-flex flex-column">
@@ -23,9 +18,7 @@
 						<v-spacer></v-spacer>
 
 						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-							<span class="ml-n1">
-								${{ item_price }}
-							</span>
+							<span class="ml-n1"> ${{ item_price }} </span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
@@ -63,7 +56,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { getItemById } from "@/api/itemService";
 import placeholder from "@/assets/placeholder.jpg";
 
 export default {
@@ -80,33 +73,32 @@ export default {
 		};
 	},
 	methods: {
-		getItem() {
-			const path = `${process.env.ITEM_BASEURL}/item/${this.id}`;
-			axios
-				.get(path)
-				.then(({ data }) => {
-					const { Item } = data;
-					this.item_price = Item.Price
-					this.item_desc = "Placeholder Description";
-					this.item_image = Item.ImageLink;
-					this.item_platform = "Placeholder Platform";
-					this.item_stock = 100;
-				})
-				.catch((error) => {
-					this.item_name = "Test Item";
-					this.item_price = 100;
-					this.item_desc = "Tesitng Desc sdfjsdfhsdjkfhsdhf";
-					this.item_image = placeholder;
-					this.item_platform = "hsdfhjsdksdjlsj";
-					this.item_stock = 10000;
-					console.error(error);
-				});
+		async getItem() {
+			let item = await getItemById(this.id);
+			if (item) {
+				this.item_price = item.Item.Price;
+				this.item_desc = "Placeholder Description";
+				this.item_image = item.Item.ImageLink;
+				this.item_platform = "Placeholder Platform";
+				this.item_stock = 100;
+			} else {
+				this.item_name = "Test Item";
+				this.item_price = 100;
+				this.item_desc = "Tesitng Desc sdfjsdfhsdjkfhsdhf";
+				this.item_image = placeholder;
+				this.item_platform = "hsdfhjsdksdjlsj";
+				this.item_stock = 10000;
+			}
 		},
 		handleAddToCart() {
 			this.$store.dispatch("addItemToCart", {
-				id: this.id, item_name: this.item_name, item_price: this.item_price,
-				item_desc: this.item_desc, item_image: this.item_image,
-				item_platform: this.item_platform, item_stock: this.item_stock
+				id: this.id,
+				item_name: this.item_name,
+				item_price: this.item_price,
+				item_desc: this.item_desc,
+				item_image: this.item_image,
+				item_platform: this.item_platform,
+				item_stock: this.item_stock,
 			});
 		},
 	},
