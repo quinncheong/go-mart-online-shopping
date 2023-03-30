@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/")
+@app.route("/v1/order/health")
 def hello():
     """
     Health Check Endpoint
@@ -18,7 +18,7 @@ def hello():
     return "Order connected"
 
 
-@app.route("/order/all")
+@app.route("/v1/order/all")
 def get_all_orders():
     """
     This function gets all orders from the database
@@ -26,7 +26,7 @@ def get_all_orders():
     return order_controller.get_all_orders()
 
 
-@app.route("/order/<order_id>")
+@app.route("/v1/order/<order_id>")
 def get_order_by_id(order_id: str = None):
     """
     This function gets a specific order from the database,
@@ -35,7 +35,7 @@ def get_order_by_id(order_id: str = None):
     return order_controller.get_order(order_id)
 
 
-@app.route("/order", methods=["POST"])
+@app.route("/v1/order", methods=["POST"])
 def create_order():
     """
     This function creates a new order in the database

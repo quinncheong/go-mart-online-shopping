@@ -4,7 +4,19 @@
 			<v-row class="ma-5">
 				<!--  -->
 				<v-col
-					v-for="({ id, item_image, item_name, item_platform, item_price, item_stock, recommended, recommended_picture }, i) in items"
+					v-for="(
+						{
+							id,
+							item_image,
+							item_name,
+							item_platform,
+							item_price,
+							item_stock,
+							recommended,
+							recommended_picture,
+						},
+						i
+					) in items"
 					:key="i"
 					:cols="4"
 					class="d-flex flex-column"
@@ -94,11 +106,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import { queryItemsByEsk, getNumItems } from "@/api/itemService";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
-
-axios.defaults.headers = { "Content-Type": "application/json" };
 
 export default {
 	name: "Items",
@@ -125,24 +135,19 @@ export default {
 		},
 	},
 	methods: {
-		getNumPages() {
-			const path = `${process.env.ITEM_BASEURL}/get-num-items`;
-			axios
-				.get(path)
-				.then((res) => {
-					this.total_pages = Math.ceil(res.data / this.items_per_page);
-				})
-				.catch((error) => {
-					console.error(error);
-					this.total_pages = 1;
-				});
+		async getNumPages() {
+			let res = await getNumItems();
+			if (res) {
+				this.total_pages = Math.ceil(res / this.items_per_page);
+			} else {
+				this.total_pages = 1;
+			}
 		},
-		getAllItems() {
-			const path = `${process.env.ITEM_BASEURL}/item/all`; // under "define" in vite.config.js
-			axios
-				.get(path)
-				.then(({ data }) => {
-					this.items = data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
+		async getItemsByEsk(esk) {
+			let items = await queryItemsByEsk(esk);
+			if (items) {
+				this.items = items.Items.map(
+					({ id, ProductName, Price, ImageLink }) => ({
 						id,
 						item_name: ProductName,
 						item_price: Price,
@@ -150,30 +155,44 @@ export default {
 						item_image: ImageLink,
 						item_platform: "",
 						item_stock: 100,
-						recommended: true, // TODO: change recommended to get from back-end, and not be hard-coded
-						recommended_picture,
-					}));
-				})
-				.catch((error) => {
-					console.error(error);
-					const item_placeholder = {
-						item_name: "Test1",
+						recommended: true,
+						recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
+					})
+				);
+			} else {
+				this.items = [
+					{
+						item_name: "Placeholder name",
 						item_price: 1,
-						item_desc: "Test desc",
+						item_desc: "Placeholder Desc",
 						item_image: placeholder,
 						item_platform: "",
 						item_stock: 100,
-						recommended: false,
+						recommended: true,
 						recommended_picture,
-					};
-					this.items = Array(10).fill(
-						item_placeholder, 0, 2,
-					).fill(
-						{ ...item_placeholder, recommended: true }, 2, 8,
-					).fill(
-						item_placeholder, 8,
-					);
-				});
+					},
+					{
+						item_name: "Placeholder name",
+						item_price: 1,
+						item_desc: "Placeholder Desc",
+						item_image: placeholder,
+						item_platform: "",
+						item_stock: 100,
+						recommended: true,
+						recommended_picture,
+					},
+					{
+						item_name: "Placeholder name",
+						item_price: 1,
+						item_desc: "Placeholder Desc",
+						item_image: placeholder,
+						item_platform: "",
+						item_stock: 100,
+						recommended: true,
+						recommended_picture,
+					},
+				];
+			}
 		},
 		showItem(name, id) {
 			this.$router.push({

@@ -17,7 +17,7 @@ ORDER_URL = os.environ.get("ORDER_URL")
 ERROR_URL = os.environ.get("ERROR_URL")
 
 
-@app.route("/")
+@app.route("/v1/place-order/health")
 def hello():
     """
     Health Check Endpoint
@@ -25,7 +25,7 @@ def hello():
     return "Place Order connected"
 
 
-@app.route("/place-order", methods=["POST"])
+@app.route("/v1/place-order", methods=["POST"])
 def place_order():
     body = request.get_json()
 
@@ -45,7 +45,7 @@ def place_order():
     order_data["payment_id"] = payment_outcome["payment_id"]
 
     res = invoke_http(
-        ORDER_URL + "/order",
+        ORDER_URL + "/v1/order",
         method="POST",
         json=order_data,
     )
