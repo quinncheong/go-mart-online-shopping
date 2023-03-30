@@ -36,21 +36,21 @@ var cardElement = elements.create("card", {
 });
 cardElement.mount("#card-element");
 
-var form = document.getElementById("payment-form");
+var form = document.getElementById("place-order");
 
 form.addEventListener("submit", function (event) {
 	// We don't want to let default form submission happen here,
 	// which would refresh the page.
 	event.preventDefault();
 
-	submitEle = document.getElementById("submit");
-	submitEle.classList.add("disabled");
+	// submitEle = document.getElementById("submit");
+	// submitEle.classList.add("disabled");
 
-	errorEle = document.getElementById("error-box");
-	errorEle.classList.add("invisible");
+	// errorEle = document.getElementById("error-box");
+	// errorEle.classList.add("invisible");
 
-	submitSpinnerEle = document.getElementById("button-text");
-	submitSpinnerEle.innerText = "Processing payment...";
+	// submitSpinnerEle = document.getElementById("button-text");
+	// submitSpinnerEle.innerText = "Processing payment...";
 
 	stripe
 		.createPaymentMethod({

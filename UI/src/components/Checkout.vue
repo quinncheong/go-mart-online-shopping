@@ -70,7 +70,7 @@
 							</v-card-subtitle>
 						</v-col>
 						<v-col class="text-right mx-3">
-							<v-btn class="ml-auto mt-2 buttons" rounded @click="placeOrder">
+							<v-btn id="place-order" class="ml-auto mt-2 buttons" rounded @click="placeOrder">
 								Place Order
 							</v-btn>
 						</v-col>
@@ -134,13 +134,13 @@ export default {
 		// Stripe
 
 		// Stripe2
-		const stripeplugin2 = document.createElement("script");
-		stripeplugin2.setAttribute(
-		"src",
-		"./src/store/modules/stripe_script.js"
-		);
-		stripeplugin2.async = true;
-		document.head.appendChild(stripeplugin2);
+		// const stripeplugin2 = document.createElement("script");
+		// stripeplugin2.setAttribute(
+		// "src",
+		// "./src/store/modules/stripe_script.js"
+		// );
+		// stripeplugin2.async = true;
+		// document.head.appendChild(stripeplugin2);
 
 	},
 	data() {
@@ -258,13 +258,32 @@ export default {
 		// this.unsubscribeAuth();
 	},
 	mounted() {
+		// const stripeplugin = document.createElement("script");
+		// stripeplugin.setAttribute(
+		// "src",
+		// "//js.stripe.com/v3/"
+		// );
+		// stripeplugin.async = false;
+		// document.head.appendChild(stripeplugin);
+
+		// stripe plugin
 		const stripeplugin = document.createElement("script");
 		stripeplugin.setAttribute(
-		"src",
-		"//js.stripe.com/v3/"
+			"src",
+			"//js.stripe.com/v3/"
 		);
 		stripeplugin.async = false;
 		document.head.appendChild(stripeplugin);
+		setTimeout(() => {
+			// Stripe2
+			const stripeplugin2 = document.createElement("script");
+			stripeplugin2.setAttribute(
+				"src",
+				"./src/store/modules/stripe_script.js"
+			);
+			stripeplugin2.async = true;
+			document.head.appendChild(stripeplugin2);
+		}, 500);
 	}
 };
 </script>
