@@ -9,10 +9,18 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/v1/item/health")
+@app.route("/")
 def hello():
     """
-    Health Check Endpoint
+    Health Endpoint
+    """
+    return "OK"
+
+
+@app.route("/v1/item/health")
+def health():
+    """
+    Health Check Endpoint for API Gateway
     """
     return "Item connected"
 

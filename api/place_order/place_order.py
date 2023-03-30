@@ -17,10 +17,18 @@ ORDER_URL = os.environ.get("ORDER_URL")
 ERROR_URL = os.environ.get("ERROR_URL")
 
 
+@app.route("/")
+def hello():
+    """
+    Health Endpoint
+    """
+    return "OK"
+
+
 @app.route("/v1/place-order/health")
 def hello():
     """
-    Health Check Endpoint
+    Health Check Endpoint for API Gateway
     """
     return "Place Order connected"
 
