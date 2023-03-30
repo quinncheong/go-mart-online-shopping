@@ -71,7 +71,6 @@ const mutations = {
 			quantity: 1,
 		});
 		state.numCartItems += 1;
-		console.log(state.numCartItems);
 	},
 
 	[INCREMENT_ITEM_CART_QUANTITY](state, cartItem) {

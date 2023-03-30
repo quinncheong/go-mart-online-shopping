@@ -34,6 +34,7 @@ def get_item_by_id(item_id: str = None):
     return item_controller.get_item(item_id)
 
 
+# deprecated
 @app.route("/get-all-items", methods=["POST"])
 def get_all_items():
     data = request.get_json()
@@ -50,6 +51,7 @@ def get_all_items():
     return res if res else "No items found/left"
 
 
+# deprecated
 @app.route("/get-item", methods=["POST"])
 def get_item():
     data = request.get_json()

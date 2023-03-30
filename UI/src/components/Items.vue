@@ -13,7 +13,7 @@
 						<v-container>
 							<v-img
 								:src="recommended_picture"
-								v-if="recommended"
+								v-show="recommended"
 								class="cursor"
 								:width="80"
 								aspect-ratio="1"
@@ -98,9 +98,7 @@ import axios from "axios";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
 
-axios.defaults.headers = {
-	"Content-Type": "application/json",
-};
+axios.defaults.headers = { "Content-Type": "application/json" };
 
 export default {
 	name: "Items",
@@ -112,18 +110,6 @@ export default {
 			total_pages: 0,
 			esk_list: [{ data: "empty" }],
 			items: [],
-			/**
-			 * {
-					item_name: "Placeholder name",
-					item_price: 1,
-					item_desc: "Placeholder Desc",
-					item_image: placeholder,
-					item_platform: "",
-					item_stock: 100,
-					recommended: true,
-					recommended_picture,
-				},
-			 */
 			snackbar: {
 				on: false,
 				item_name: "",
@@ -151,123 +137,42 @@ export default {
 					this.total_pages = 1;
 				});
 		},
-		getItemsByEsk(esk) {
-			console.log({ esk });
-			const path = `${process.env.ITEM_BASEURL}/get-all-items`; // under "define" in vite.config.js
+		getAllItems() {
+			const path = `${process.env.ITEM_BASEURL}/item/all`; // under "define" in vite.config.js
 			axios
-				.post(path, esk)
-				.then((res) => {
-					this.items = res.data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
-						id, item_name: ProductName, item_price: Price,
-						item_desc: "Placeholder description", item_image: ImageLink,
-						item_platform: "", item_stock: 100,
-						recommended: true, recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
+				.get(path)
+				.then(({ data }) => {
+					this.items = data.Items.map(({ id, ProductName, Price, ImageLink }) => ({
+						id,
+						item_name: ProductName,
+						item_price: Price,
+						item_desc: "Placeholder description",
+						item_image: ImageLink,
+						item_platform: "",
+						item_stock: 100,
+						recommended: true, // TODO: change recommended to get from back-end, and not be hard-coded
+						recommended_picture,
 					}));
 				})
 				.catch((error) => {
 					console.error(error);
-					this.items = [
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-						{
-							item_name: "Test1",
-							item_price: 1,
-							item_desc: "Test desc",
-							item_image: placeholder,
-							item_platform: "",
-							item_stock: 100,
-							recommended: true,
-							recommended_picture,
-						},
-					];
+					const item_placeholder = {
+						item_name: "Test1",
+						item_price: 1,
+						item_desc: "Test desc",
+						item_image: placeholder,
+						item_platform: "",
+						item_stock: 100,
+						recommended: false,
+						recommended_picture,
+					};
+					this.items = Array(10).fill(
+						item_placeholder, 0, 2,
+					).fill(
+						{ ...item_placeholder, recommended: true }, 2, 8,
+					).fill(
+						item_placeholder, 8,
+					);
 				});
 		},
 		showItem(name, id) {
@@ -284,12 +189,12 @@ export default {
 		//     esk = { esk: { item_name: item_name } };
 		//     this.esk_list.push(esk);
 		//   }
-		//   this.getItemsByEsk(esk);
+		//   this.getAllItems(esk);
 		// },
 		// handlePagePrev() {
 		//   this.page -= 1;
 		//   let esk = this.esk_list[this.page];
-		//   this.getItemsByEsk(esk);
+		//   this.getAllItems(esk);
 		// },
 		handleAddToCart(itemName) {
 			const item = this.items.find(({ item_name }) => item_name === itemName);
@@ -303,8 +208,8 @@ export default {
 	},
 	created() {
 		this.getNumPages();
-		const esk = {}; // { data: "empty" }
-		this.getItemsByEsk(esk);
+		// const esk = {}; // { data: "empty" }
+		this.getAllItems();
 	},
 };
 </script>
