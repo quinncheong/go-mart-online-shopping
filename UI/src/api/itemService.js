@@ -3,9 +3,6 @@ import axios from "axios";
 const { ITEM_BASEURL } = process.env;
 const ITEM_URL = `${ITEM_BASEURL}/v1/item`;
 
-// Fix CORs issue with axios
-axios.defaults.headers.common["origin"] = "https://gomartttt.store";
-
 export const getAllItems = async () => {
 	const response = await axios.get(`${ITEM_URL}/all`);
 	console.info(response);
