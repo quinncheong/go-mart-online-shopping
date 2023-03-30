@@ -26,7 +26,7 @@ def hello():
 
 
 @app.route("/v1/place-order/health")
-def hello():
+def health():
     """
     Health Check Endpoint for API Gateway
     """
