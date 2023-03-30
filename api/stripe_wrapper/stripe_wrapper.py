@@ -20,8 +20,19 @@ app = Flask(__name__)
 CORS(app)
 
 
+@app.route("/")
+def hello():
+    """
+    Health Endpoint
+    """
+    return "OK"
+
+
 @app.route("/v1/stripe-wrapper/health")
 def health():
+    """
+    Health Endpoint for API Gateway
+    """
     return "Stripe Wrapper Connected"
 
 
