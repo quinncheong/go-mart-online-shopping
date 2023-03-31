@@ -22,6 +22,7 @@ export default defineConfig({
 	],
 	define: {
 		"process.env": {
+			USER_BASEURL:           "http://localhost:5001",
 			PLACE_ORDER_BASEURL:    "http://localhost:5002",
 			ITEM_BASEURL:           "http://localhost:5003",
 			ERROR_BASEURL:          "http://localhost:5004",
