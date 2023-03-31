@@ -70,7 +70,7 @@
 							</v-card-subtitle>
 						</v-col>
 						<v-col class="text-right mx-3">
-							<v-btn id="place-order" class="ml-auto mt-2 buttons" rounded @click="placeOrder">
+							<v-btn ref="placeOrder" class="ml-auto mt-2 buttons" rounded @click="placeOrder">
 								Place Order
 							</v-btn>
 						</v-col>
@@ -95,6 +95,8 @@
 // import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 // import { Auth } from "aws-amplify";
 import axios from "axios";
+// import Stripe from "stripe";
+import { loadStripe } from "@stripe/stripe-js";
 
 export default {
 	name: "Checkout",
@@ -130,21 +132,11 @@ export default {
 			},
 		];
 		this.getTotalPrice();
-		
-		// Stripe
-
-		// Stripe2
-		// const stripeplugin2 = document.createElement("script");
-		// stripeplugin2.setAttribute(
-		// "src",
-		// "./src/store/modules/stripe_script.js"
-		// );
-		// stripeplugin2.async = true;
-		// document.head.appendChild(stripeplugin2);
-
 	},
 	data() {
 		return {
+			stripe: null,
+			cardElement: null,
 			user: undefined,
 			authState: undefined,
 			unsubscribeAuth: undefined,
@@ -253,37 +245,40 @@ export default {
 		activate() {
 			// setTimeout(() => this.$router.push("/"), 3000);
 		},
+		async submitPayment() {
+			const { paymentMethod } = await this.stripe.createPaymentMethod({
+				type: "card",
+				card: this.cardElement,
+			})
+			console.log("payment_method: ", paymentMethod)
+		}
 	},
 	beforeUnmount() {
 		// this.unsubscribeAuth();
 	},
-	mounted() {
+	beforeCreate() {
+		// // load the main stripe plugin beforeCreate
 		// const stripeplugin = document.createElement("script");
 		// stripeplugin.setAttribute(
-		// "src",
-		// "//js.stripe.com/v3/"
+		// 	"src",
+		// 	"//js.stripe.com/v3/"
 		// );
 		// stripeplugin.async = false;
 		// document.head.appendChild(stripeplugin);
-
-		// stripe plugin
-		const stripeplugin = document.createElement("script");
-		stripeplugin.setAttribute(
-			"src",
-			"//js.stripe.com/v3/"
-		);
-		stripeplugin.async = false;
-		document.head.appendChild(stripeplugin);
-		setTimeout(() => {
-			// Stripe2
-			const stripeplugin2 = document.createElement("script");
-			stripeplugin2.setAttribute(
-				"src",
-				"./src/store/modules/stripe_script.js"
-			);
-			stripeplugin2.async = true;
-			document.head.appendChild(stripeplugin2);
-		}, 500);
+	},
+	async mounted() {
+		// // Stripe2
+		// const stripeplugin2 = document.createElement("script");
+		// stripeplugin2.setAttribute(
+		// 	"src",
+		// 	"./src/store/modules/stripe_script.js"
+		// );
+		// stripeplugin2.async = true;
+		// document.head.appendChild(stripeplugin2);
+		this.stripe = await loadStripe("pk_test_51KegmTDlqIwRfGLS8skxZOKRQ86IEqZ2uEeZET5H6gWVP1J92gF5qK5xcAmAH2DlX1IbpnRCk445erHe6yKzrBSz00LHcNYTrM")
+		const elements = this.stripe.elements()
+		this.cardElement = elements.create("card")
+		this.cardElement.mount("#card-element")
 	}
 };
 </script>
