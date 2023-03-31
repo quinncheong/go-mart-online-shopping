@@ -22,7 +22,12 @@ export default defineConfig({
 	],
 	define: {
 		"process.env": {
-			ITEM_BASEURL: "http://localhost:5003",
+			PLACE_ORDER_BASEURL:    "http://localhost:5002",
+			ITEM_BASEURL:           "http://localhost:5003",
+			ERROR_BASEURL:          "http://localhost:5004",
+			STRIPE_WRAPPER_BASEURL: "http://localhost:5006",
+			ORDER_BASEURL:          "http://localhost:5007",
+			EMAIL_BASEURL:          "http://localhost:5672",
 		}
 	},
 	resolve: {
