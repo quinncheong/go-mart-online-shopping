@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+
 import item_controller
+import lambda_controller
 
 load_dotenv()
 

@@ -2,34 +2,27 @@ import boto3
 import os
 import json
 
-REGION = 
-ACCESS_KEY = 
-SECRET_KEY = 
-
-session = boto3.Session(
-    aws_access_key_id=ACCESS_KEY,
-    aws_secret_access_key=SECRET_KEY
-)
+session = boto3.Session(aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
 
 # Create an instance of the Lambda client
-lambda_client = session.client('lambda',region_name='ap-southeast-1')
+lambda_client = session.client("lambda", region_name="ap-southeast-1")
 
 # Define the name of the Lambda function to be invoked
-#retrieve_redis_fn_arn = f"arn:aws:lambda:{region_name}:{account_id}:function:{retrieve_redis_fn_name}"
-retrieve_redis_fn_arn = "arn:aws:lambda:ap-southeast-1:377115435266:function:retrieve_redis"
+# retrieve_redis_fn_arn = f"arn:aws:lambda:{region_name}:{account_id}:function:{retrieve_redis_fn_name}"
+retrieve_redis_fn_arn = (
+    "arn:aws:lambda:ap-southeast-1:377115435266:function:retrieve_redis"
+)
 # Define the input data to be passed to the Lambda function
-input_data = {
-    "id": "73"
-}
+input_data = {"id": "73"}
 
 # Invoke the Lambda function and capture the response
 response = lambda_client.invoke(
     FunctionName=retrieve_redis_fn_arn,
-    InvocationType='RequestResponse',
+    InvocationType="RequestResponse",
 )
 
 # Extract the response body from the response
-response_body = json.loads(response['Payload'].read())
+response_body = json.loads(response["Payload"].read())
 
 dynamodb = boto3.resource(
     "dynamodb",
@@ -64,9 +57,9 @@ def get_item(item_id=None):
 def get_num_items():
     return connection.describe_table(TableName="item")["Table"]["ItemCount"]
 
-# Process the response body
-if (response_body['body']=='[]'):
 
+# Process the response body
+if response_body["body"] == "[]":
     # Get all items or a specific item based on input data
     if input_data.get("id"):
         data = get_item(input_data["id"])
@@ -82,17 +75,17 @@ if (response_body['body']=='[]'):
 
     # Define the name of the Lambda function to store data
     # store_data_fn_arn = f"arn:aws:lambda:{region_name}:{account_id}:function:{store_data_fn_name}"
-    store_data_fn_arn = "arn:aws:lambda:ap-southeast-1:377115435266:function:store_redis"
+    store_data_fn_arn = (
+        "arn:aws:lambda:ap-southeast-1:377115435266:function:store_redis"
+    )
 
     # Invoke the Lambda function to store the data
     response = lambda_client.invoke(
         FunctionName=store_data_fn_arn,
-        InvocationType='RequestResponse',
+        InvocationType="RequestResponse",
         Payload=json.dumps(data),
     )
 
     # Extract the response body from the response
-    response_body = json.loads(response['Payload'].read())
+    response_body = json.loads(response["Payload"].read())
 print(response_body)
-
-
