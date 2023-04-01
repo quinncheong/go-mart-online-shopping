@@ -13,8 +13,8 @@
 				</v-card>
 			</v-col>
 			<v-col cols="7">
-				<v-card-title class="bold-30 mb-n5 ma-5">Order Summary</v-card-title>
-				<v-card v-for="({ item, quantity }, i) in cart" :key="i" class="rounded-xl">
+				<v-card-title class="bold-30 my-3">Order Summary</v-card-title>
+				<v-card v-for="({ item, quantity }) in cart" :key="item.id" class="rounded-xl mb-3">
 					<v-row class="ma-5">
 						<v-col cols="2" class="d-flex flex-column">
 							<v-img
@@ -27,57 +27,43 @@
 							</v-img>
 						</v-col>
 						<v-col class="d-flex flex-column">
-							<v-card-title class="bold-30 cursor">
-								{{ item.item_name }}
-							</v-card-title>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-								Platform: {{ item.item_platform }}
-							</v-card-subtitle>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-								$<span class="ml-n1">{{ Number(item.item_price).toFixed(2) }}</span>
-							</v-card-subtitle>
+							<v-card-title class="bold-30 cursor">{{ item.item_name }}</v-card-title>
+							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">Platform: {{ item.item_platform }}</v-card-subtitle>
 							<v-spacer></v-spacer>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-								Quantity: <span class="ml-n1">{{ quantity }}</span>
-							</v-card-subtitle>
+							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">${{ Number(item.item_price).toFixed(2) }}</v-card-subtitle>
+							<v-spacer></v-spacer>
+							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">Quantity: {{ quantity }}</v-card-subtitle>
 						</v-col>
 					</v-row>
 				</v-card>
-				<v-card class="d-flex flex-column rounded-xl">
+				<v-card class="rounded-xl my-3">
 					<v-row class="ma-3">
 						<div ref="cardElement" class="m-4 p-3 border border-secondary rounded bg-white"><!--Stripe.js injects the Card Element--></div>
 					</v-row>
 				</v-card>
-				<v-card class="d-flex flex-column rounded-xl">
-					<v-row>
-						<v-col class="text-left mx-3 my-3">
-							<v-card-subtitle class="medium-20">
-								Total: ${{ total_price.toFixed(2) }}
-							</v-card-subtitle>
+				<v-card class="d-flex flex-column rounded-xl my-3">
+					<v-row class="align-center">
+						<v-col class="text-left mx-3">
+							<v-card-subtitle class="medium-20">Total: ${{ total_price.toFixed(2) }}</v-card-subtitle>
 						</v-col>
 						<v-col class="text-right mx-3 my-3">
-							<v-btn ref="placeOrder" class="ml-auto buttons" rounded :disabled="stripeError.err" @click="placeOrder">
-								Place Order
-							</v-btn>
+							<v-btn class="ml-auto buttons" rounded @click="placeOrder">Place Order</v-btn>
 						</v-col>
 					</v-row>
 				</v-card>
 				<v-card class="d-flex flex-column rounded-xl">
-					<v-row>
-						<div ref="stripeErrorElement" v-if="stripeError.err">
-							{{ stripeError.message }}
-						</div>
+					<v-row v-if="stripeError.err">
+						<v-col>
+							<v-card-subtitle>{{ stripeError.message }}</v-card-subtitle>
+						</v-col>
 					</v-row>
 				</v-card>
 			</v-col>
 		</v-row>
 	</div>
-	<v-snackbar v-model="snackbar.on">
-		{{ snackbar.message }}
+	<v-snackbar v-model="snackbar.on">{{ snackbar.message }}
 		<template v-slot:action="{ attrs }">
-			<v-btn color="white" text v-bind="attrs" @click="snackbar.on = false">
-				Close
-			</v-btn>
+			<v-btn color="white" text v-bind="attrs" @click="snackbar.on = false">Close</v-btn>
 		</template>
 	</v-snackbar>
 </template>
@@ -86,7 +72,7 @@
 
 <script setup>
 import axios from "axios"
-import { ref, onMounted, computed } from "vue"
+import { ref, onMounted } from "vue"
 import { useStore } from "vuex"
 import { loadStripe } from "@stripe/stripe-js"
 // import { StripeElements, StripeElement } from "vue-stripe-js"
@@ -95,22 +81,21 @@ const store = useStore() // to access vuex store
 const stripe = ref(null) // stripe instance
 const card = ref(null) // card instance
 const cardElement = ref(null) // card element reference
-const stripeError = ref({	err: false, message: "" }) // have error = true
-const stripeErrorElement = ref(null) // error element
+const stripeError = ref({	err: false, message: "no error" }) // have error = true
 
 const user = ref(null)
 const authState = ref(null)
 const unsubscribeAuth = ref(null)
 const name = ref("test_name")
 const email = ref("test_email")
-const addres = ref("test_address")
+const address = ref("test_address")
 const number = ref("test_number")
 const country = ref("test_country")
 
 const cart = ref([
 	{
 		item: {
-			item_id: "1",
+			id: "1",
 			item_name: "Test",
 			item_price: 10,
 			item_image: "https://i.imgur.com/9YQ9Z9r.jpg",
@@ -174,7 +159,7 @@ const formFields = ref([
 
 
 onMounted(async () => {
-	stripe.value = await loadStripe(process.env.STRIPE_API_KEY)
+	stripe.value = await loadStripe(process.env.STRIPE_PUBLISHABLE)
 	const elements = stripe.value.elements()
 	card.value = elements.create("card", {
 		hidePostalCode: true,
@@ -201,18 +186,17 @@ onMounted(async () => {
 		},
 	})
 	card.value.mount(cardElement.value)
-	cart.value = store.state.cart
+	cart.value = store.getters.getItems
 	getTotalPrice()
 })
 
-
-function activate() {}
 
 function getTotalPrice() {
 	total_price.value = 0
 	cart.value.forEach(({ item, quantity }) => {
 		total_price.value += item.item_price * quantity
 	})
+	console.log(total_price.value)
 }
 
 function getOrderDetails() {
@@ -220,9 +204,28 @@ function getOrderDetails() {
 	cart.value.forEach(({ item, quantity }) => {
 		items.value.push({ [item.item_name]: quantity })
 	})
+	console.log(items.value)
 }
 
 async function placeOrder() {
+	console.log("not working haha so funni")
+	const { error=null, paymentMethod=null } = await stripe.value.createPaymentMethod({
+		type: "card",
+		card: card.value,
+		billing_details: {
+			name: name.value,
+			email: email.value,
+			phone: number.value,
+		},
+	})
+	if (error) {
+		console.log(error)
+		stripeError.value.err = true
+		stripeError.value.message = error.message
+		return
+	}
+	console.log(paymentMethod)
+
 	const { PLACE_ORDER_BASEURL } = process.env
 	getOrderDetails()
 	try {
@@ -241,30 +244,5 @@ async function placeOrder() {
 		snackbar.value.on = false
 		snackbar.value.message = "There was an error placing your order, please try again later."
 	}
-}
-
-// assuming this not needed
-async function submitPayment() {
-	const { error=null, paymentMethod=null } = await stripe.value.createPaymentMethod({
-		type: "card",
-		card: card.value,
-		billing_details: {
-			name: name.value,
-			email: email.value,
-			phone: number.value,
-		},
-	})
-	if (error) {
-		console.log(error)
-		stripeError.value.err = true
-		stripeError.value.message = error.message
-		return
-	}
-	console.log(paymentMethod)
-
-	try {
-		const res = await fetch()
-	} catch (err) {}
-
 }
 </script>

@@ -206,6 +206,11 @@ export default {
 		placeOrder() {
 			const { PLACE_ORDER_BASEURL } = process.env
 			this.getOrderDetails();
+			const { paymentMethod } = this.stripe.createPaymentMethod({
+				type: "card",
+				card: this.cardElement,
+			})
+			console.log("payment_method: ", paymentMethod)
 			const payload = {
 				phone_number: this.number,
 				user_name: this.name,

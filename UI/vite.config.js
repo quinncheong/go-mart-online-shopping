@@ -29,6 +29,7 @@ export default defineConfig({
 			STRIPE_WRAPPER_BASEURL: "http://localhost:5006",
 			ORDER_BASEURL:          "http://localhost:5007",
 			EMAIL_BASEURL:          "http://localhost:5672",
+			STRIPE_PUBLISHABLE: 		"pk_test_51KegmTDlqIwRfGLS8skxZOKRQ86IEqZ2uEeZET5H6gWVP1J92gF5qK5xcAmAH2DlX1IbpnRCk445erHe6yKzrBSz00LHcNYTrM",
 		}
 	},
 	resolve: {
