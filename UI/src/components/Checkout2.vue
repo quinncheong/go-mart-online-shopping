@@ -50,13 +50,13 @@
 				</v-card>
 				<v-card class="d-flex flex-column rounded-xl">
 					<v-row>
-						<v-col class="text-left mx-3">
+						<v-col class="text-left mx-3 my-3">
 							<v-card-subtitle class="medium-20">
 								Total: ${{ total_price.toFixed(2) }}
 							</v-card-subtitle>
 						</v-col>
-						<v-col class="text-right mx-3">
-							<v-btn ref="placeOrder" class="ml-auto mt-2 buttons" rounded :disabled="stripeError" @click="placeOrder">
+						<v-col class="text-right mx-3 my-3">
+							<v-btn ref="placeOrder" class="ml-auto buttons" rounded :disabled="stripeError.err" @click="placeOrder">
 								Place Order
 							</v-btn>
 						</v-col>
@@ -64,8 +64,8 @@
 				</v-card>
 				<v-card class="d-flex flex-column rounded-xl">
 					<v-row>
-						<div ref="stripeErrorElement" v-if="stripeError">
-							{{ stripeErrorMessage }}
+						<div ref="stripeErrorElement" v-if="stripeError.err">
+							{{ stripeError.message }}
 						</div>
 					</v-row>
 				</v-card>
@@ -95,8 +95,7 @@ const store = useStore() // to access vuex store
 const stripe = ref(null) // stripe instance
 const card = ref(null) // card instance
 const cardElement = ref(null) // card element reference
-const stripeError = ref(false) // have error = true
-const stripeErrorMessage = ref("") // error message
+const stripeError = ref({	err: false, message: "" }) // have error = true
 const stripeErrorElement = ref(null) // error element
 
 const user = ref(null)
@@ -226,15 +225,13 @@ function getOrderDetails() {
 async function placeOrder() {
 	const { PLACE_ORDER_BASEURL } = process.env
 	getOrderDetails()
-	const payload = {
-		phone_number: number.value,
-		user_name: name.value,
-		email: email.value,
-		items: items.value
-	}
-	console.log(payload)
 	try {
-		const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, payload)
+		const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, {
+			order_data: {
+				payment_id: 0,
+			},
+			payment_data: {},
+		})
 		console.log(data)
 		snackbar.value.on = true
 		snackbar.value.message = "Order successfully placed!"
@@ -259,8 +256,8 @@ async function submitPayment() {
 	})
 	if (error) {
 		console.log(error)
-		stripeError.value = true
-		stripeErrorMessage.value = error.message
+		stripeError.value.err = true
+		stripeError.value.message = error.message
 		return
 	}
 	console.log(paymentMethod)

@@ -23,7 +23,7 @@
 			</v-col>
 			<v-col cols="7">
 				<v-card-title class="bold-30 mb-n5 ma-5">Order Summary</v-card-title>
-				<v-card v-for="({ item }, i) in cart" :key="i" class="rounded-xl">
+				<v-card v-for="({ item, quantity }, i) in cart" :key="i" class="rounded-xl">
 					<v-row class="ma-5">
 						<v-col cols="2" class="d-flex flex-column">
 							<v-img
@@ -51,7 +51,7 @@
 							</v-card-subtitle>
 							<v-spacer></v-spacer>
 							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-								Quantity: <span v-text="item.quantity" class="ml-n1"></span>
+								Quantity: <span v-text="quantity" class="ml-n1"></span>
 							</v-card-subtitle>
 						</v-col>
 					</v-row>
@@ -61,15 +61,16 @@
 						<div id="card-element" class="m-4 p-3 border border-secondary rounded bg-white"><!--Stripe.js injects the Card Element--></div>
 					</v-row>
 				</v-card>
+				<v-spacer></v-spacer>
 				<v-card class="d-flex flex-column rounded-xl">
-					<v-row>
-						<v-col class="text-left mx-3">
+					<v-row class="align-center">
+						<v-col class="text-left mx-3 my-3">
 							<v-card-subtitle class="medium-20">
 								Total: ${{ total_price.toFixed(2) }}
 							</v-card-subtitle>
 						</v-col>
-						<v-col class="text-right mx-3">
-							<v-btn ref="placeOrder" class="ml-auto mt-2 buttons" rounded @click="placeOrder">
+						<v-col class="text-right mx-3 my-3">
+							<v-btn ref="placeOrder" class="ml-auto buttons" rounded @click="placeOrder">
 								Place Order
 							</v-btn>
 						</v-col>
@@ -229,8 +230,8 @@ export default {
 		},
 		getTotalPrice() {
 			this.total_price = 0;
-			this.cart.forEach((item) => {
-				this.total_price += item.item_price * item.quantity;
+			this.cart.forEach(({item, quantity}) => {
+				this.total_price += item.item_price * quantity;
 			});
 		},
 		getOrderDetails() {

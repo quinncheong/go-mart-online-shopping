@@ -59,14 +59,14 @@
 			<v-card class="d-flex flex-column rounded-xl" v-if="!isCartEmpty">
 				<v-row class="align-center">
 					<v-col class="text-left mx-3">
-						<v-card-subtitle class="medium-20"
-							>Total: ${{ total_price.toFixed(2) }}</v-card-subtitle
-						>
+						<v-card-subtitle class="medium-20">
+							Total: ${{ total_price.toFixed(2) }}
+						</v-card-subtitle>
 					</v-col>
 					<v-col class="text-right mx-3 my-3">
-						<v-btn class="ml-auto buttons" rounded to="/checkout"
-							>Checkout</v-btn
-						>
+						<v-btn class="ml-auto buttons" rounded to="/checkout">
+							Checkout
+						</v-btn>
 					</v-col>
 				</v-row>
 			</v-card>
