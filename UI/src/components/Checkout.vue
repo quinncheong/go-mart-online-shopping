@@ -23,7 +23,7 @@
 			</v-col>
 			<v-col cols="7">
 				<v-card-title class="bold-30 mb-n5 ma-5">Order Summary</v-card-title>
-				<v-card v-for="(item, i) in cart" :key="i" class="rounded-xl">
+				<v-card v-for="({ item }, i) in cart" :key="i" class="rounded-xl">
 					<v-row class="ma-5">
 						<v-col cols="2" class="d-flex flex-column">
 							<v-img
@@ -60,7 +60,6 @@
 					<v-row class="ma-3">
 						<div id="card-element" class="m-4 p-3 border border-secondary rounded bg-white"><!--Stripe.js injects the Card Element--></div>
 					</v-row>
-					
 				</v-card>
 				<v-card class="d-flex flex-column rounded-xl">
 					<v-row>
@@ -121,17 +120,6 @@ export default {
 		// 		});
 		// });
 		// this.cart = this.$store.getters.getCart;
-		this.cart = [
-			{
-				item_id: "1",
-				item_name: "Test",
-				item_price: 10,
-				item_image: "https://i.imgur.com/9YQ9Z9r.jpg",
-				item_platform: "PC",
-				item_stock: "10",
-			},
-		];
-		this.getTotalPrice();
 	},
 	data() {
 		return {
@@ -145,7 +133,19 @@ export default {
 			address: "Test",
 			number: "Test",
 			country: "Test",
-			cart: [],
+			cart: [
+				{
+					item: {
+						item_id: "1",
+						item_name: "Test",
+						item_price: 10,
+						item_image: "https://i.imgur.com/9YQ9Z9r.jpg",
+						item_platform: "PC",
+						item_stock: "10",
+					},
+					quantity: 1
+				}
+			],
 			no_stock: false,
 			total_price: 0,
 			items: [],
@@ -203,7 +203,7 @@ export default {
 	},
 	methods: {
 		placeOrder() {
-			const path = "po/place-order";
+			const { PLACE_ORDER_BASEURL } = process.env
 			this.getOrderDetails();
 			const payload = {
 				phone_number: this.number,
@@ -212,8 +212,7 @@ export default {
 				items: this.items,
 			};
 			console.log(payload);
-			axios
-				.post(path, payload)
+			axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, payload)
 				.then((res) => {
 					console.log(res);
 					this.snackbar.on = true;
@@ -279,6 +278,11 @@ export default {
 		const elements = this.stripe.elements()
 		this.cardElement = elements.create("card")
 		this.cardElement.mount("#card-element")
+		this.cart = this.$store.getters.getItems
+		console.log(this.cart)
+		console.log(this.cart[0].item)
+		console.log(this.cart[0].quantity)
+		this.getTotalPrice();
 	}
 };
 </script>
