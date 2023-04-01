@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-import sqs_controller
+import sns_controller
 import stripe_controller
 from invokes import invoke_http
 
@@ -59,10 +59,13 @@ def place_order():
     )
 
     if res["code"] in range(200, 300):
-        sqs_controller.send_message_to_queue("Your order has been successful")
+        message = {
+            "subject": "Your Order has been placed",
+            "emails": ["quinncheong.2019.is458.jan2023@gmail.com, alinaatxn@gmail.com"],
+            "body": "Your order has been successfully placed!",
+        }
 
-    #     message = f"Hi {data['user_name']}, your order was successfully placed!"
-    #     data = {"body": message, "to": data["phone_number"]}
+        sns_controller.send_message_to_sns_topic(message)
 
     # sms_data = json.dumps(data)
     # msg_status = send_sms(sms_data)
