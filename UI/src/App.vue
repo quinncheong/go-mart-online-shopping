@@ -12,20 +12,16 @@
 <script setup>
 import NavigationBar from "@/components/NavigationBar.vue";
 
-function getIdToken() {
-	const modifiedUrl = window.location.href.replace("#", "?")
-	const url = new URL(modifiedUrl)
-	return url.searchParams.get("id_token")
-}
-const idToken = getIdToken()
+const url = new URL(window.location.href.replace("#", "?"))
+const idToken = url.searchParams.get("id_token")
 
 if (idToken) {
-	console.log(idToken);
+	// console.log(idToken);
 	document.cookie="idtoken=" + idToken;
-	const base64Url = document.cookie.split('.')[1];
-	const base64 = base64Url.replace('-', '+').replace('_', '/');
-	const parsedJWT = JSON.parse(atob(base64));
-	console.log(parsedJWT) // cookie key thing
-	window.localStorage.setItem("cognito-user-jwt", JSON.stringify(parsedJWT))
+	// const base64Url = document.cookie.split('.')[1];
+	// const base64 = base64Url.replace('-', '+').replace('_', '/');
+	// const parsedJWT = JSON.parse(atob(base64));
+	// console.log(parsedJWT) // cookie key thing
+	// window.localStorage.setItem("cognito-user-jwt", JSON.stringify(parsedJWT)) // for easier testing purposes
 }
 </script>

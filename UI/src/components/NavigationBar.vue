@@ -8,11 +8,8 @@
 				</v-toolbar-title>
 			</router-link>
 			<v-spacer></v-spacer>
-			<!-- <button class="white-15" @click="redirect">
-				<v-toolbar-title style="border: solid white; padding: 1rem;">Log-In / Sign-Up</v-toolbar-title>
-			</button> -->
 			<v-btn class="white-15" @click="redirect">Log-In / Sign-Up</v-btn>
-			
+			<v-btn></v-btn>
 			<v-badge overlap class="mx-8" color="#efcfda">
 				<template v-slot:badge>
 					<span class="bold-15">{{ getNumItems }}</span>
