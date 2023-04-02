@@ -8,7 +8,8 @@ services:
     build:
       context: ./api/item
       dockerfile: item.Dockerfile
-    image: public.ecr.aws/n1d3h0o8/gomart/item:latest
+    # image: public.ecr.aws/n1d3h0o8/gomart/item:latest
+    image: gomart/item:latest
     restart: always
     env_file:
       - "./api/order/.env"
@@ -22,7 +23,7 @@ services:
     build:
       context: ./api/order
       dockerfile: order.Dockerfile
-    image: public.ecr.aws/n1d3h0o8/gomart/order:latest
+    image: gomart/order:latest
     restart: always
     env_file:
       - "./api/order/.env"
@@ -36,7 +37,7 @@ services:
     build:
       context: ./api/place_order
       dockerfile: place_order.Dockerfile
-    image: public.ecr.aws/n1d3h0o8/gomart/place_order:latest
+    image: gomart/place_order:latest
     depends_on:
       - order
       # - sms
@@ -54,7 +55,7 @@ services:
     build:
       context: ./api/stripe_wrapper
       dockerfile: stripe_wrapper.Dockerfile
-    image: public.ecr.aws/n1d3h0o8/gomart/stripe_wrapper:latest
+    image: gomart/stripe_wrapper:latest
     restart: always
     env_file:
       - "./api/stripe_wrapper/.env"
