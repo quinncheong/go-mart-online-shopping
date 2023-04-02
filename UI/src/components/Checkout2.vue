@@ -14,7 +14,7 @@
 			</v-col>
 			<v-col cols="7">
 				<v-card-title class="bold-30 my-3">Order Summary</v-card-title>
-				<v-card v-for="({ item, quantity }) in cart" :key="item.id" class="rounded-xl mb-3">
+				<v-card v-for="({ item, quantity }) in store.getters.getItems" :key="item.id" class="rounded-xl mb-3">
 					<v-row class="ma-5">
 						<v-col cols="2" class="d-flex flex-column">
 							<v-img
@@ -39,9 +39,7 @@
 				<v-card class="d-flex flex-column rounded-xl my-3">
 					<v-row class="align-center">
 						<v-col class="mx-3 my-3">
-							<div ref="cardElement" class="m-4 p-3 border border-secondary rounded bg-white">
-								<!--Stripe.js injects the Card Element-->
-							</div>
+							<div ref="cardElement" class="m-4 p-3 border border-secondary rounded bg-white"><!--Stripe mounts Card Element--></div>
 						</v-col>
 					</v-row>
 				</v-card>
@@ -76,7 +74,7 @@
 
 <script setup>
 import axios from "axios"
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import { useStore } from "vuex"
 import { loadStripe } from "@stripe/stripe-js"
 // import { StripeElements, StripeElement } from "vue-stripe-js"
@@ -96,23 +94,16 @@ const address = ref("00 Test Avenue")
 const number = ref("00000000")
 const country = ref("Singapore")
 
-// format of the cart array
-const cart = ref([
-	{
-		item: {
-			id: "1",
-			item_name: "Test",
-			item_price: 10,
-			item_image: "https://i.imgur.com/9YQ9Z9r.jpg",
-			item_platform: "PC",
-			item_stock: "10",
-		},
-		quantity: 1
-	}
-])
+const cart = computed(() => store.getters.getItems)
+const total_price = computed(() => {
+	let total = 0
+	cart.value.forEach(({ item, quantity }) => {
+		total += item.item_price * quantity
+	})
+	return total
+})
 const no_stock = ref(false)
-const total_price = ref(0)
-const items = ref([])
+const items = computed(() => cart.value.map(({ item, quantity }) => ({ [item.id]: quantity })))
 const to = ref(null)
 const snackbar = ref({ on: false, message: "" })
 
@@ -163,22 +154,6 @@ const formFields = ref([
 ])
 
 
-function getTotalPrice() {
-	total_price.value = 0
-	cart.value.forEach(({ item, quantity }) => {
-		total_price.value += item.item_price * quantity
-	})
-	console.log("total price:", total_price.value)
-}
-
-function getOrderDetails() {
-	items.value = []
-	cart.value.forEach(({ item, quantity }) => {
-		items.value.push({ [item.item_name]: quantity })
-	})
-	console.log("items:", items.value)
-}
-
 async function placeOrder() {
 	console.log("card:", card.value)
 	// creating the card to send to the api (not sure if this is still wanted or not)
@@ -202,23 +177,20 @@ async function placeOrder() {
 	stripeError.value.message = "no error"
 
 	const { PLACE_ORDER_BASEURL } = process.env
-	getOrderDetails()
 	try {
 		const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, {
 			order_data: {
-				payment_id: paymentMethod.id,
-				items: items.value,
-				price: total_price.value,
+				product_ids: items.value, // [{ id: quantity }, { id: quantity }]
 			},
 			payment_data: {
 				payment_method_id: paymentMethod.id,
-				card: paymentMethod.card,
-				billing_details: paymentMethod.billing_details,
+				amount: total_price.value * 100, // in cents
 			},
 		})
 		console.log(data)
 		snackbar.value.on = true
 		snackbar.value.message = "Order successfully placed!"
+		card.value.unmount()
 		store.dispatch("clearCart")
 	} catch (err) {
 		console.error(err)
@@ -228,6 +200,7 @@ async function placeOrder() {
 }
 
 onMounted(async () => {
+	console.log(cart.value)
 	stripe.value = await loadStripe(process.env.STRIPE_PUBLISHABLE)
 	const elements = stripe.value.elements()
 	card.value = elements.create("card", {
@@ -256,6 +229,6 @@ onMounted(async () => {
 	})
 	card.value.mount(cardElement.value)
 	cart.value = store.getters.getItems
-	getTotalPrice()
+	// getTotalPrice()
 })
 </script>
