@@ -163,39 +163,6 @@ const formFields = ref([
 ])
 
 
-onMounted(async () => {
-	stripe.value = await loadStripe(process.env.STRIPE_PUBLISHABLE)
-	const elements = stripe.value.elements()
-	card.value = elements.create("card", {
-		hidePostalCode: true,
-		value: '4242424242424242', // attempt to add defaults (not working)
-		style: {
-			base: {
-				iconColor: "#202020",
-				color: "#202020",
-				fontWeight: "500",
-				fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
-				fontSize: "16px",
-				fontSmoothing: "antialiased",
-				":-webkit-autofill": {
-					color: "#202020",
-				},
-				"::placeholder": {
-					color: "#202020",
-				},
-			},
-			invalid: {
-				iconColor: "#B22222",
-				color: "#B22222",
-			},
-		},
-	})
-	card.value.mount(cardElement.value)
-	cart.value = store.getters.getItems
-	getTotalPrice()
-})
-
-
 function getTotalPrice() {
 	total_price.value = 0
 	cart.value.forEach(({ item, quantity }) => {
@@ -259,4 +226,36 @@ async function placeOrder() {
 		snackbar.value.message = "There was an error placing your order, please try again later."
 	}
 }
+
+onMounted(async () => {
+	stripe.value = await loadStripe(process.env.STRIPE_PUBLISHABLE)
+	const elements = stripe.value.elements()
+	card.value = elements.create("card", {
+		hidePostalCode: true,
+		value: '4242424242424242', // attempt to add defaults (not working)
+		style: {
+			base: {
+				iconColor: "#202020",
+				color: "#202020",
+				fontWeight: "500",
+				fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
+				fontSize: "16px",
+				fontSmoothing: "antialiased",
+				":-webkit-autofill": {
+					color: "#202020",
+				},
+				"::placeholder": {
+					color: "#202020",
+				},
+			},
+			invalid: {
+				iconColor: "#B22222",
+				color: "#B22222",
+			},
+		},
+	})
+	card.value.mount(cardElement.value)
+	cart.value = store.getters.getItems
+	getTotalPrice()
+})
 </script>
