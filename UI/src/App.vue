@@ -10,28 +10,22 @@
 </template>
 
 <script setup>
-import HelloWorld from "@/components/HelloWorld.vue";
 import NavigationBar from "@/components/NavigationBar.vue";
-import Items from "@/components/Items.vue";
-import Checkout from "@/components/Checkout.vue";
-</script>
 
-<script>
-const getIdToken = () => { const modifiedUrl = window.location.href.replace("#", "?")
+function getIdToken() {
+	const modifiedUrl = window.location.href.replace("#", "?")
 	const url = new URL(modifiedUrl)
 	return url.searchParams.get("id_token")
 }
 const idToken = getIdToken()
-console.log(idToken);
-document.cookie="idtoken=" + idToken;
 
-export default {
-	name: "App",
-	components: {
-		NavigationBar,
-		HelloWorld,
-		Items,
-		Checkout,
-	},
-};
+if (idToken) {
+	console.log(idToken);
+	document.cookie="idtoken=" + idToken;
+	const base64Url = document.cookie.split('.')[1];
+	const base64 = base64Url.replace('-', '+').replace('_', '/');
+	const parsedJWT = JSON.parse(atob(base64));
+	console.log(parsedJWT) // cookie key thing
+	window.localStorage.setItem("cognito-user-jwt", JSON.stringify(parsedJWT))
+}
 </script>
