@@ -45,6 +45,10 @@ export default {
 				'loginPopup',
 				`width=${popupWidth}, height=${popupHeight}, left=${left}, top=${top}, resizable=yes, scrollbars=yes`
 			);
+			if (!loginPopup) {
+				alert("Popup blocked. Please allow pop ups for this site.")
+				return
+			}
 			if (window.focus) loginPopup.focus(); // just in case
 		},
 		redirect() {

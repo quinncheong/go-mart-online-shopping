@@ -6,5 +6,5 @@ export const getCookie = (name) => document.cookie.split("; ").find((cookie) => 
 // decodes the cookie token -- if cookie is undefined, returns undefined
 export const decodeToken = (cookie) => cookie ? jwt_decode(cookie) : undefined
 
-// check the token -- true if token not expired, false if expired
-export const checkToken = ({ exp }) => exp < Date.now()
+// check the token -- true if expired, false otherwise
+export const isExpired = ({ exp }) => exp >= Date.now()
