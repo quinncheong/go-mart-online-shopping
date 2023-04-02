@@ -22,16 +22,18 @@ export default defineConfig({
 	],
 	define: {
 		"process.env": {
-			USER_BASEURL:           "http://localhost:5001",
-			PLACE_ORDER_BASEURL:    "http://localhost:5002",
-			ITEM_BASEURL:           "http://localhost:5003",
-			// ITEM_BASEURL:           "https://api.gomartttt.store",
-			ERROR_BASEURL:          "http://localhost:5004",
+			NODE_END: "prod",
+			PROD_BASE_URL: "https://api.gomartttt.store",
+			USER_BASEURL: "http://localhost:5001",
+			PLACE_ORDER_BASEURL: "http://localhost:5002",
+			ITEM_BASEURL: "http://localhost:5003",
+			ERROR_BASEURL: "http://localhost:5004",
 			STRIPE_WRAPPER_BASEURL: "http://localhost:5006",
-			ORDER_BASEURL:          "http://localhost:5007",
-			EMAIL_BASEURL:          "http://localhost:5672",
-			STRIPE_PUBLISHABLE: 		"pk_test_51KegmTDlqIwRfGLS8skxZOKRQ86IEqZ2uEeZET5H6gWVP1J92gF5qK5xcAmAH2DlX1IbpnRCk445erHe6yKzrBSz00LHcNYTrM",
-		}
+			ORDER_BASEURL: "http://localhost:5007",
+			EMAIL_BASEURL: "http://localhost:5672",
+			STRIPE_PUBLISHABLE:
+				"pk_test_51KegmTDlqIwRfGLS8skxZOKRQ86IEqZ2uEeZET5H6gWVP1J92gF5qK5xcAmAH2DlX1IbpnRCk445erHe6yKzrBSz00LHcNYTrM",
+		},
 	},
 	resolve: {
 		alias: {
