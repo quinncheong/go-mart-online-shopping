@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+
 import item_controller
+import lambda_controller
 
 load_dotenv()
 
@@ -9,10 +11,18 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/v1/item/health")
+@app.route("/")
 def hello():
     """
-    Health Check Endpoint
+    Health Endpoint
+    """
+    return "OK"
+
+
+@app.route("/v1/item/health")
+def health():
+    """
+    Health Check Endpoint for API Gateway
     """
     return "Item connected"
 

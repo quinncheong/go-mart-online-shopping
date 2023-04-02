@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { queryItemsByEsk, getNumItems } from "@/api/itemService";
+import { getAllItems, getNumItems } from "@/api/itemService";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
 
@@ -143,8 +143,8 @@ export default {
 				this.total_pages = 1;
 			}
 		},
-		async getItemsByEsk(esk = {}) {
-			let items = await queryItemsByEsk(esk);
+		async getItemsByEsk() {
+			let items = await getAllItems();
 			if (items) {
 				this.items = items.Items.map(
 					({ id, ProductName, Price, ImageLink }) => ({
