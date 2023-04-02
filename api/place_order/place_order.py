@@ -22,7 +22,7 @@ def hello():
     """
     Health Endpoint
     """
-    return "OK"
+    return "Place-order is OK"
 
 
 @app.route("/v1/place-order/health")
@@ -36,6 +36,7 @@ def health():
 @app.route("/v1/place-order", methods=["POST"])
 def place_order():
     body = request.get_json()
+    print(body)
 
     if "order_data" not in body:
         return jsonify("Wrong Order Data"), 404
@@ -61,7 +62,10 @@ def place_order():
     if res["code"] in range(200, 300):
         message = {
             "subject": "Your Order has been placed",
-            "emails": ["quinncheong.2019.is458.jan2023@gmail.com, alinaatxn@gmail.com"],
+            "emails": [
+                "quinncheong.2019.is458.jan2023@gmail.com",
+                "alinaatxn@gmail.com",
+            ],
             "body": "Your order has been successfully placed!",
         }
 
