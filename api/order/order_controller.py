@@ -59,8 +59,9 @@ def add_order(order):
     to_insert = {
         "id": order_id,
         "product_ids": order["product_ids"],
-        # add another bit column for email
+        "email": order["email"],
     }
+    print(to_insert)
 
     order_table.put_item(Item=to_insert)
     res = order_table.query(KeyConditionExpression=Key("id").eq(order_id))

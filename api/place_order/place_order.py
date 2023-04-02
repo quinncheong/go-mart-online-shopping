@@ -51,6 +51,7 @@ def place_order():
 
     order_data = body["order_data"]
     order_data["payment_id"] = payment_outcome["payment_id"]
+    print("order data:", order_data)
 
     res = invoke_http(
         ORDER_URL + "/v1/order",

@@ -85,11 +85,14 @@ const card = ref(null) // card instance
 const cardElement = ref(null) // card element reference
 const stripeError = ref({	err: false, message: "no error" }) // have error = true
 
+
+const parsedJWT = JSON.parse(window.localStorage.getItem("cognito-user-jwt"))
+
 const user = ref(null)
 const authState = ref(null)
 const unsubscribeAuth = ref(null)
 const name = ref("test_name")
-const email = ref("test_name@gmail.com")
+const email = ref(parsedJWT.email ?? "test_name@gmail.com")
 const address = ref("00 Test Avenue")
 const number = ref("00000000")
 const country = ref("Singapore")
@@ -102,6 +105,7 @@ const total_price = computed(() => {
 	})
 	return total
 })
+console.log(cart.value)
 const no_stock = ref(false)
 const items = computed(() => cart.value.map(({ item, quantity }) => ({ [item.id]: quantity })))
 const to = ref(null)
@@ -181,6 +185,7 @@ async function placeOrder() {
 		const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, {
 			order_data: {
 				product_ids: items.value, // [{ id: quantity }, { id: quantity }]
+				email: email.value,
 			},
 			payment_data: {
 				payment_method_id: paymentMethod.id,
@@ -228,7 +233,5 @@ onMounted(async () => {
 		},
 	})
 	card.value.mount(cardElement.value)
-	cart.value = store.getters.getItems
-	// getTotalPrice()
 })
 </script>

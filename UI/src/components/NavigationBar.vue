@@ -37,7 +37,7 @@ export default {
 		},
 	},
 	methods: {
-		redirect() {
+		popup() {
 			// pop up window -- redirects to cognito
 			const popupWidth = 600;
 			const popupHeight = 400;
@@ -49,6 +49,10 @@ export default {
 				`width=${popupWidth}, height=${popupHeight}, left=${left}, top=${top}, resizable=yes, scrollbars=yes`
 			);
 			if (window.focus) loginPopup.focus(); // just in case
+		},
+		redirect() {
+			// refresh redirect to cognito
+			window.open("https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost:3000", "_self")
 		},
 	},
 };
