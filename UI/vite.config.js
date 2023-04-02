@@ -24,8 +24,8 @@ export default defineConfig({
 		"process.env": {
 			USER_BASEURL:           "http://localhost:5001",
 			PLACE_ORDER_BASEURL:    "http://localhost:5002",
-			// ITEM_BASEURL: "http://localhost:5003",
-			ITEM_BASEURL: "https://api.gomartttt.store",
+			ITEM_BASEURL:           "http://localhost:5003",
+			// ITEM_BASEURL:           "https://api.gomartttt.store",
 			ERROR_BASEURL:          "http://localhost:5004",
 			STRIPE_WRAPPER_BASEURL: "http://localhost:5006",
 			ORDER_BASEURL:          "http://localhost:5007",
