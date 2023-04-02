@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    REPOSITORY_URI: public.ecr.aws/n1d3h0o8/gomart
+    REPOSITORY_URI: 377115435266.dkr.ecr.ap-southeast-1.amazonaws.com/gomart
     IMAGE_TAG: latest
 
 phases:
@@ -10,7 +10,7 @@ phases:
     commands:
       - cd $CODEBUILD_SRC_DIR
       - echo Logging in to Amazon ECR...
-      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n1d3h0o8
+      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 377115435266.dkr.ecr.ap-southeast-1.amazonaws.com
 
   build:
     commands:
