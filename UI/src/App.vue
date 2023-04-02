@@ -17,6 +17,14 @@ import Checkout from "@/components/Checkout.vue";
 </script>
 
 <script>
+const getIdToken = () => { const modifiedUrl = window.location.href.replace("#", "?")
+	const url = new URL(modifiedUrl)
+	return url.searchParams.get("id_token")
+}
+const idToken = getIdToken()
+console.log(idToken);
+document.cookie="idtoken=" + idToken;
+
 export default {
 	name: "App",
 	components: {
@@ -26,4 +34,6 @@ export default {
 		Checkout,
 	},
 };
+
+
 </script>
