@@ -26,4 +26,5 @@ export default {
 		Checkout,
 	},
 };
+// check session token validity in dynamoDB, if yes, set something USER LOGGED IN, if no, idk lmao
 </script>
