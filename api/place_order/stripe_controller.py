@@ -9,7 +9,7 @@ PAYMENT_URL = os.environ.get("PAYMENT_URL") or "http://localhost:5005"
 
 
 def make_payment(data):
-    payment_intent = invoke_http(PAYMENT_URL, method="POST", json=data)
+    payment_intent = invoke_http(PAYMENT_URL + "/v1/stripe-wrapper/pay", method="POST", json=data)
     log.info(payment_intent)
 
     payment_outcome = {"payment_id": "", "payment_status": ""}
