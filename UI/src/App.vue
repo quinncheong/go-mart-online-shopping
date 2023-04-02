@@ -34,6 +34,4 @@ export default {
 		Checkout,
 	},
 };
-
-
 </script>

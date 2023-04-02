@@ -59,6 +59,7 @@ def add_order(order):
     to_insert = {
         "id": order_id,
         "product_ids": order["product_ids"],
+        # add another bit column for email
     }
 
     order_table.put_item(Item=to_insert)

@@ -23,7 +23,7 @@
 			</v-col>
 			<v-col cols="7">
 				<v-card-title class="bold-30 mb-n5 ma-5">Order Summary</v-card-title>
-				<v-card v-for="(item, i) in cart" :key="i" class="rounded-xl">
+				<v-card v-for="({ item, quantity }, i) in cart" :key="i" class="rounded-xl">
 					<v-row class="ma-5">
 						<v-col cols="2" class="d-flex flex-column">
 							<v-img
@@ -51,7 +51,7 @@
 							</v-card-subtitle>
 							<v-spacer></v-spacer>
 							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-								Quantity: <span v-text="item.quantity" class="ml-n1"></span>
+								Quantity: <span v-text="quantity" class="ml-n1"></span>
 							</v-card-subtitle>
 						</v-col>
 					</v-row>
@@ -60,17 +60,17 @@
 					<v-row class="ma-3">
 						<div id="card-element" class="m-4 p-3 border border-secondary rounded bg-white"><!--Stripe.js injects the Card Element--></div>
 					</v-row>
-					
 				</v-card>
+				<v-spacer></v-spacer>
 				<v-card class="d-flex flex-column rounded-xl">
-					<v-row>
-						<v-col class="text-left mx-3">
+					<v-row class="align-center">
+						<v-col class="text-left mx-3 my-3">
 							<v-card-subtitle class="medium-20">
 								Total: ${{ total_price.toFixed(2) }}
 							</v-card-subtitle>
 						</v-col>
-						<v-col class="text-right mx-3">
-							<v-btn id="place-order" class="ml-auto mt-2 buttons" rounded @click="placeOrder">
+						<v-col class="text-right mx-3 my-3">
+							<v-btn ref="placeOrder" class="ml-auto buttons" rounded @click="placeOrder">
 								Place Order
 							</v-btn>
 						</v-col>
@@ -95,6 +95,8 @@
 // import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 // import { Auth } from "aws-amplify";
 import axios from "axios";
+// import Stripe from "stripe";
+import { loadStripe } from "@stripe/stripe-js";
 
 export default {
 	name: "Checkout",
@@ -119,32 +121,11 @@ export default {
 		// 		});
 		// });
 		// this.cart = this.$store.getters.getCart;
-		this.cart = [
-			{
-				item_id: "1",
-				item_name: "Test",
-				item_price: 10,
-				item_image: "https://i.imgur.com/9YQ9Z9r.jpg",
-				item_platform: "PC",
-				item_stock: "10",
-			},
-		];
-		this.getTotalPrice();
-		
-		// Stripe
-
-		// Stripe2
-		// const stripeplugin2 = document.createElement("script");
-		// stripeplugin2.setAttribute(
-		// "src",
-		// "./src/store/modules/stripe_script.js"
-		// );
-		// stripeplugin2.async = true;
-		// document.head.appendChild(stripeplugin2);
-
 	},
 	data() {
 		return {
+			stripe: null,
+			cardElement: null,
 			user: undefined,
 			authState: undefined,
 			unsubscribeAuth: undefined,
@@ -153,7 +134,19 @@ export default {
 			address: "Test",
 			number: "Test",
 			country: "Test",
-			cart: [],
+			cart: [
+				{
+					item: {
+						item_id: "1",
+						item_name: "Test",
+						item_price: 10,
+						item_image: "https://i.imgur.com/9YQ9Z9r.jpg",
+						item_platform: "PC",
+						item_stock: "10",
+					},
+					quantity: 1
+				}
+			],
 			no_stock: false,
 			total_price: 0,
 			items: [],
@@ -211,8 +204,13 @@ export default {
 	},
 	methods: {
 		placeOrder() {
-			const path = "po/place-order";
+			const { PLACE_ORDER_BASEURL } = process.env
 			this.getOrderDetails();
+			const { paymentMethod } = this.stripe.createPaymentMethod({
+				type: "card",
+				card: this.cardElement,
+			})
+			console.log("payment_method: ", paymentMethod)
 			const payload = {
 				phone_number: this.number,
 				user_name: this.name,
@@ -220,8 +218,7 @@ export default {
 				items: this.items,
 			};
 			console.log(payload);
-			axios
-				.post(path, payload)
+			axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, payload)
 				.then((res) => {
 					console.log(res);
 					this.snackbar.on = true;
@@ -238,8 +235,8 @@ export default {
 		},
 		getTotalPrice() {
 			this.total_price = 0;
-			this.cart.forEach((item) => {
-				this.total_price += item.item_price * item.quantity;
+			this.cart.forEach(({item, quantity}) => {
+				this.total_price += item.item_price * quantity;
 			});
 		},
 		getOrderDetails() {
@@ -253,37 +250,45 @@ export default {
 		activate() {
 			// setTimeout(() => this.$router.push("/"), 3000);
 		},
+		async submitPayment() {
+			const { paymentMethod } = await this.stripe.createPaymentMethod({
+				type: "card",
+				card: this.cardElement,
+			})
+			console.log("payment_method: ", paymentMethod)
+		}
 	},
 	beforeUnmount() {
 		// this.unsubscribeAuth();
 	},
-	mounted() {
+	beforeCreate() {
+		// // load the main stripe plugin beforeCreate
 		// const stripeplugin = document.createElement("script");
 		// stripeplugin.setAttribute(
-		// "src",
-		// "//js.stripe.com/v3/"
+		// 	"src",
+		// 	"//js.stripe.com/v3/"
 		// );
 		// stripeplugin.async = false;
 		// document.head.appendChild(stripeplugin);
-
-		// stripe plugin
-		const stripeplugin = document.createElement("script");
-		stripeplugin.setAttribute(
-			"src",
-			"//js.stripe.com/v3/"
-		);
-		stripeplugin.async = false;
-		document.head.appendChild(stripeplugin);
-		setTimeout(() => {
-			// Stripe2
-			const stripeplugin2 = document.createElement("script");
-			stripeplugin2.setAttribute(
-				"src",
-				"./src/store/modules/stripe_script.js"
-			);
-			stripeplugin2.async = true;
-			document.head.appendChild(stripeplugin2);
-		}, 500);
+	},
+	async mounted() {
+		// // Stripe2
+		// const stripeplugin2 = document.createElement("script");
+		// stripeplugin2.setAttribute(
+		// 	"src",
+		// 	"./src/store/modules/stripe_script.js"
+		// );
+		// stripeplugin2.async = true;
+		// document.head.appendChild(stripeplugin2);
+		this.stripe = await loadStripe("pk_test_51KegmTDlqIwRfGLS8skxZOKRQ86IEqZ2uEeZET5H6gWVP1J92gF5qK5xcAmAH2DlX1IbpnRCk445erHe6yKzrBSz00LHcNYTrM")
+		const elements = this.stripe.elements()
+		this.cardElement = elements.create("card")
+		this.cardElement.mount("#card-element")
+		this.cart = this.$store.getters.getItems
+		console.log(this.cart)
+		console.log(this.cart[0].item)
+		console.log(this.cart[0].quantity)
+		this.getTotalPrice();
 	}
 };
 </script>
