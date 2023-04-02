@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const { ITEM_BASEURL } = process.env;
-const ITEM_URL = `${ITEM_BASEURL}/v1/item`;
+const { ITEM_BASEURL, NODE_ENV, PROD_BASE_URL } = process.env;
+
+const ITEM_URL =
+	NODE_ENV === "prod" ? `${PROD_BASE_URL}/v1/item` : `${ITEM_BASEURL}/v1/item`;
 
 export const getAllItems = async () => {
 	const response = await axios.get(`${ITEM_URL}/all`);
