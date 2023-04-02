@@ -75,10 +75,11 @@ export default {
 	methods: {
 		async getItem() {
 			let item = await getItemById(this.id);
+			console.log(item)
 			if (item) {
-				this.item_price = item.Item.Price;
+				this.item_price = item.Price;
 				this.item_desc = "Placeholder Description";
-				this.item_image = item.Item.ImageLink;
+				this.item_image = item.ImageLink;
 				this.item_platform = "Placeholder Platform";
 				this.item_stock = 100;
 			} else {
