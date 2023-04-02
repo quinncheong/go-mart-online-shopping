@@ -36,14 +36,18 @@
 						</v-col>
 					</v-row>
 				</v-card>
-				<v-card class="rounded-xl my-3">
-					<v-row class="ma-3">
-						<div ref="cardElement" class="m-4 p-3 border border-secondary rounded bg-white"><!--Stripe.js injects the Card Element--></div>
+				<v-card class="d-flex flex-column rounded-xl my-3">
+					<v-row class="align-center">
+						<v-col class="mx-3 my-3">
+							<div ref="cardElement" class="m-4 p-3 border border-secondary rounded bg-white">
+								<!--Stripe.js injects the Card Element-->
+							</div>
+						</v-col>
 					</v-row>
 				</v-card>
 				<v-card class="d-flex flex-column rounded-xl my-3">
 					<v-row class="align-center">
-						<v-col class="text-left mx-3">
+						<v-col class="text-left mx-3 my-3">
 							<v-card-subtitle class="medium-20">Total: ${{ total_price.toFixed(2) }}</v-card-subtitle>
 						</v-col>
 						<v-col class="text-right mx-3 my-3">
@@ -87,11 +91,12 @@ const user = ref(null)
 const authState = ref(null)
 const unsubscribeAuth = ref(null)
 const name = ref("test_name")
-const email = ref("test_email")
-const address = ref("test_address")
-const number = ref("test_number")
-const country = ref("test_country")
+const email = ref("test_name@gmail.com")
+const address = ref("00 Test Avenue")
+const number = ref("00000000")
+const country = ref("Singapore")
 
+// format of the cart array
 const cart = ref([
 	{
 		item: {
@@ -196,7 +201,7 @@ function getTotalPrice() {
 	cart.value.forEach(({ item, quantity }) => {
 		total_price.value += item.item_price * quantity
 	})
-	console.log(total_price.value)
+	console.log("total price:", total_price.value)
 }
 
 function getOrderDetails() {
@@ -204,19 +209,20 @@ function getOrderDetails() {
 	cart.value.forEach(({ item, quantity }) => {
 		items.value.push({ [item.item_name]: quantity })
 	})
-	console.log(items.value)
+	console.log("items:", items.value)
 }
 
 async function placeOrder() {
-	console.log("not working haha so funni")
+	console.log("card:", card.value)
+	// creating the card to send to the api (not sure if this is still wanted or not)
 	const { error=null, paymentMethod=null } = await stripe.value.createPaymentMethod({
 		type: "card",
 		card: card.value,
-		billing_details: {
-			name: name.value,
-			email: email.value,
-			phone: number.value,
-		},
+		// billing_details: {
+		// 	name: name.value,
+		// 	email: email.value,
+		// 	phone: number.value,
+		// },
 	})
 	if (error) {
 		console.log(error)
@@ -225,15 +231,23 @@ async function placeOrder() {
 		return
 	}
 	console.log(paymentMethod)
+	stripeError.value.err = false
+	stripeError.value.message = "no error"
 
 	const { PLACE_ORDER_BASEURL } = process.env
 	getOrderDetails()
 	try {
 		const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, {
 			order_data: {
-				payment_id: 0,
+				payment_id: paymentMethod.id,
+				items: items.value,
+				price: total_price.value,
 			},
-			payment_data: {},
+			payment_data: {
+				payment_method_id: paymentMethod.id,
+				card: paymentMethod.card,
+				billing_details: paymentMethod.billing_details,
+			},
 		})
 		console.log(data)
 		snackbar.value.on = true
