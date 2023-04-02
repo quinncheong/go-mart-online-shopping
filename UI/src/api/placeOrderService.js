@@ -3,7 +3,7 @@ import axios from "axios";
 const { PLACE_ORDER_BASEURL, NODE_ENV, PROD_BASE_URL } = process.env;
 
 const PLACE_ORDER_URL =
-	NODE_ENV === "prod"
+	NODE_ENV !== "development"
 		? `${PROD_BASE_URL}/v1/place-order`
 		: `${PLACE_ORDER_BASEURL}/v1/place-order`;
 
