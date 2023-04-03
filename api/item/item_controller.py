@@ -1,6 +1,7 @@
 import boto3
 import os
-
+from flask import Flask
+from flask_cors import CORS
 import lambda_controller
 
 REGION = os.environ.get("REGION")
@@ -30,7 +31,7 @@ def get_all_items():
 
     print("Cache Miss")
 
-    table_data = item_table.scan(Limit=80)
+    table_data = item_table.scan(Limit=5)
     if table_data and "Items" in table_data:
         redis_payload["data"] = table_data
         write_result = lambda_controller.write_to_redis(redis_payload)

@@ -1,27 +1,29 @@
 import axios from "axios";
+
 var email="";
-if (localStorage) {
+if (localStorage.getItem("cognito-user-jwt")) {
 	// local storage is available, set the value
 	email = JSON.parse(localStorage.getItem("cognito-user-jwt"));
-	email = email["email"];
+	if (email["Email"]) {
+		email = email["email"];
+	
+	}
+	else {
+		email= "False"
+	}
+		
   } else {
 	// local storage is not available, set the value to false
 	email = "False";
   }
 
-<<<<<<< Updated upstream
-const { ITEM_BASEURL, NODE_ENV, PROD_BASE_URL } = process.env;
+const { ITEM_BASEURL, NODE_ENV, PROD_BASE_URL, PLACE_ORDER_BASEURL } = process.env;
+const PLACE_ORDER_URL = `${PLACE_ORDER_BASEURL}/v1`;
 
 const ITEM_URL =
 	NODE_ENV !== "development"
 		? `${PROD_BASE_URL}/v1/item`
 		: `${ITEM_BASEURL}/v1/item`;
-=======
-const { ITEM_BASEURL } = process.env;
-const { PLACE_ORDER_BASEURL } = process.env
-const ITEM_URL = `${ITEM_BASEURL}/v1/item`;
-const PLACE_ORDER_URL = `${PLACE_ORDER_BASEURL}/v1/`;
->>>>>>> Stashed changes
 
 export const getAllItems = async () => {
 	const response = await axios.get(`${ITEM_URL}/all`);

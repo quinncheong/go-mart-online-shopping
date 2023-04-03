@@ -98,11 +98,10 @@ def displayItems(email:str = None):
     items = items_response['Items']
 
     if email=="False":
+        return json.dumps({"items": items})
         for item in items_response["Items"]:
-            if item["id"] in res_payload:
-                item["Recommendation"] = True
-            else:
-                item["Recommendation"] = False
+
+            item["Recommendation"] = False
         return json.dumps({"items": items})
     
     user_last_purchase_product_id=  requests.get(ORDER_URL+"//v1/order/email/"+email).json()
@@ -121,9 +120,11 @@ def displayItems(email:str = None):
     res_payload = json.loads(response["Payload"].read())
     
     res_payload= res_payload["Output"]
+    print("Res_payload")
+    print(res_payload)
     
     for item in items_response["Items"]:
-        if item["id"] in res_payload:
+        if int(item["id"]) in res_payload:
             item["Recommendation"] = True
         else:
             item["Recommendation"] = False

@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { getAllItems, getNumItems, getRecommendedItems } from "@/api/itemService";
+import { getNumItems, getRecommendedItems } from "@/api/itemService";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
 
@@ -147,7 +147,7 @@ export default {
 			let items = await getRecommendedItems();
 			console.log(items)
 			if (items) {
-				this.items = items.Input.map(
+				this.items = items.items.map(
 					({ id, ProductName, Price, ImageLink, Recommendation}) => ({
 						id,
 						item_name: ProductName,
@@ -156,7 +156,7 @@ export default {
 						item_image: ImageLink,
 						item_platform: "",
 						item_stock: 100,
-						recommended: Recommendation,
+						recommended: Recommendation !== undefined ? Recommendation : false,
 						recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
 					})
 				);
