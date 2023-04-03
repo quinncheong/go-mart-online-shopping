@@ -57,6 +57,7 @@
 
 <script>
 import { getItemById } from "@/api/itemService";
+import { getRecommendedItems } from "@/api/itemService";
 import placeholder from "@/assets/placeholder.jpg";
 
 export default {
@@ -102,6 +103,10 @@ export default {
 				item_stock: this.item_stock,
 			});
 		},
+		async getRecommendedItems() {
+			let item = await getRecommendedItems();
+			console.log(item);
+		}
 	},
 	computed: {
 		availableStock() {

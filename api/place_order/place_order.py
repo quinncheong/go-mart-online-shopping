@@ -2,20 +2,32 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-
+import boto3
+import json
 load_dotenv()
 
 import sns_controller
 import stripe_controller
+import requests
 from invokes import invoke_http
 
+REGION = os.environ.get("REGION")
+ACCESS_KEY = os.environ.get("ACCESS_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 app = Flask(__name__)
 CORS(app)
 
+ITEM_URL= os.environ.get("ITEM_URL")
 ORDER_URL = os.environ.get("ORDER_URL")
 ERROR_URL = os.environ.get("ERROR_URL")
 
+lambda_client = boto3.client(
+    "lambda",
+    region_name=REGION,
+    aws_access_key_id=ACCESS_KEY,
+    aws_secret_access_key=SECRET_KEY,
+)
 
 @app.route("/")
 def hello():
@@ -77,6 +89,50 @@ def place_order():
 
     return jsonify(res), res["code"]
 
+@app.route("/v1/displayItems/<email>")
+def displayItems(email:str = None):
+    """
+    This function returns the item details and also includes if item is recommended
+    """
+    items_response = requests.get(ITEM_URL+"/v1/item/all").json()
+    items = items_response['Items']
 
+    if email=="False":
+        for item in items_response["Items"]:
+            if item["id"] in res_payload:
+                item["Recommendation"] = True
+            else:
+                item["Recommendation"] = False
+        return json.dumps({"items": items})
+    
+    user_last_purchase_product_id=  requests.get(ORDER_URL+"//v1/order/email/"+email).json()
+    user_last_purchase_product_id=user_last_purchase_product_id["product_id"]
+    # Get the request body
+    request_body = json.dumps({"Input": user_last_purchase_product_id})
+
+    # Invoke the Lambda function
+    response = lambda_client.invoke(
+        FunctionName="ML_Recommendation",
+        InvocationType="RequestResponse",
+        Payload=request_body,
+    )
+
+    # Extract the response body
+    res_payload = json.loads(response["Payload"].read())
+    
+    res_payload= res_payload["Output"]
+    
+    for item in items_response["Items"]:
+        if item["id"] in res_payload:
+            item["Recommendation"] = True
+        else:
+            item["Recommendation"] = False
+            
+    items = items_response['Items']        
+    return json.dumps({"Input": items})
+    
+    
+    
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5002, debug=True)
