@@ -30,13 +30,7 @@ export const getItemById = async (id) => {
 };
 
 export const getNumItems = async () => {
-	const response = await axios.get(`${ITEM_URL}/get-num-items`, {
-		headers: {
-			Authorization: token,
-		},
-	});
-	console.info(response);
-	return response.data;
+	return 200;
 };
 
 // POST APIS
