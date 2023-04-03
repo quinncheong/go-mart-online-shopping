@@ -15,10 +15,11 @@ import { getCookie, decodeToken } from "@/api/cookie"
 
 const url = new URL(window.location.href.replace("#", "?"))
 const idToken = url.searchParams.get("id_token")
+document.cookie = `idtoken=${idToken}`; // if token doesn't exist, will be "idtoken=null"
 
+// if idtoken is not undefined
 if (idToken) {
-	document.cookie = `idtoken=${idToken}`;
-	const token = decodeToken(getCookie("idtoken"))
+	const token = decodeToken(idToken)
 	window.localStorage.setItem("cognito-user-jwt", JSON.stringify(token)) // for easier testing purposes
 	console.log(token)// need to check exp for expiry, email for email
 }

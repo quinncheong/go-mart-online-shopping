@@ -1,5 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from "vue-router";
+import { retrieveCookie } from "@/api/cookie"
 
 const routes = [
 	{
@@ -15,11 +16,17 @@ const routes = [
 				path: "/checkout",
 				name: "Checkout",
 				component: () => import("@/views/CheckoutPage.vue"),
+				meta: {
+					requiresAuth: true,
+				},
 			},
 			{
 				path: "/cart",
 				name: "Cart",
 				component: () => import("@/views/CartPage.vue"),
+				meta: {
+					requiresAuth: true,
+				},
 			},
 			{
 				path: "/about",
@@ -51,5 +58,12 @@ const router = createRouter({
 		return { top: 0 };
 	},
 });
+
+router.beforeEach((to, from) => {
+	const cookie = retrieveCookie("idtoken")
+	if (to.meta.requiresAuth && !cookie) {
+		return { name: "Home" }
+	}
+})
 
 export default router;
