@@ -110,6 +110,7 @@ import { getNumItems } from "@/api/itemService";
 import { getRecommendedItems } from "@/api/placeOrderService";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
+import { retrieveCookie } from "@/api/cookie"
 
 export default {
 	name: "Items",
@@ -125,6 +126,7 @@ export default {
 				on: false,
 				item_name: "",
 			},
+			cookie: null
 		};
 	},
 	computed: {
@@ -218,6 +220,11 @@ export default {
 		//   this.getAllItems(esk);
 		// },
 		handleAddToCart(itemName) {
+			if (!this.cookie) {
+				// cookie guard -- don't allow add to cart if not authenticated
+				//TODO: add some code here to inform user
+				return // return early, break out of click
+			}
 			const item = this.items.find(({ item_name }) => item_name === itemName);
 			this.$store.dispatch("addItemToCart", item);
 			this.snackbar.message = itemName;
@@ -231,6 +238,7 @@ export default {
 		this.getNumPages();
 		// const esk = {}; // { data: "empty" }
 		this.getItemsByEsk();
+		this.cookie = retrieveCookie("idtoken")
 	},
 };
 </script>

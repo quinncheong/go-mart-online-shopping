@@ -77,14 +77,13 @@ import axios from "axios"
 import { ref, onMounted, computed } from "vue"
 import { useStore } from "vuex"
 import { loadStripe } from "@stripe/stripe-js"
-// import { StripeElements, StripeElement } from "vue-stripe-js"
+import { getCookie, decodeToken, isExpired } from "@/api/cookie"
 
 const store = useStore() // to access vuex store
 const stripe = ref(null) // stripe instance
 const card = ref(null) // card instance
 const cardElement = ref(null) // card element reference
 const stripeError = ref({	err: false, message: "no error" }) // have error = true
-
 
 const parsedJWT = JSON.parse(window.localStorage.getItem("cognito-user-jwt"))
 
