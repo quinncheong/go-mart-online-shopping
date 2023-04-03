@@ -49,7 +49,7 @@
 							<v-card-subtitle class="medium-20">Total: ${{ total_price.toFixed(2) }}</v-card-subtitle>
 						</v-col>
 						<v-col class="text-right mx-3 my-3">
-							<v-btn class="ml-auto buttons" rounded @click="placeOrder">Place Order</v-btn>
+							<v-btn :loading="loading" class="ml-auto buttons" rounded @click="placeOrder">Place Order</v-btn>
 						</v-col>
 					</v-row>
 				</v-card>
@@ -76,10 +76,12 @@
 import axios from "axios"
 import { ref, onMounted, computed } from "vue"
 import { useStore } from "vuex"
+import { useRouter } from "vue-router"
 import { loadStripe } from "@stripe/stripe-js"
 import { getToken } from "@/api/cookie"
 
 const store = useStore() // to access vuex store
+const router = useRouter() // to access vue-router
 const stripe = ref(null) // stripe instance
 const card = ref(null) // card instance
 const cardElement = ref(null) // card element reference
@@ -109,6 +111,7 @@ const no_stock = ref(false)
 const items = computed(() => cart.value.map(({ item, quantity }) => ({ [item.id]: quantity })))
 const to = ref(null)
 const snackbar = ref({ on: false, message: "" })
+const loading = ref(false)
 
 const formFields = ref([
 	{
@@ -159,6 +162,8 @@ const formFields = ref([
 
 async function placeOrder() {
 	console.log("card:", card.value)
+	loading.value = true
+
 	// creating the card to send to the api (not sure if this is still wanted or not)
 	const { error=null, paymentMethod=null } = await stripe.value.createPaymentMethod({
 		type: "card",
@@ -169,10 +174,12 @@ async function placeOrder() {
 		// 	phone: number.value,
 		// },
 	})
+
 	if (error) {
 		console.log(error)
 		stripeError.value.err = true
 		stripeError.value.message = error.message
+		loading.value = false
 		return
 	}
 	console.log(paymentMethod)
@@ -196,11 +203,15 @@ async function placeOrder() {
 		snackbar.value.message = "Order successfully placed!"
 		card.value.unmount()
 		store.dispatch("clearCart")
+		setTimeout(() => {
+			router.push({ name: "Home" })
+		}, 1000)
 	} catch (err) {
 		console.error(err)
 		snackbar.value.on = false
 		snackbar.value.message = "There was an error placing your order, please try again later."
 	}
+	loading.value = false
 }
 
 onMounted(async () => {
