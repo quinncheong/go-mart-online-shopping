@@ -3,7 +3,6 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 import item_controller
-import lambda_controller
 
 load_dotenv()
 
@@ -59,12 +58,6 @@ def query_items_by_esk():
         res = item_controller.get_all_items()
 
     return res if res else "No items found/left"
-
-
-@app.route("/v1/item/get-num-items")
-def get_num_items():
-    res = item_controller.get_num_items()
-    return str(res) if res else "0"
 
 
 if __name__ == "__main__":
