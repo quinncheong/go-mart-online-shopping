@@ -22,6 +22,7 @@ if (idToken) {
 	const token = decodeToken(idToken)
 	window.localStorage.setItem("cognito-user-jwt", JSON.stringify(token)) // for easier testing purposes
 	console.log(token)// need to check exp for expiry, email for email
+	console.log(retrieveCookie("idToken"))
 } 
 // else {
 // 	const cookie = retrieveCookie("idtoken")
