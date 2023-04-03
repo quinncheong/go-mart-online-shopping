@@ -3,7 +3,7 @@
 		<v-app-bar color="#5ba4a3" dense height="120" elevation="0">
 			<router-link to="/" class="d-flex align-center">
 				<img
-					src="@/assets/shopLogo.jpg"
+					src="@/assets/GoMart-Logo.png"
 					class="mx-4"
 					alt="shop_logo_jpg"
 					width="100"
@@ -13,8 +13,8 @@
 				</v-toolbar-title>
 			</router-link>
 			<v-spacer></v-spacer>
-			<v-btn class="white-15" @click="redirect">Log-In / Sign-Up</v-btn>
-			<v-btn></v-btn>
+			<v-btn class="white-15" @click="popup">Log-In / Sign-Up</v-btn>
+			<v-btn class="white-15"></v-btn>
 			<v-badge overlap class="mx-8" color="#efcfda">
 				<template v-slot:badge>
 					<span class="bold-15">{{ getNumItems }}</span>
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { retrieveCookie } from "@/api/cookie"
+
 export default {
 	name: "NavigationBar",
 	data() {
@@ -39,23 +41,6 @@ export default {
 		},
 	},
 	methods: {
-		popup() {
-			// pop up window -- redirects to cognito
-			const popupWidth = 600;
-			const popupHeight = 400;
-			const left = (window.innerWidth - popupWidth) / 2;
-			const top = (window.innerHeight - popupHeight) / 3;
-			const loginPopup = window.open(
-				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https://gomartttt.store",
-				"loginPopup",
-				`width=${popupWidth}, height=${popupHeight}, left=${left}, top=${top}, resizable=yes, scrollbars=yes`
-			);
-			if (!loginPopup) {
-				alert("Popup blocked. Please allow pop ups for this site.")
-				return
-			}
-			if (window.focus) loginPopup.focus(); // just in case
-		},
 		redirect() {
 			// refresh redirect to cognito
 			window.open(
@@ -63,6 +48,9 @@ export default {
 				"_self"
 			);
 		},
+	},
+	mounted() {
+		
 	},
 };
 </script>
