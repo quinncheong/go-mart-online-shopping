@@ -162,7 +162,7 @@ export default {
 						recommended: Recommendation !== undefined ? Recommendation : false,
 						recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
 					})
-				);
+				).sort(this.compareItems);
 			} else {
 				this.items = [
 					{
@@ -172,7 +172,27 @@ export default {
 						item_image: placeholder,
 						item_platform: "",
 						item_stock: 100,
+						recommended: false,
+						recommended_picture,
+					},
+					{
+						item_name: "Placeholder name",
+						item_price: 1,
+						item_desc: "Placeholder Desc",
+						item_image: placeholder,
+						item_platform: "",
+						item_stock: 100,
 						recommended: true,
+						recommended_picture,
+					},
+					{
+						item_name: "Placeholder name",
+						item_price: 1,
+						item_desc: "Placeholder Desc",
+						item_image: placeholder,
+						item_platform: "",
+						item_stock: 100,
+						recommended: false,
 						recommended_picture,
 					},
 					{
@@ -195,7 +215,7 @@ export default {
 						recommended: true,
 						recommended_picture,
 					},
-				];
+				].sort(this.compareItems);
 			}
 		},
 		showItem(name, id) {
@@ -247,7 +267,6 @@ export default {
 		this.getNumPages();
 		// const esk = {}; // { data: "empty" }
 		this.getItemsByEsk();
-		this.items.sort(this.compareItems)
 	},
 };
 </script>

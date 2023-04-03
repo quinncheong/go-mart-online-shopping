@@ -108,7 +108,7 @@ const mutations = {
 	},
 
 	[CLEAR_CART](state) {
-		window.localStorage.clear();
+		window.localStorage.removeItem("cart");
 		state.cart = [];
 		state.numCartItems = 0;
 	},
