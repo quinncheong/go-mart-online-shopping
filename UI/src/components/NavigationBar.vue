@@ -58,7 +58,7 @@ export default {
 		redirect() {
 			// refresh redirect to cognito
 			window.open(
-				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=http://gomartttt.store",
+				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https://gomartttt.store",
 				"_self"
 			);
 		},
