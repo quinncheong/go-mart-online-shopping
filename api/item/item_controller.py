@@ -60,3 +60,7 @@ def get_item(item_id=None):
         print("Write Result is: ", write_result)
 
     return table_data
+
+
+def get_num_items():
+    return connection.describe_table(TableName="item")["Table"]["ItemCount"]
