@@ -49,7 +49,7 @@ export default {
 			const left = (window.innerWidth - popupWidth) / 2;
 			const top = (window.innerHeight - popupHeight) / 3;
 			const loginPopup = window.open(
-				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fgomartttt.store",
+				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https://gomartttt.store",
 				"loginPopup",
 				`width=${popupWidth}, height=${popupHeight}, left=${left}, top=${top}, resizable=yes, scrollbars=yes`
 			);
@@ -58,7 +58,7 @@ export default {
 		redirect() {
 			// refresh redirect to cognito
 			window.open(
-				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=http%3A%2F%2Fgomartttt.store",
+				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=http://gomartttt.store",
 				"_self"
 			);
 		},
