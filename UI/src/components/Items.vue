@@ -25,7 +25,7 @@
 						<v-container>
 							<v-img
 								:src="recommended_picture"
-								v-show="recommended"
+								v-if="recommended"
 								class="cursor"
 								:width="80"
 								aspect-ratio="1"
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { getAllItems, getNumItems } from "@/api/itemService";
+import { getNumItems, getRecommendedItems } from "@/api/itemService";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
 
@@ -116,7 +116,7 @@ export default {
 		return {
 			item_id: 0,
 			page: 0,
-			items_per_page: 2,
+			items_per_page: 10,
 			total_pages: 0,
 			esk_list: [{ data: "empty" }],
 			items: [],
@@ -144,10 +144,11 @@ export default {
 			}
 		},
 		async getItemsByEsk() {
-			let items = await getAllItems();
+			let items = await getRecommendedItems();
+			console.log(items)
 			if (items) {
-				this.items = items.Items.map(
-					({ id, ProductName, Price, ImageLink }) => ({
+				this.items = items.items.map(
+					({ id, ProductName, Price, ImageLink, Recommendation}) => ({
 						id,
 						item_name: ProductName,
 						item_price: Price,
@@ -155,7 +156,7 @@ export default {
 						item_image: ImageLink,
 						item_platform: "",
 						item_stock: 100,
-						recommended: true,
+						recommended: Recommendation !== undefined ? Recommendation : false,
 						recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
 					})
 				);

@@ -73,6 +73,15 @@ def create_order():
         res["ResponseMetadata"]["HTTPStatusCode"],
     )
 
+@app.route("/v1/order/email/<email>")
+def get_order_by_email(email:str = None):
+    """
+    This function gets a specific order from the database,
+    querying by order_id
+    """
+    return order_controller.get_productID(email)
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5007, debug=True)
