@@ -11,22 +11,25 @@
 
 <script setup>
 import NavigationBar from "@/components/NavigationBar.vue";
-import { decodeToken, retrieveCookie } from "@/api/cookie"
+import { setToken, decodeToken, getToken } from "@/api/cookie"
 
 const url = new URL(window.location.href.replace("#", "?"))
 const idToken = url.searchParams.get("id_token")
 document.cookie = `idtoken=${idToken}`; // if token doesn't exist, will be "idtoken=null"
 
-// if idtoken is not undefined
+console.log(idToken)
+
 if (idToken) {
-	const token = decodeToken(idToken)
-	window.localStorage.setItem("cognito-user-jwt", JSON.stringify(token)) // for easier testing purposes
-	console.log(token)// need to check exp for expiry, email for email
-	console.log(retrieveCookie("idToken"))
-} 
-// else {
-// 	const cookie = retrieveCookie("idtoken")
-// 	if (!cookie) window.localStorage.removeItem("cognito-user-jwt")
-// 	else window.localStorage.setItem("cognito-user-jwt", JSON.stringify(cookie))
-// }
+	const token = decodeToken(idToken) // decode the URI
+	setToken("cognito-user-jwt", token) // might be null, or an actual token, idk, we'll do checks later lmao
+	console.log("cognito-user-jwt", token)
+} else {
+	const token = getToken("cognito-user-jwt")
+	if (!token) {
+		setToken("cognito-user-jwt", null)
+	}
+	// no need to change token :D
+}
+
+
 </script>

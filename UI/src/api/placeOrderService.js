@@ -1,11 +1,13 @@
 import axios from "axios";
+import { getToken } from "@/api/cookie"
 
 const { PLACE_ORDER_BASEURL, NODE_ENV, PROD_BASE_URL } = process.env;
 
 let email = null;
-let token = localStorage.getItem("cognito-user-jwt");
+let token = getToken("cognito-user-jwt");
 if (token) {
-	email = token["Email"] ? token["Email"] : null;
+	email = token.email;
+	console.log(email)
 }
 
 const PLACE_ORDER_URL =
