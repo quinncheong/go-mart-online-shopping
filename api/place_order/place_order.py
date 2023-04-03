@@ -67,6 +67,17 @@ def test_email():
     return res if res else "Email not sent"
 
 
+@app.route("/v1/place-order/test/other")
+def test_other():
+    """
+    Test Email to send message
+    """
+    print("inside the test request")
+    items = requests.get(ITEM_URL + "/v1/item/all").json()
+    print(items)
+    return items
+
+
 @app.route("/v1/place-order", methods=["POST"])
 def place_order():
     body = request.get_json()
@@ -137,6 +148,8 @@ def displayItems(email: str = None):
     user_last_purchase_product_id = user_last_purchase_product_id["product_id"]
     # Get the request body
     request_body = json.dumps({"Input": user_last_purchase_product_id})
+
+    print(request_body)
 
     # Invoke the Lambda function
     response = lambda_client.invoke(
