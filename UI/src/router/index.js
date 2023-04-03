@@ -1,6 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from "vue-router";
-import { retrieveCookie } from "@/api/cookie"
+import { getToken } from "@/api/cookie"
 
 const routes = [
 	{
@@ -60,11 +60,11 @@ const router = createRouter({
 });
 
 // eslint-disable-next-line
-// router.beforeEach((to, from) => {
-// 	const cookie = retrieveCookie("idtoken")
-// 	if (to.meta.requiresAuth && !cookie) {
-// 		return { name: "Home" }
-// 	}
-// })
+router.beforeEach((to, from) => {
+	const token = getToken("cognito-user-jwt")
+	if (to.meta.requiresAuth && !token) {
+		return { name: "Home" }
+	}
+})
 
 export default router;

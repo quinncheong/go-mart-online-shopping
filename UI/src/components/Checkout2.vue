@@ -77,7 +77,7 @@ import axios from "axios"
 import { ref, onMounted, computed } from "vue"
 import { useStore } from "vuex"
 import { loadStripe } from "@stripe/stripe-js"
-import { getCookie, decodeToken, isExpired } from "@/api/cookie"
+import {  } from "@/api/cookie"
 
 const store = useStore() // to access vuex store
 const stripe = ref(null) // stripe instance

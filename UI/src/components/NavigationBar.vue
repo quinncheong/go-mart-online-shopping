@@ -13,8 +13,11 @@
 				</v-toolbar-title>
 			</router-link>
 			<v-spacer></v-spacer>
-			<v-btn class="white-15" @click="redirect">Log-In / Sign-Up</v-btn>
-			<v-btn class="white-15"></v-btn>
+
+			<!-- if else authenticated | currently just shows user_email -->
+			<v-btn v-if="isAuthenticated" class="white-15">{{ user_email }}</v-btn>
+			<v-btn v-else class="white-15" @click="redirect">Log-In / Sign-Up</v-btn>
+
 			<v-badge overlap class="mx-8" color="#efcfda">
 				<template v-slot:badge>
 					<span class="bold-15">{{ getNumItems }}</span>
@@ -28,12 +31,15 @@
 </template>
 
 <script>
-import { retrieveCookie } from "@/api/cookie"
+import { getToken } from "@/api/cookie"
 
 export default {
 	name: "NavigationBar",
 	data() {
-		return {};
+		return {
+			isAuthenticated: false,
+			user_email: "",
+		};
 	},
 	computed: {
 		getNumItems() {
@@ -43,8 +49,8 @@ export default {
 	methods: {
 		redirect() {
 			// refresh redirect to cognito
-			const redirect_url = "https://gomartttt.store"
-			// const redirect_url = "http://localhost:3000"
+			// const redirect_url = "https://gomartttt.store"
+			const redirect_url = "http://localhost:3000"
 			window.open(
 				`https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=${redirect_url}`,
 				"_self"
@@ -52,7 +58,15 @@ export default {
 		},
 	},
 	mounted() {
-		
+		const token = getToken("cognito-user-jwt")
+		if (!token) {
+			// handle token expired or not there
+			this.isAuthenticated = false
+		} else {
+			// handle token authenticated
+			this.isAuthenticated = true
+			this.user_email = token.email
+		}
 	},
 };
 </script>
