@@ -106,7 +106,8 @@
 </template>
 
 <script>
-import { getNumItems, getRecommendedItems } from "@/api/itemService";
+import { getNumItems } from "@/api/itemService";
+import { getRecommendedItems } from "@/api/placeOrderService";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
 
@@ -145,10 +146,10 @@ export default {
 		},
 		async getItemsByEsk() {
 			let items = await getRecommendedItems();
-			console.log(items)
+			console.log(items);
 			if (items) {
-				this.items = items.items.map(
-					({ id, ProductName, Price, ImageLink, Recommendation}) => ({
+				this.items = items.map(
+					({ id, ProductName, Price, ImageLink, Recommendation }) => ({
 						id,
 						item_name: ProductName,
 						item_price: Price,

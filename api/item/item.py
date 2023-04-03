@@ -15,7 +15,7 @@ def hello():
     """
     Health Endpoint
     """
-    return "OK"
+    return "Item connected"
 
 
 @app.route("/v1/item/health")
