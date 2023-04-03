@@ -220,11 +220,11 @@ export default {
 		//   this.getAllItems(esk);
 		// },
 		handleAddToCart(itemName) {
-			if (!this.cookie) {
-				// cookie guard -- don't allow add to cart if not authenticated
-				//TODO: add some code here to inform user
-				return // return early, break out of click
-			}
+			// if (!this.cookie) {
+			// 	// cookie guard -- don't allow add to cart if not authenticated
+			// 	alert("Authentication is required to add items to cart (Log-In / Sign-Up)") // for testing
+			// 	return // return early, break out of click
+			// }
 			const item = this.items.find(({ item_name }) => item_name === itemName);
 			this.$store.dispatch("addItemToCart", item);
 			this.snackbar.message = itemName;
@@ -233,11 +233,21 @@ export default {
 		availableStock(item_stock) {
 			return item_stock > 1 ? true : false;
 		},
+		compareItems(a, b) {
+			// comparison function for custom sort
+			if (a.recommended && !b.recommended)
+				return -1; // a comes before b
+			else if (!a.recommended && b.recommended)
+				return 1; // b comes before a
+			else
+				return 0; // no change in order
+		},
 	},
 	created() {
 		this.getNumPages();
 		// const esk = {}; // { data: "empty" }
 		this.getItemsByEsk();
+		this.items.sort(this.compareItems)
 		this.cookie = retrieveCookie("idtoken")
 	},
 };

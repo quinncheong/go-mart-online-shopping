@@ -59,11 +59,12 @@ const router = createRouter({
 	},
 });
 
-router.beforeEach((to, from) => {
-	const cookie = retrieveCookie("idtoken")
-	if (to.meta.requiresAuth && !cookie) {
-		return { name: "Home" }
-	}
-})
+// eslint-disable-next-line
+// router.beforeEach((to, from) => {
+// 	const cookie = retrieveCookie("idtoken")
+// 	if (to.meta.requiresAuth && !cookie) {
+// 		return { name: "Home" }
+// 	}
+// })
 
 export default router;

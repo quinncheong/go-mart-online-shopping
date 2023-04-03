@@ -11,7 +11,7 @@
 
 <script setup>
 import NavigationBar from "@/components/NavigationBar.vue";
-import { getCookie, decodeToken } from "@/api/cookie"
+import { decodeToken, retrieveCookie } from "@/api/cookie"
 
 const url = new URL(window.location.href.replace("#", "?"))
 const idToken = url.searchParams.get("id_token")
@@ -22,5 +22,10 @@ if (idToken) {
 	const token = decodeToken(idToken)
 	window.localStorage.setItem("cognito-user-jwt", JSON.stringify(token)) // for easier testing purposes
 	console.log(token)// need to check exp for expiry, email for email
-}
+} 
+// else {
+// 	const cookie = retrieveCookie("idtoken")
+// 	if (!cookie) window.localStorage.removeItem("cognito-user-jwt")
+// 	else window.localStorage.setItem("cognito-user-jwt", JSON.stringify(cookie))
+// }
 </script>

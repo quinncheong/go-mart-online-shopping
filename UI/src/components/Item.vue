@@ -59,6 +59,7 @@
 import { getItemById } from "@/api/itemService";
 import { getRecommendedItems } from "@/api/placeOrderService";
 import placeholder from "@/assets/placeholder.jpg";
+import { retrieveCookie } from "@/api/cookie"
 
 export default {
 	name: "Item",
@@ -71,6 +72,7 @@ export default {
 			item_image: "",
 			item_platform: "",
 			item_stock: 100,
+			cookie: null,
 		};
 	},
 	methods: {
@@ -93,6 +95,11 @@ export default {
 			}
 		},
 		handleAddToCart() {
+			// if (!this.cookie) {
+			// 	// cookie guard -- don't allow add to cart if not authenticated
+			// 	alert("Authentication is required to add item to cart (Log-In / Sign-Up)") // for testing
+			// 	return // return early, break out of click
+			// }
 			this.$store.dispatch("addItemToCart", {
 				id: this.id,
 				item_name: this.item_name,
@@ -115,6 +122,7 @@ export default {
 	},
 	created() {
 		this.getItem();
+		this.cookie = retrieveCookie()
 	},
 };
 </script>
