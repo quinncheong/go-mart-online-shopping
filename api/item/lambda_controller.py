@@ -29,6 +29,9 @@ def read_from_redis(data={"table": "itemDetails", "key": "all"}):
     )
 
     res_payload = json.loads(response["Payload"].read())
+
+    if "body" not in res_payload:
+        return []
     res_body = res_payload["body"]
     if res_body:  # To account for if body = "" and json.loads will stringify it
         res_body = json.loads(res_body)
@@ -46,7 +49,10 @@ def write_to_redis(data={"table": "itemDetails", "key": "all"}):
     )
 
     res_payload = json.loads(response["Payload"].read())
-    print(res_payload["statusCode"])
 
+    if "body" not in res_payload:
+        return False
+
+    print(res_payload["statusCode"])
     res_body = res_payload["body"]
     return res_body

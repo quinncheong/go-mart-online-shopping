@@ -57,6 +57,7 @@
 
 <script>
 import { getItemById } from "@/api/itemService";
+import { getRecommendedItems } from "@/api/placeOrderService";
 import placeholder from "@/assets/placeholder.jpg";
 
 export default {
@@ -75,7 +76,7 @@ export default {
 	methods: {
 		async getItem() {
 			let item = await getItemById(this.id);
-			console.log(item)
+			console.log(item);
 			if (item) {
 				this.item_price = item.Price;
 				this.item_desc = "Placeholder Description";
@@ -101,6 +102,10 @@ export default {
 				item_platform: this.item_platform,
 				item_stock: this.item_stock,
 			});
+		},
+		async getRecommendedItems() {
+			let item = await getRecommendedItems();
+			console.log(item);
 		},
 	},
 	computed: {

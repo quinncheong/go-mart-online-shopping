@@ -2,7 +2,12 @@
 	<div>
 		<v-app-bar color="#5ba4a3" dense height="120" elevation="0">
 			<router-link to="/" class="d-flex align-center">
-				<img src="@/assets/shopLogo.jpg" class="mx-4" alt="shop_logo_jpg" width="100">
+				<img
+					src="@/assets/shopLogo.jpg"
+					class="mx-4"
+					alt="shop_logo_jpg"
+					width="100"
+				/>
 				<v-toolbar-title>
 					<h1 class="navbar-title">Go Mart</h1>
 				</v-toolbar-title>
@@ -41,8 +46,8 @@ export default {
 			const left = (window.innerWidth - popupWidth) / 2;
 			const top = (window.innerHeight - popupHeight) / 3;
 			const loginPopup = window.open(
-				'https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fgomartttt.store',
-				'loginPopup',
+				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https://gomartttt.store",
+				"loginPopup",
 				`width=${popupWidth}, height=${popupHeight}, left=${left}, top=${top}, resizable=yes, scrollbars=yes`
 			);
 			if (!loginPopup) {
@@ -53,7 +58,10 @@ export default {
 		},
 		redirect() {
 			// refresh redirect to cognito
-			window.open("https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=http%3A%2F%2Flocalhost:3000", "_self")
+			window.open(
+				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https://gomartttt.store",
+				"_self"
+			);
 		},
 	},
 };
