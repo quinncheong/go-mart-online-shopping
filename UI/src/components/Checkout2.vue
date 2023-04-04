@@ -23,16 +23,21 @@
 								contain
 								max-height="200px"
 								class="cursor"
-							>
-							</v-img>
+							></v-img>
 						</v-col>
 						<v-col class="d-flex flex-column">
 							<v-card-title class="bold-30 cursor">{{ item.item_name }}</v-card-title>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">Platform: {{ item.item_platform }}</v-card-subtitle>
+							<v-card-subtitle class="text-left mt-1">
+								<span class="medium-20 mt-2">Platform: {{ item.item_platform }}</span>
+							</v-card-subtitle>
 							<v-spacer></v-spacer>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">${{ Number(item.item_price).toFixed(2) }}</v-card-subtitle>
+							<v-card-subtitle class="text-left mt-1">
+								<span class="medium-20 mt-2">${{ Number(item.item_price).toFixed(2) }}</span>
+							</v-card-subtitle>
 							<v-spacer></v-spacer>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">Quantity: {{ quantity }}</v-card-subtitle>
+							<v-card-subtitle class="text-left mt-1">
+								<span class="medium-20 mt-2">Quantity: {{ quantity }}</span>
+							</v-card-subtitle>
 						</v-col>
 					</v-row>
 				</v-card>
@@ -46,7 +51,9 @@
 				<v-card class="d-flex flex-column rounded-xl my-3">
 					<v-row class="align-center">
 						<v-col class="text-left mx-3 my-3">
-							<v-card-subtitle class="medium-20">Total: ${{ total_price.toFixed(2) }}</v-card-subtitle>
+							<v-card-subtitle>
+								<span class="medium-20">Total: ${{ total_price.toFixed(2) }}</span>
+							</v-card-subtitle>
 						</v-col>
 						<v-col class="text-right mx-3 my-3">
 							<v-btn :loading="loading" class="ml-auto buttons" rounded @click="placeOrder">Place Order</v-btn>
