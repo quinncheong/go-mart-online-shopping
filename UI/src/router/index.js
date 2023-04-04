@@ -62,10 +62,8 @@ const router = createRouter({
 
 // eslint-disable-next-line
 router.beforeEach((to, from) => {
+	NProgress.start()
 	const token = getToken("cognito-user-jwt")
-	if (to.path !== from.path) {
-		NProgress.start()
-	}
 	if (to.meta.requiresAuth && !token) {
 		alert("Authentication is required to enter cart & proceed to checkout")
 		return { name: "Home" }
