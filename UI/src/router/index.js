@@ -63,6 +63,7 @@ const router = createRouter({
 router.beforeEach((to, from) => {
 	const token = getToken("cognito-user-jwt")
 	if (to.meta.requiresAuth && !token) {
+		alert("Authentication is required to enter cart & proceed to checkout")
 		return { name: "Home" }
 	}
 })
