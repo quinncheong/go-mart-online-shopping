@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import axios from "axios"; // eslint-disable-line
+// import { getToken } from "@/api/cookie"
 
 export default {
 	name: "Cart",
@@ -135,6 +135,11 @@ export default {
 	mounted() {
 		this.cart = this.$store.getters.getItems;
 		this.getTotalPrice();
+		// const token = getToken("cognito-user-jwt")
+		// if (!token) {
+		// 	alert("Authentication required to access cart")
+		// 	this.$router.push({ name: "Home" })
+		// }
 	},
 };
 </script>

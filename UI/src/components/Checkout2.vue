@@ -73,13 +73,16 @@
 
 
 <script setup>
-import axios from "axios"
+// import axios from "axios"
 import { ref, onMounted, computed } from "vue"
 import { useStore } from "vuex"
 import { useRouter } from "vue-router"
 import { loadStripe } from "@stripe/stripe-js"
 import { getToken } from "@/api/cookie"
 import { placeOrderCheckout } from "@/api/placeOrderService"
+
+const token = getToken("cognito-user-jwt")
+// if (!token) {}
 
 const store = useStore() // to access vuex store
 const router = useRouter() // to access vue-router
@@ -88,16 +91,14 @@ const card = ref(null) // card instance
 const cardElement = ref(null) // card element reference
 const stripeError = ref({	err: false, message: "no error" }) // have error = true
 
-const token = getToken("cognito-user-jwt")
-
-const user = ref(null)
-const authState = ref(null)
-const unsubscribeAuth = ref(null)
+// const user = ref(null)
+// const authState = ref(null)
+// const unsubscribeAuth = ref(null)
 const name = ref("test_name")
 const email = ref(token.email ?? "test_name@gmail.com")
 const address = ref("00 Test Avenue")
 const number = ref("00000000")
-const country = ref("Singapore")
+// const country = ref("Singapore")
 
 const cart = computed(() => store.getters.getItems)
 const total_price = computed(() => {
@@ -108,57 +109,57 @@ const total_price = computed(() => {
 	return total
 })
 console.log(cart.value)
-const no_stock = ref(false)
+// const no_stock = ref(false)
 const items = computed(() => cart.value.map(({ item, quantity }) => ({ [item.id]: quantity })))
-const to = ref(null)
+// const to = ref(null)
 const snackbar = ref({ on: false, message: "" })
 const loading = ref(false)
 
-const formFields = ref([
-	{
-		type: "name",
-		label: "Name",
-		placeholder: "Enter Name",
-		inputProps: { required: true },
-	},
-	{
-		type: "username",
-		label: "Username",
-		placeholder: "Enter Username",
-		inputProps: { required: true },
-	},
-	{
-		type: "email",
-		label: "Email",
-		placeholder: "Enter Email",
-		inputProps: { required: true },
-	},
-	{
-		type: "password",
-		label: "Password",
-		placeholder: "Enter Password",
-		inputProps: { required: true, autocomplete: "new-password" },
-	},
-	{
-		type: "phone_number",
-		label: "Phone Number",
-		dialCode: "+65",
-		placeholder: "Enter Phone Number",
-		inputProps: { required: true },
-	},
-	{
-		type: "custom:Country",
-		label: "Country of Residence",
-		placeholder: "Enter Country of Residence",
-		inputProps: { required: true },
-	},
-	{
-		type: "address",
-		label: "Address",
-		placeholder: "Enter Address",
-		inputProps: { required: true },
-	},
-])
+// const formFields = ref([
+// 	{
+// 		type: "name",
+// 		label: "Name",
+// 		placeholder: "Enter Name",
+// 		inputProps: { required: true },
+// 	},
+// 	{
+// 		type: "username",
+// 		label: "Username",
+// 		placeholder: "Enter Username",
+// 		inputProps: { required: true },
+// 	},
+// 	{
+// 		type: "email",
+// 		label: "Email",
+// 		placeholder: "Enter Email",
+// 		inputProps: { required: true },
+// 	},
+// 	{
+// 		type: "password",
+// 		label: "Password",
+// 		placeholder: "Enter Password",
+// 		inputProps: { required: true, autocomplete: "new-password" },
+// 	},
+// 	{
+// 		type: "phone_number",
+// 		label: "Phone Number",
+// 		dialCode: "+65",
+// 		placeholder: "Enter Phone Number",
+// 		inputProps: { required: true },
+// 	},
+// 	{
+// 		type: "custom:Country",
+// 		label: "Country of Residence",
+// 		placeholder: "Enter Country of Residence",
+// 		inputProps: { required: true },
+// 	},
+// 	{
+// 		type: "address",
+// 		label: "Address",
+// 		placeholder: "Enter Address",
+// 		inputProps: { required: true },
+// 	},
+// ])
 
 
 async function placeOrder() {
