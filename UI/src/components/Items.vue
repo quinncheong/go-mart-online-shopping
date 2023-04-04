@@ -22,23 +22,23 @@
 					class="d-flex flex-column"
 				>
 					<v-card class="rounded-xl">
-						<v-container>
+						<v-container class="image-container">
+							<v-img
+								:src="item_image"
+								class="white--text align-end cursor background-image"
+								height="200px"
+								aspect-ratio="1"
+								contain
+								@click="showItem(item_name, id)"
+							></v-img>
 							<v-img
 								:src="recommended_picture"
+								class="cursor overlay-image"
 								v-if="recommended"
-								class="cursor"
 								:width="80"
 								aspect-ratio="1"
 							></v-img>
 						</v-container>
-						<v-img
-							:src="item_image"
-							class="white--text align-end cursor"
-							height="200px"
-							aspect-ratio="1"
-							contain
-							@click="showItem(item_name, id)"
-						></v-img>
 						<v-card-title @click="showItem(item_name, id)" class="cursor">
 							<v-spacer />
 							<div class="text-center">
@@ -263,5 +263,20 @@ export default {
 <style scoped>
 .cursor {
 	cursor: pointer;
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+.background-image {
+  position: relative;
+  z-index: 1;
+}
+.overlay-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
 }
 </style>
