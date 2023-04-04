@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { getToken, setToken } from "@/api/cookie";
+import { getToken } from "@/api/cookie";
 
 export default {
 	name: "NavigationBar",
@@ -61,8 +61,8 @@ export default {
 	methods: {
 		redirect() {
 			// refresh redirect to cognito
-			// const redirect_url = "https://gomartttt.store"
-			const redirect_url = "http://localhost:3000";
+			const redirect_url = "https://gomartttt.store"
+			// const redirect_url = "http://localhost:3000";
 			window.open(
 				`https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=${redirect_url}`,
 				"_self"
