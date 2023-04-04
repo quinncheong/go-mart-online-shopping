@@ -12,6 +12,7 @@ import { createApp } from "vue";
 
 // Plugins
 import { registerPlugins } from "@/plugins";
+import "nprogress/nprogress.css"
 
 // CSS
 import "@/assets/fonts.css";

@@ -1,5 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from "vue-router";
+import NProgress from "nprogress"
 import { getToken } from "@/api/cookie"
 
 const routes = [
@@ -62,10 +63,18 @@ const router = createRouter({
 // eslint-disable-next-line
 router.beforeEach((to, from) => {
 	const token = getToken("cognito-user-jwt")
+	if (to.path !== from.path) {
+		NProgress.start()
+	}
 	if (to.meta.requiresAuth && !token) {
 		alert("Authentication is required to enter cart & proceed to checkout")
 		return { name: "Home" }
 	}
+})
+
+// eslint-disable-next-line
+router.afterEach((to, from) => {
+	NProgress.done()
 })
 
 export default router;
