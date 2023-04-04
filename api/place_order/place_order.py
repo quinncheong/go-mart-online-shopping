@@ -164,7 +164,7 @@ def displayItems(email: str = None):
         print("output not found")
         return items
 
-    res_payload = res_payload["Output"]
+    res_payload = res_payload["Output"][:4]
     for item in items_response["Items"]:
         if int(item["id"]) in res_payload:
             item["Recommendation"] = True
