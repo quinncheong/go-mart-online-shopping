@@ -16,15 +16,11 @@ dynamodb = boto3.resource(
     aws_secret_access_key=SECRET_KEY,
 )
 
-connection = boto3.client(
-    "dynamodb", REGION, aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY
-)
+# connection = boto3.client(
+#     "dynamodb", REGION, aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY
+# )
 
 order_table = dynamodb.Table(TABLE_NAME)
-
-
-def get_num_items():
-    return connection.describe_table(TableName=TABLE_NAME)["Table"]["ItemCount"]
 
 
 def get_all_orders(esk={}):
@@ -33,28 +29,29 @@ def get_all_orders(esk={}):
     return order_table.scan(Limit=2)
 
 
-# def get_order(order_id=None):
-#     if not order_id:
-#         return
+def get_order(order_id=None):
+    if not order_id:
+        return
 
-#     key = {"id": int(order_id)}
-#     res = order_table.get_item(Key=key)
-#     if res and "Item" in res:
-#         return res["Item"]
-#     return None
+    key = {"id": int(order_id)}
+    res = order_table.get_item(Key=key)
+    if res and "Item" in res:
+        return res["Item"]
+    return None
+
 
 def get_productID(email):
     res = order_table.scan(
-        FilterExpression='email = :email',
-        ExpressionAttributeValues={':email': email},
-        ProjectionExpression='id, product_ids',
+        FilterExpression="email = :email",
+        ExpressionAttributeValues={":email": email},
+        ProjectionExpression="id, product_ids",
     )
-    sorted_items = sorted(res['Items'], key=lambda x: x['id'], reverse=True)
+    sorted_items = sorted(res["Items"], key=lambda x: x["id"], reverse=True)
 
     if len(sorted_items) > 0:
-        x= sorted_items[0]["product_ids"][0]
+        x = sorted_items[0]["product_ids"][0]
         value = list(x.keys())[0]
-        return {"product_id":value}
+        return {"product_id": value}
 
     return None
 
@@ -66,11 +63,10 @@ def add_order(order):
     response = order_table.scan(Select="COUNT")
     order_id = response["Count"] + 1
 
-    to_insert = {
-        "id": order_id,
-        "product_ids": order["product_ids"],
-        "email": order["email"],
-    }
+    to_insert = {"id": order_id, "product_ids": order["product_ids"]}
+    if "email" in order:
+        to_insert["email"] = order["email"]
+
     print(to_insert)
 
     order_table.put_item(Item=to_insert)
@@ -89,3 +85,7 @@ def add_order(order):
     #         )
     # res = order_table.query(KeyConditionExpression=Key("id").eq(order_id))
     return res
+
+
+# def get_num_items():
+#     return connection.describe_table(TableName=TABLE_NAME)["Table"]["ItemCount"]

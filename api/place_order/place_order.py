@@ -67,6 +67,52 @@ def test_email():
     return res if res else "Email not sent"
 
 
+@app.route("/v1/place-order/test/item")
+def test_item():
+    """
+    Test Email to send message
+    """
+    print("inside the test request")
+    items = requests.get(ITEM_URL + "/v1/item/all").json()
+    print(items)
+    return items
+
+
+@app.route("/v1/place-order/test/order")
+def test_order():
+    """
+    Test Email to send message
+    """
+    print("inside the test order request")
+    product_id = requests.get(
+        ORDER_URL + "/v1/order/email/" + "test@example.com"
+    ).json()
+    print(product_id)
+    return product_id
+
+
+@app.route("/v1/place-order/test/sage")
+def test_sage():
+    """
+    Test Email to send message
+    """
+    print("inside the test sagemake lambda request")
+
+    request_body = json.dumps({"Input": 20})
+
+    # Invoke the Lambda function
+    response = lambda_client.invoke(
+        FunctionName="ML_Recommendation",
+        InvocationType="RequestResponse",
+        Payload=request_body,
+    )
+
+    # Extract the response body
+    res_payload = json.loads(response["Payload"].read())
+    print(res_payload)
+    return res_payload
+
+
 @app.route("/v1/place-order", methods=["POST"])
 def place_order():
     body = request.get_json()
@@ -119,8 +165,12 @@ def displayItems(email: str = None):
     """
 
     print(email)
-    items_response = requests.get(ITEM_URL + "/v1/item/all").json()
-    items = items_response["Items"]
+    try:
+        items_response = requests.get(ITEM_URL + "/v1/item/all").json()
+        items = items_response["Items"]
+    except:
+        print("No items found")
+        return jsonify([]), 200
 
     if (
         email == "None"
@@ -131,12 +181,18 @@ def displayItems(email: str = None):
     ):
         return items
 
-    user_last_purchase_product_id = requests.get(
-        ORDER_URL + "/v1/order/email/" + email
-    ).json()
-    user_last_purchase_product_id = user_last_purchase_product_id["product_id"]
+    try:
+        user_last_purchase_product_id = requests.get(
+            ORDER_URL + "/v1/order/email/" + email
+        ).json()
+        user_last_purchase_product_id = user_last_purchase_product_id["product_id"]
+    except:
+        print("No previous purchase found")
+        return items
+
     # Get the request body
     request_body = json.dumps({"Input": user_last_purchase_product_id})
+    print(request_body)
 
     # Invoke the Lambda function
     response = lambda_client.invoke(

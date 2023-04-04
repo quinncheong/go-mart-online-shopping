@@ -22,7 +22,7 @@ export default defineConfig({
 	],
 	define: {
 		"process.env": {
-			NODE_ENV: "development",
+			NODE_ENV: "prod",
 			PROD_BASE_URL: "https://api.gomartttt.store",
 			USER_BASEURL: "http://localhost:5001",
 			PLACE_ORDER_BASEURL: "http://localhost:5002",
