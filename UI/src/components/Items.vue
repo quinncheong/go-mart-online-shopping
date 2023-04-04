@@ -18,7 +18,7 @@
 						i
 					) in items"
 					:key="i"
-					:cols="4"
+					:cols="3"
 					class="d-flex flex-column"
 				>
 					<v-card class="rounded-xl">
@@ -34,7 +34,7 @@
 						<v-img
 							:src="item_image"
 							class="white--text align-end cursor"
-							height="500px"
+							height="200px"
 							aspect-ratio="1"
 							contain
 							@click="showItem(item_name, id)"

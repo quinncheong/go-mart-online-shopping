@@ -86,6 +86,13 @@ v-app {
     background-color: #f7f3f0;
 }
 
+#nprogress .bar {
+    /* background-color: red; */
+    /* background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); */
+    background-image: linear-gradient(to right, #1fa2ff, #12d8fa, #a6ffcb);
+    height: 0.25rem;
+}
+
 .buttons {
     color: white !important;
     background-color: #5ba4a3 !important;

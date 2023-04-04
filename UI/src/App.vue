@@ -23,6 +23,10 @@ if (idToken) {
 	const token = decodeToken(idToken) // decode the URI
 	setToken("cognito-user-jwt", token) // might be null, or an actual token, idk, we'll do checks later lmao
 	console.log("cognito-user-jwt", token)
+
+	// clearing the token from the front end
+	const x = window.location.href
+	window.location.href = x.substring(0, x.indexOf("#id_token"))
 } else {
 	const token = getToken("cognito-user-jwt")
 	if (!token) {
