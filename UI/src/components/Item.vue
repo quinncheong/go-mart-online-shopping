@@ -86,12 +86,11 @@ export default {
 				this.item_platform = "Placeholder Platform";
 				this.item_stock = 100;
 			} else {
-				this.item_name = "Test Item";
-				this.item_price = 100;
-				this.item_desc = "Tesitng Desc sdfjsdfhsdjkfhsdhf";
+				this.item_price = 10;
+				this.item_desc = "Test";
 				this.item_image = placeholder;
-				this.item_platform = "hsdfhjsdksdjlsj";
-				this.item_stock = 10000;
+				this.item_platform = "Test";
+				this.item_stock = 100;
 			}
 		},
 		handleAddToCart() {
@@ -119,9 +118,9 @@ export default {
 			return this.item_stock >= 1 ? true : false;
 		},
 	},
-	created() {
-		this.token = getToken("cognito-user-jwt")
+	mounted() {
 		this.getItem();
+		this.token = getToken("cognito-user-jwt")
 	},
 };
 </script>
