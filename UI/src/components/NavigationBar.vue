@@ -3,7 +3,7 @@
 		<v-app-bar color="#5ba4a3" dense height="120" elevation="0">
 			<router-link to="/" class="d-flex align-center">
 				<img
-					src="@/assets/shopLogo.jpg"
+					src="@/assets/GoMart-Logo.png"
 					class="mx-4"
 					alt="shop_logo_jpg"
 					width="100"
@@ -13,8 +13,23 @@
 				</v-toolbar-title>
 			</router-link>
 			<v-spacer></v-spacer>
-			<v-btn class="white-15" @click="redirect">Log-In / Sign-Up</v-btn>
-			<v-btn></v-btn>
+
+			<!-- if else authenticated | currently just shows user_email -->
+			<v-btn v-if="isAuthenticated" class="white-15">
+				{{ user_email }}
+				<v-menu activator="parent">
+					<v-list>
+						<v-list-item style="cursor: pointer;">
+							<v-list-item-title @click="logout">Sign-out</v-list-item-title>
+						</v-list-item>
+					</v-list>
+				</v-menu>
+			</v-btn>
+
+			<v-btn v-else class="white-15" v-bind="props" @click="redirect"
+				>Log-In / Sign-Up</v-btn
+			>
+
 			<v-badge overlap class="mx-8" color="#efcfda">
 				<template v-slot:badge>
 					<span class="bold-15">{{ getNumItems }}</span>
@@ -28,10 +43,15 @@
 </template>
 
 <script>
+import { getToken } from "@/api/cookie";
+
 export default {
 	name: "NavigationBar",
 	data() {
-		return {};
+		return {
+			isAuthenticated: false,
+			user_email: "",
+		};
 	},
 	computed: {
 		getNumItems() {
@@ -39,30 +59,29 @@ export default {
 		},
 	},
 	methods: {
-		popup() {
-			// pop up window -- redirects to cognito
-			const popupWidth = 600;
-			const popupHeight = 400;
-			const left = (window.innerWidth - popupWidth) / 2;
-			const top = (window.innerHeight - popupHeight) / 3;
-			const loginPopup = window.open(
-				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https://gomartttt.store",
-				"loginPopup",
-				`width=${popupWidth}, height=${popupHeight}, left=${left}, top=${top}, resizable=yes, scrollbars=yes`
-			);
-			if (!loginPopup) {
-				alert("Popup blocked. Please allow pop ups for this site.")
-				return
-			}
-			if (window.focus) loginPopup.focus(); // just in case
-		},
 		redirect() {
 			// refresh redirect to cognito
 			window.open(
-				"https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=https://gomartttt.store",
+				`https://gomart-welcome.auth.ap-southeast-1.amazoncognito.com/login?client_id=5gt59njjg9khu9a5o3dgq0uo68&response_type=token&scope=email+openid+phone&redirect_uri=${window.location.origin}`,
 				"_self"
 			);
 		},
+		logout() {
+			window.localStorage.clear()
+			this.isAuthenticated = false
+			window.location.href = window.location.origin
+		},
+	},
+	mounted() {
+		const token = getToken("cognito-user-jwt");
+		if (!token) {
+			// handle token expired or not there
+			this.isAuthenticated = false;
+		} else {
+			// handle token authenticated
+			this.isAuthenticated = true;
+			this.user_email = token.email;
+		}
 	},
 };
 </script>

@@ -8,29 +8,29 @@
 						</v-img>
 					</v-col>
 					<v-col class="d-flex flex-column">
-						<v-card-title class="bold-30">
-							{{ item_name }}
+						<v-card-title>
+							<h3>{{ item_name }}</h3>
 						</v-card-title>
-						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-							Platform: {{ item_platform }}
+						<v-card-subtitle class="text-left mt-2 mb-n4">
+							<span class="medium-15">Platform: {{ item_platform }}</span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
 
-						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-							<span class="ml-n1"> ${{ item_price }} </span>
+						<v-card-subtitle class="text-left mt-2 mb-n4">
+							<span class="ml-n1 medium-15"> ${{ item_price }} </span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
 
-						<v-card-subtitle class="text-left medium-20">
-							Description:
+						<v-card-subtitle class="text-left">
+							<span class="medium-15">Description:</span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
 
-						<v-card-subtitle class="text-left medium-15 mt-n5">
-							{{ item_desc }}
+						<v-card-subtitle class="text-left mt-n5">
+							<span class="medium-15">{{ item_desc }}</span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
@@ -59,6 +59,7 @@
 import { getItemById } from "@/api/itemService";
 import { getRecommendedItems } from "@/api/placeOrderService";
 import placeholder from "@/assets/placeholder.jpg";
+import { getToken } from "@/api/cookie"
 
 export default {
 	name: "Item",
@@ -71,6 +72,7 @@ export default {
 			item_image: "",
 			item_platform: "",
 			item_stock: 100,
+			token: null,
 		};
 	},
 	methods: {
@@ -84,15 +86,18 @@ export default {
 				this.item_platform = "Placeholder Platform";
 				this.item_stock = 100;
 			} else {
-				this.item_name = "Test Item";
-				this.item_price = 100;
-				this.item_desc = "Tesitng Desc sdfjsdfhsdjkfhsdhf";
+				this.item_price = 10;
+				this.item_desc = "Test";
 				this.item_image = placeholder;
-				this.item_platform = "hsdfhjsdksdjlsj";
-				this.item_stock = 10000;
+				this.item_platform = "Test";
+				this.item_stock = 100;
 			}
 		},
 		handleAddToCart() {
+			if (!this.token) {
+				alert("Authentication is required to add item to cart (Log-In / Sign-Up)") // for testing
+				return // return early, break out of click
+			}
 			this.$store.dispatch("addItemToCart", {
 				id: this.id,
 				item_name: this.item_name,
@@ -113,8 +118,9 @@ export default {
 			return this.item_stock >= 1 ? true : false;
 		},
 	},
-	created() {
+	mounted() {
 		this.getItem();
+		this.token = getToken("cognito-user-jwt")
 	},
 };
 </script>

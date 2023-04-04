@@ -43,6 +43,15 @@ def get_order_by_id(order_id: str = None):
     return order_controller.get_order(order_id)
 
 
+@app.route("/v1/order/email/<email>")
+def get_order_by_email(email: str = None):
+    """
+    This function gets a specific order from the database,
+    querying by order_id
+    """
+    return order_controller.get_productID(email)
+
+
 @app.route("/v1/order", methods=["POST"])
 def create_order():
     """
@@ -72,15 +81,6 @@ def create_order():
         ),
         res["ResponseMetadata"]["HTTPStatusCode"],
     )
-
-@app.route("/v1/order/email/<email>")
-def get_order_by_email(email:str = None):
-    """
-    This function gets a specific order from the database,
-    querying by order_id
-    """
-    return order_controller.get_productID(email)
-
 
 
 if __name__ == "__main__":

@@ -29,25 +29,24 @@
 						>
 							{{ item.item.item_name }}
 						</v-card-title>
-						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-							Platform:
-							<span v-text="item.item.item_platform"></span>
+						<v-card-subtitle class="text-left mt-2 mb-n4">
+							<span class="ml-n1 medium-20">
+								Platform: {{ item.item.item_platform }}
+							</span>
 						</v-card-subtitle>
 						<v-spacer></v-spacer>
 						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-							$
-							<span
-								v-text="Number(item.item.item_price).toFixed(2)"
-								class="ml-n1"
-							></span>
+							<span class="ml-n1 medium-15">
+								${{ Number(item.item.item_price).toFixed(2) }}
+							</span>
 						</v-card-subtitle>
 						<v-spacer></v-spacer>
 						<v-card-actions class="ml-auto">
 							<v-btn outlined class="v-btn" icon @click="handleMinus(item.item)"
 								><v-icon color="#5ba4a3">mdi-minus</v-icon></v-btn
 							>
-							<v-card-subtitle class="medium-20">
-								{{ item.quantity }}
+							<v-card-subtitle>
+								<span class="medium-15">{{ item.quantity }}</span>
 							</v-card-subtitle>
 							<v-btn outlined class="v-btn" icon @click="handlePlus(item.item)"
 								><v-icon color="#5ba4a3">mdi-plus</v-icon></v-btn
@@ -59,8 +58,8 @@
 			<v-card class="d-flex flex-column rounded-xl" v-if="!isCartEmpty">
 				<v-row class="align-center">
 					<v-col class="text-left mx-3">
-						<v-card-subtitle class="medium-20">
-							Total: ${{ total_price.toFixed(2) }}
+						<v-card-subtitle>
+							<span class="medium-20">Total: ${{ total_price.toFixed(2) }}</span>
 						</v-card-subtitle>
 					</v-col>
 					<v-col class="text-right mx-3 my-3">
@@ -83,7 +82,7 @@
 </template>
 
 <script>
-import axios from "axios"; // eslint-disable-line
+// import { getToken } from "@/api/cookie"
 
 export default {
 	name: "Cart",
@@ -135,6 +134,11 @@ export default {
 	mounted() {
 		this.cart = this.$store.getters.getItems;
 		this.getTotalPrice();
+		// const token = getToken("cognito-user-jwt")
+		// if (!token) {
+		// 	alert("Authentication required to access cart")
+		// 	this.$router.push({ name: "Home" })
+		// }
 	},
 };
 </script>

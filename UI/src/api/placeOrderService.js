@@ -2,12 +2,14 @@ import axios from "axios";
 import { getToken } from "@/api/cookie";
 import { getRaw } from "@/api/cookie";
 
+
 const { PLACE_ORDER_BASEURL, NODE_ENV, PROD_BASE_URL } = process.env;
 
 let email = null;
-let token = localStorage.getItem("cognito-user-jwt");
+let token = getToken("cognito-user-jwt");
 if (token) {
-	email = token["Email"] ? token["Email"] : null;
+	email = token.email;
+	console.log(email);
 }
 
 let rawToken = getRaw("cognito-encoded-jwt");
@@ -28,6 +30,7 @@ export const placeOrderCheckout = async (payload) => {
 		return 404;
 	}
 	console.log(payload);
+
 	console.log(rawToken);
 
 	const response = await axios.post(`${PLACE_ORDER_URL}/checkout`, payload, {
@@ -36,6 +39,7 @@ export const placeOrderCheckout = async (payload) => {
 			'Authorization': rawToken
 		}
 	});
+
 	console.log(response);
 	if (response) {
 		return response.data;

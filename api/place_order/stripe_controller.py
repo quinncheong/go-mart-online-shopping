@@ -1,11 +1,7 @@
 import os
-import logging
 from invokes import invoke_http
 
-
-log = logging.getLogger("stripe_controller.sub")
-
-PAYMENT_URL = os.environ.get("PAYMENT_URL") or "http://localhost:5006"
+PAYMENT_URL = os.environ.get("PAYMENT_URL")
 
 
 def make_payment(data):

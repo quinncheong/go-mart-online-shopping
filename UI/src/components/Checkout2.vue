@@ -23,16 +23,21 @@
 								contain
 								max-height="200px"
 								class="cursor"
-							>
-							</v-img>
+							></v-img>
 						</v-col>
 						<v-col class="d-flex flex-column">
 							<v-card-title class="bold-30 cursor">{{ item.item_name }}</v-card-title>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">Platform: {{ item.item_platform }}</v-card-subtitle>
+							<v-card-subtitle class="text-left mt-1">
+								<span class="medium-20 mt-2">Platform: {{ item.item_platform }}</span>
+							</v-card-subtitle>
 							<v-spacer></v-spacer>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">${{ Number(item.item_price).toFixed(2) }}</v-card-subtitle>
+							<v-card-subtitle class="text-left mt-1">
+								<span class="medium-20 mt-2">${{ Number(item.item_price).toFixed(2) }}</span>
+							</v-card-subtitle>
 							<v-spacer></v-spacer>
-							<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">Quantity: {{ quantity }}</v-card-subtitle>
+							<v-card-subtitle class="text-left mt-1">
+								<span class="medium-20 mt-2">Quantity: {{ quantity }}</span>
+							</v-card-subtitle>
 						</v-col>
 					</v-row>
 				</v-card>
@@ -46,10 +51,12 @@
 				<v-card class="d-flex flex-column rounded-xl my-3">
 					<v-row class="align-center">
 						<v-col class="text-left mx-3 my-3">
-							<v-card-subtitle class="medium-20">Total: ${{ total_price.toFixed(2) }}</v-card-subtitle>
+							<v-card-subtitle>
+								<span class="medium-20">Total: ${{ total_price.toFixed(2) }}</span>
+							</v-card-subtitle>
 						</v-col>
 						<v-col class="text-right mx-3 my-3">
-							<v-btn class="ml-auto buttons" rounded @click="placeOrder">Place Order</v-btn>
+							<v-btn :loading="loading" class="ml-auto buttons" rounded @click="placeOrder">Place Order</v-btn>
 						</v-col>
 					</v-row>
 				</v-card>
@@ -73,28 +80,26 @@
 
 
 <script setup>
-import axios from "axios"
 import { ref, onMounted, computed } from "vue"
 import { useStore } from "vuex"
+import { useRouter } from "vue-router"
 import { loadStripe } from "@stripe/stripe-js"
-import { getCookie, decodeToken, isExpired } from "@/api/cookie"
+import { getToken } from "@/api/cookie"
+import { placeOrderCheckout } from "@/api/placeOrderService"
+
+const token = getToken("cognito-user-jwt")
 
 const store = useStore() // to access vuex store
+const router = useRouter() // to access vue-router
 const stripe = ref(null) // stripe instance
 const card = ref(null) // card instance
 const cardElement = ref(null) // card element reference
 const stripeError = ref({	err: false, message: "no error" }) // have error = true
 
-const parsedJWT = JSON.parse(window.localStorage.getItem("cognito-user-jwt"))
-
-const user = ref(null)
-const authState = ref(null)
-const unsubscribeAuth = ref(null)
 const name = ref("test_name")
-const email = ref(parsedJWT.email ?? "test_name@gmail.com")
+const email = ref(token.email ?? "test_name@gmail.com")
 const address = ref("00 Test Avenue")
 const number = ref("00000000")
-const country = ref("Singapore")
 
 const cart = computed(() => store.getters.getItems)
 const total_price = computed(() => {
@@ -105,102 +110,67 @@ const total_price = computed(() => {
 	return total
 })
 console.log(cart.value)
-const no_stock = ref(false)
+// const no_stock = ref(false)
 const items = computed(() => cart.value.map(({ item, quantity }) => ({ [item.id]: quantity })))
-const to = ref(null)
+// const to = ref(null)
 const snackbar = ref({ on: false, message: "" })
+const loading = ref(false)
 
-const formFields = ref([
-	{
-		type: "name",
-		label: "Name",
-		placeholder: "Enter Name",
-		inputProps: { required: true },
-	},
-	{
-		type: "username",
-		label: "Username",
-		placeholder: "Enter Username",
-		inputProps: { required: true },
-	},
-	{
-		type: "email",
-		label: "Email",
-		placeholder: "Enter Email",
-		inputProps: { required: true },
-	},
-	{
-		type: "password",
-		label: "Password",
-		placeholder: "Enter Password",
-		inputProps: { required: true, autocomplete: "new-password" },
-	},
-	{
-		type: "phone_number",
-		label: "Phone Number",
-		dialCode: "+65",
-		placeholder: "Enter Phone Number",
-		inputProps: { required: true },
-	},
-	{
-		type: "custom:Country",
-		label: "Country of Residence",
-		placeholder: "Enter Country of Residence",
-		inputProps: { required: true },
-	},
-	{
-		type: "address",
-		label: "Address",
-		placeholder: "Enter Address",
-		inputProps: { required: true },
-	},
-])
 
 
 async function placeOrder() {
 	console.log("card:", card.value)
+	loading.value = true
+
 	// creating the card to send to the api (not sure if this is still wanted or not)
 	const { error=null, paymentMethod=null } = await stripe.value.createPaymentMethod({
 		type: "card",
 		card: card.value,
-		// billing_details: {
-		// 	name: name.value,
-		// 	email: email.value,
-		// 	phone: number.value,
-		// },
 	})
+
 	if (error) {
 		console.log(error)
 		stripeError.value.err = true
 		stripeError.value.message = error.message
+		loading.value = false
 		return
 	}
 	console.log(paymentMethod)
 	stripeError.value.err = false
 	stripeError.value.message = "no error"
 
-	const { PLACE_ORDER_BASEURL } = process.env
 	try {
-		const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, {
+		const payload = {
 			order_data: {
 				product_ids: items.value, // [{ id: quantity }, { id: quantity }]
-				email: email.value,
+				email: email.value, // ""
 			},
 			payment_data: {
 				payment_method_id: paymentMethod.id,
 				amount: total_price.value * 100, // in cents
 			},
-		})
+		}
+
+		console.log(payload)
+
+		const data = await placeOrderCheckout(payload)
 		console.log(data)
 		snackbar.value.on = true
 		snackbar.value.message = "Order successfully placed!"
 		card.value.unmount()
 		store.dispatch("clearCart")
+		setTimeout(() => {
+			router.push({ name: "Home" })
+		}, 1000)
 	} catch (err) {
-		console.error(err)
-		snackbar.value.on = false
+		console.log(err)
+		snackbar.value.on = true
 		snackbar.value.message = "There was an error placing your order, please try again later."
 	}
+	setTimeout(() => {
+		snackbar.value.on = false
+	}, 2000)
+	loading.value = false
 }
 
 onMounted(async () => {

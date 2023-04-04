@@ -18,27 +18,27 @@
 						i
 					) in items"
 					:key="i"
-					:cols="4"
+					:cols="3"
 					class="d-flex flex-column"
 				>
 					<v-card class="rounded-xl">
-						<v-container>
+						<v-container class="image-container">
+							<v-img
+								:src="item_image"
+								class="white--text align-end cursor background-image"
+								height="200px"
+								aspect-ratio="1"
+								contain
+								@click="showItem(item_name, id)"
+							></v-img>
 							<v-img
 								:src="recommended_picture"
+								class="cursor overlay-image"
 								v-if="recommended"
-								class="cursor"
 								:width="80"
 								aspect-ratio="1"
 							></v-img>
 						</v-container>
-						<v-img
-							:src="item_image"
-							class="white--text align-end cursor"
-							height="500px"
-							aspect-ratio="1"
-							contain
-							@click="showItem(item_name, id)"
-						></v-img>
 						<v-card-title @click="showItem(item_name, id)" class="cursor">
 							<v-spacer />
 							<div class="text-center">
@@ -106,11 +106,10 @@
 </template>
 
 <script>
-import { getNumItems } from "@/api/itemService";
 import { getRecommendedItems } from "@/api/placeOrderService";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
-import { retrieveCookie } from "@/api/cookie"
+import { getToken } from "@/api/cookie";
 
 export default {
 	name: "Items",
@@ -126,7 +125,7 @@ export default {
 				on: false,
 				item_name: "",
 			},
-			cookie: null
+			token: null,
 		};
 	},
 	computed: {
@@ -138,20 +137,12 @@ export default {
 		},
 	},
 	methods: {
-		async getNumPages() {
-			let res = await getNumItems();
-			if (res) {
-				this.total_pages = Math.ceil(res / this.items_per_page);
-			} else {
-				this.total_pages = 1;
-			}
-		},
 		async getItemsByEsk() {
 			let items = await getRecommendedItems();
 			console.log(items);
 			if (items) {
-				this.items = items.map(
-					({ id, ProductName, Price, ImageLink, Recommendation }) => ({
+				this.items = items
+					.map(({ id, ProductName, Price, ImageLink, Recommendation }) => ({
 						id,
 						item_name: ProductName,
 						item_price: Price,
@@ -161,8 +152,8 @@ export default {
 						item_stock: 100,
 						recommended: Recommendation !== undefined ? Recommendation : false,
 						recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
-					})
-				);
+					}))
+					.sort(this.compareItems);
 			} else {
 				this.items = [
 					{
@@ -172,7 +163,27 @@ export default {
 						item_image: placeholder,
 						item_platform: "",
 						item_stock: 100,
+						recommended: false,
+						recommended_picture,
+					},
+					{
+						item_name: "Placeholder name",
+						item_price: 1,
+						item_desc: "Placeholder Desc",
+						item_image: placeholder,
+						item_platform: "",
+						item_stock: 100,
 						recommended: true,
+						recommended_picture,
+					},
+					{
+						item_name: "Placeholder name",
+						item_price: 1,
+						item_desc: "Placeholder Desc",
+						item_image: placeholder,
+						item_platform: "",
+						item_stock: 100,
+						recommended: false,
 						recommended_picture,
 					},
 					{
@@ -195,7 +206,7 @@ export default {
 						recommended: true,
 						recommended_picture,
 					},
-				];
+				].sort(this.compareItems);
 			}
 		},
 		showItem(name, id) {
@@ -220,10 +231,11 @@ export default {
 		//   this.getAllItems(esk);
 		// },
 		handleAddToCart(itemName) {
-			if (!this.cookie) {
-				// cookie guard -- don't allow add to cart if not authenticated
-				//TODO: add some code here to inform user
-				return // return early, break out of click
+			if (!this.token) {
+				alert(
+					"Authentication is required to add items to cart (Log-In / Sign-Up)"
+				); // for testing
+				return; // return early, break out of click
 			}
 			const item = this.items.find(({ item_name }) => item_name === itemName);
 			this.$store.dispatch("addItemToCart", item);
@@ -233,12 +245,17 @@ export default {
 		availableStock(item_stock) {
 			return item_stock > 1 ? true : false;
 		},
+		compareItems(a, b) {
+			// comparison function for custom sort
+			if (a.recommended && !b.recommended) return -1; // a comes before b
+			else if (!a.recommended && b.recommended) return 1; // b comes before a
+			else return 0; // no change in order
+		},
 	},
 	created() {
-		this.getNumPages();
+		this.token = getToken("cognito-user-jwt");
 		// const esk = {}; // { data: "empty" }
 		this.getItemsByEsk();
-		this.cookie = retrieveCookie("idtoken")
 	},
 };
 </script>
@@ -246,5 +263,20 @@ export default {
 <style scoped>
 .cursor {
 	cursor: pointer;
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+.background-image {
+  position: relative;
+  z-index: 1;
+}
+.overlay-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
 }
 </style>

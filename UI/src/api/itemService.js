@@ -20,23 +20,10 @@ export const getAllItems = async () => {
 };
 
 export const getItemById = async (id) => {
-	const response = await axios.get(`${ITEM_URL}/${id}`, {
-		headers: {
-			Authorization: token,
-		},
-	});
+	const response = await axios.get(`${ITEM_URL}/${id}`);
 	console.info(response);
-	return response.data;
-};
-
-export const getNumItems = async () => {
-	const response = await axios.get(`${ITEM_URL}/get-num-items`, {
-		headers: {
-			Authorization: token,
-		},
-	});
-	console.info(response);
-	return response.data;
+	if (!response.data.Item) return response.data;
+	else return response.data.Item;
 };
 
 // POST APIS
