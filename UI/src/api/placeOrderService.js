@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getToken } from "@/api/cookie"
+import { getToken } from "@/api/cookie";
 
 const { PLACE_ORDER_BASEURL, NODE_ENV, PROD_BASE_URL } = process.env;
 
@@ -7,7 +7,7 @@ let email = null;
 let token = getToken("cognito-user-jwt");
 if (token) {
 	email = token.email;
-	console.log(email)
+	console.log(email);
 }
 
 const PLACE_ORDER_URL =
@@ -21,10 +21,20 @@ export const getRecommendedItems = async () => {
 	return response.data;
 };
 
-export const placeOrderCheckout = async (payload={}) => {
-	const { data } = await axios.post(PLACE_ORDER_URL, payload)
-	return data
-}
+export const placeOrderCheckout = async (payload) => {
+	if (!payload) {
+		return 404;
+	}
+	console.log(payload);
+
+	const response = await axios.post(`${PLACE_ORDER_URL}/checkout`, payload);
+	console.log(response);
+	if (response) {
+		return response.data;
+	}
+
+	return false;
+};
 
 // Not yet implemented
 export const getAllOrders = async () => {
