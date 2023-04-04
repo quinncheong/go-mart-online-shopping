@@ -79,6 +79,7 @@ import { useStore } from "vuex"
 import { useRouter } from "vue-router"
 import { loadStripe } from "@stripe/stripe-js"
 import { getToken } from "@/api/cookie"
+import { placeOrderCheckout } from "@/api/placeOrderService"
 
 const store = useStore() // to access vuex store
 const router = useRouter() // to access vue-router
@@ -186,18 +187,28 @@ async function placeOrder() {
 	stripeError.value.err = false
 	stripeError.value.message = "no error"
 
-	const { PLACE_ORDER_BASEURL } = process.env
+	// const { PLACE_ORDER_BASEURL } = process.env
 	try {
-		const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, {
+		const data = await placeOrderCheckout({
 			order_data: {
 				product_ids: items.value, // [{ id: quantity }, { id: quantity }]
-				email: email.value,
+				email: email.value, // ""
 			},
 			payment_data: {
 				payment_method_id: paymentMethod.id,
 				amount: total_price.value * 100, // in cents
 			},
 		})
+		// const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, {
+		// 	order_data: {
+		// 		product_ids: items.value, // [{ id: quantity }, { id: quantity }]
+		// 		email: email.value,
+		// 	},
+		// 	payment_data: {
+		// 		payment_method_id: paymentMethod.id,
+		// 		amount: total_price.value * 100, // in cents
+		// 	},
+		// })
 		console.log(data)
 		snackbar.value.on = true
 		snackbar.value.message = "Order successfully placed!"
@@ -208,9 +219,12 @@ async function placeOrder() {
 		}, 1000)
 	} catch (err) {
 		console.error(err)
-		snackbar.value.on = false
+		snackbar.value.on = true
 		snackbar.value.message = "There was an error placing your order, please try again later."
 	}
+	setTimeout(() => {
+		snackbar.value.on = false
+	}, 1000)
 	loading.value = false
 }
 
