@@ -27,7 +27,7 @@ export const placeOrderCheckout = async (payload) => {
 	}
 	console.log(payload);
 
-	const response = await axios.post(`${PLACE_ORDER_URL}`, payload);
+	const response = await axios.post(`${PLACE_ORDER_URL}/checkout`, payload);
 	console.log(response);
 	if (response) {
 		return response.data;

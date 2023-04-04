@@ -106,11 +106,10 @@
 </template>
 
 <script>
-import { getNumItems } from "@/api/itemService";
 import { getRecommendedItems } from "@/api/placeOrderService";
 import placeholder from "@/assets/placeholder.jpg";
 import recommended_picture from "@/assets/recommended picture.png";
-import { getToken } from "@/api/cookie"
+import { getToken } from "@/api/cookie";
 
 export default {
 	name: "Items",
@@ -138,20 +137,12 @@ export default {
 		},
 	},
 	methods: {
-		async getNumPages() {
-			let res = await getNumItems();
-			if (res) {
-				this.total_pages = Math.ceil(res / this.items_per_page);
-			} else {
-				this.total_pages = 1;
-			}
-		},
 		async getItemsByEsk() {
 			let items = await getRecommendedItems();
 			console.log(items);
 			if (items) {
-				this.items = items.map(
-					({ id, ProductName, Price, ImageLink, Recommendation }) => ({
+				this.items = items
+					.map(({ id, ProductName, Price, ImageLink, Recommendation }) => ({
 						id,
 						item_name: ProductName,
 						item_price: Price,
@@ -161,8 +152,8 @@ export default {
 						item_stock: 100,
 						recommended: Recommendation !== undefined ? Recommendation : false,
 						recommended_picture, // TODO: change recommended to get from back-end, and not be hard-coded
-					})
-				).sort(this.compareItems);
+					}))
+					.sort(this.compareItems);
 			} else {
 				this.items = [
 					{
@@ -241,8 +232,10 @@ export default {
 		// },
 		handleAddToCart(itemName) {
 			if (!this.token) {
-				alert("Authentication is required to add items to cart (Log-In / Sign-Up)") // for testing
-				return // return early, break out of click
+				alert(
+					"Authentication is required to add items to cart (Log-In / Sign-Up)"
+				); // for testing
+				return; // return early, break out of click
 			}
 			const item = this.items.find(({ item_name }) => item_name === itemName);
 			this.$store.dispatch("addItemToCart", item);
@@ -254,17 +247,13 @@ export default {
 		},
 		compareItems(a, b) {
 			// comparison function for custom sort
-			if (a.recommended && !b.recommended)
-				return -1; // a comes before b
-			else if (!a.recommended && b.recommended)
-				return 1; // b comes before a
-			else
-				return 0; // no change in order
+			if (a.recommended && !b.recommended) return -1; // a comes before b
+			else if (!a.recommended && b.recommended) return 1; // b comes before a
+			else return 0; // no change in order
 		},
 	},
 	created() {
-		this.token = getToken("cognito-user-jwt")
-		this.getNumPages();
+		this.token = getToken("cognito-user-jwt");
 		// const esk = {}; // { data: "empty" }
 		this.getItemsByEsk();
 	},

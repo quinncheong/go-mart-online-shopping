@@ -113,51 +113,6 @@ def test_sage():
     return res_payload
 
 
-@app.route("/v1/place-order", methods=["POST"])
-def place_order():
-    body = request.get_json()
-    print(body)
-
-    if "order_data" not in body:
-        return jsonify("Wrong Order Data"), 404
-
-    if "payment_data" not in body:
-        return jsonify("Wrong Payment Data"), 404
-
-    payment_data = body["payment_data"]
-    payment_outcome = stripe_controller.make_payment(payment_data)
-
-    if payment_outcome["payment_status"] == "Failed":
-        return jsonify("Payment Failed"), 404
-
-    order_data = body["order_data"]
-    order_data["payment_id"] = payment_outcome["payment_id"]
-    print("order data:", order_data)
-
-    res = invoke_http(
-        ORDER_URL + "/v1/order",
-        method="POST",
-        json=order_data,
-    )
-
-    if res["code"] in range(200, 300):
-        message = {
-            "subject": "Your Order has been placed",
-            "emails": [
-                "quinncheong.2019.is458.jan2023@gmail.com",
-                "alinaatxn@gmail.com",
-            ],
-            "body": "Your order has been successfully placed!",
-        }
-
-        sns_controller.send_message_to_sns_topic(message)
-
-    # sms_data = json.dumps(data)
-    # msg_status = send_sms(sms_data)
-
-    return jsonify(res), res["code"]
-
-
 @app.route("/v1/place-order/displayItems/<email>")
 def displayItems(email: str = None):
     """
@@ -218,6 +173,96 @@ def displayItems(email: str = None):
 
     items = items_response["Items"]
     return items
+
+
+@app.route("/v1/place-order", methods=["POST"])
+def place_order():
+    body = request.get_json()
+    print(body)
+
+    if "order_data" not in body:
+        return jsonify("Wrong Order Data"), 404
+
+    if "payment_data" not in body:
+        return jsonify("Wrong Payment Data"), 404
+
+    payment_data = body["payment_data"]
+    payment_outcome = stripe_controller.make_payment(payment_data)
+
+    if payment_outcome["payment_status"] == "Failed":
+        return jsonify("Payment Failed"), 404
+
+    order_data = body["order_data"]
+    order_data["payment_id"] = payment_outcome["payment_id"]
+    print("order data:", order_data)
+
+    res = invoke_http(
+        ORDER_URL + "/v1/order",
+        method="POST",
+        json=order_data,
+    )
+
+    if res["code"] in range(200, 300):
+        message = {
+            "subject": "Your Order has been placed",
+            "emails": [
+                "quinncheong.2019.is458.jan2023@gmail.com",
+                "alinaatxn@gmail.com",
+            ],
+            "body": "Your order has been successfully placed!",
+        }
+
+        sns_controller.send_message_to_sns_topic(message)
+
+    # sms_data = json.dumps(data)
+    # msg_status = send_sms(sms_data)
+
+    return jsonify(res), res["code"]
+
+
+@app.route("/v1/place-order/checkout", methods=["POST"])
+def place_order2():
+    body = request.get_json()
+    print(body)
+
+    if "order_data" not in body:
+        return jsonify("Wrong Order Data"), 404
+
+    if "payment_data" not in body:
+        return jsonify("Wrong Payment Data"), 404
+
+    payment_data = body["payment_data"]
+    payment_outcome = stripe_controller.make_payment(payment_data)
+
+    if payment_outcome["payment_status"] == "Failed":
+        return jsonify("Payment Failed"), 404
+
+    order_data = body["order_data"]
+    order_data["payment_id"] = payment_outcome["payment_id"]
+    print("order data:", order_data)
+
+    res = invoke_http(
+        ORDER_URL + "/v1/order",
+        method="POST",
+        json=order_data,
+    )
+
+    if res["code"] in range(200, 300):
+        message = {
+            "subject": "Your Order has been placed",
+            "emails": [
+                "quinncheong.2019.is458.jan2023@gmail.com",
+                "alinaatxn@gmail.com",
+            ],
+            "body": "Your order has been successfully placed!",
+        }
+
+        sns_controller.send_message_to_sns_topic(message)
+
+    # sms_data = json.dumps(data)
+    # msg_status = send_sms(sms_data)
+
+    return jsonify(res), res["code"]
 
 
 if __name__ == "__main__":
