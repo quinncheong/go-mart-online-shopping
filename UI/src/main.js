@@ -12,10 +12,10 @@ import { createApp } from "vue";
 
 // Plugins
 import { registerPlugins } from "@/plugins";
-import "nprogress/nprogress.css"
 
 // CSS
 import "@/assets/fonts.css";
+import "nprogress/nprogress.css"
 import store from "./store";
 
 const app = createApp(App);
