@@ -19,7 +19,7 @@
 				{{ user_email }}
 				<v-menu activator="parent">
 					<v-list>
-						<v-list-item>
+						<v-list-item style="cursor: pointer;">
 							<v-list-item-title @click="logout">Sign-out</v-list-item-title>
 						</v-list-item>
 					</v-list>
@@ -69,9 +69,9 @@ export default {
 			);
 		},
 		logout() {
-			setToken("cognito-user-jwt", null)
+			window.localStorage.clear()
 			this.isAuthenticated = false
-			this.$router.push({ name: "Home" })
+			window.location.href = window.location.origin
 		},
 	},
 	mounted() {

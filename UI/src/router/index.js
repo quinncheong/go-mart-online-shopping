@@ -60,6 +60,13 @@ const router = createRouter({
 	},
 });
 
+NProgress.configure({
+	minimum: 0.1,
+  easing: 'ease',
+  speed: 800,
+	showSpinner: false,
+})
+
 // eslint-disable-next-line
 router.beforeEach((to, from) => {
 	NProgress.start()
