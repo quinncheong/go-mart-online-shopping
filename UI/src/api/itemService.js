@@ -25,12 +25,6 @@ export const getItemById = async (id) => {
 	return response.data;
 };
 
-// export const getNumItems = async () => {
-// 	const response = await axios.get(`${ITEM_URL}/get-num-items`);
-// 	console.info(response);
-// 	return response.data;
-// };
-
 // POST APIS
 export const queryItemsByEsk = async ({ esk }) => {
 	const response = await axios.post(
