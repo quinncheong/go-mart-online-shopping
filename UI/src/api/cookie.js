@@ -22,3 +22,12 @@ export function retrieveCookie(name="idtoken") {
     return token // return the token for usage
   }
 }
+
+export const getRaw = (name="cognito-encoded-jwt") => {
+  const rawToken = JSON.parse(window.localStorage.getItem(name))
+  if (!rawToken) {
+    return null
+  } else {
+    return rawToken
+  }
+}

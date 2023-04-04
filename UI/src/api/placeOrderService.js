@@ -1,4 +1,6 @@
 import axios from "axios";
+import { getToken } from "@/api/cookie";
+import { getRaw } from "@/api/cookie";
 
 const { PLACE_ORDER_BASEURL, NODE_ENV, PROD_BASE_URL } = process.env;
 
@@ -7,6 +9,8 @@ let token = localStorage.getItem("cognito-user-jwt");
 if (token) {
 	email = token["Email"] ? token["Email"] : null;
 }
+
+let rawToken = getRaw("cognito-encoded-jwt");
 
 const PLACE_ORDER_URL =
 	NODE_ENV !== "development"
@@ -17,6 +21,27 @@ export const getRecommendedItems = async () => {
 	const response = await axios.get(`${PLACE_ORDER_URL}/displayItems/` + email);
 	console.info(response);
 	return response.data;
+};
+
+export const placeOrderCheckout = async (payload) => {
+	if (!payload) {
+		return 404;
+	}
+	console.log(payload);
+	console.log(rawToken);
+
+	const response = await axios.post(`${PLACE_ORDER_URL}/checkout`, payload, {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': rawToken
+		}
+	});
+	console.log(response);
+	if (response) {
+		return response.data;
+	}
+
+	return false;
 };
 
 // Not yet implemented
@@ -37,7 +62,7 @@ export const queryItemsByEsk = async ({ payload }) => {
 		{ payload },
 		{
 			headers: {
-				Authorization: token,
+				Authorization: rawToken,
 			},
 		}
 	);
