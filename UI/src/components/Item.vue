@@ -8,29 +8,29 @@
 						</v-img>
 					</v-col>
 					<v-col class="d-flex flex-column">
-						<v-card-title class="bold-30">
-							{{ item_name }}
+						<v-card-title>
+							<h3>{{ item_name }}</h3>
 						</v-card-title>
-						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-							Platform: {{ item_platform }}
+						<v-card-subtitle class="text-left mt-2 mb-n4">
+							<span class="medium-15">Platform: {{ item_platform }}</span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
 
-						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
-							<span class="ml-n1"> ${{ item_price }} </span>
+						<v-card-subtitle class="text-left mt-2 mb-n4">
+							<span class="ml-n1 medium-15"> ${{ item_price }} </span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
 
-						<v-card-subtitle class="text-left medium-20">
-							Description:
+						<v-card-subtitle class="text-left">
+							<span class="medium-15">Description:</span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
 
-						<v-card-subtitle class="text-left medium-15 mt-n5">
-							{{ item_desc }}
+						<v-card-subtitle class="text-left mt-n5">
+							<span class="medium-15">{{ item_desc }}</span>
 						</v-card-subtitle>
 
 						<v-spacer></v-spacer>
