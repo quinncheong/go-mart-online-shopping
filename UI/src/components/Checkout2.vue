@@ -73,13 +73,14 @@
 
 
 <script setup>
-import axios from "axios"
 import { ref, onMounted, computed } from "vue"
 import { useStore } from "vuex"
 import { useRouter } from "vue-router"
 import { loadStripe } from "@stripe/stripe-js"
 import { getToken } from "@/api/cookie"
 import { placeOrderCheckout } from "@/api/placeOrderService"
+
+const token = getToken("cognito-user-jwt")
 
 const store = useStore() // to access vuex store
 const router = useRouter() // to access vue-router
@@ -88,16 +89,10 @@ const card = ref(null) // card instance
 const cardElement = ref(null) // card element reference
 const stripeError = ref({	err: false, message: "no error" }) // have error = true
 
-const token = getToken("cognito-user-jwt")
-
-const user = ref(null)
-const authState = ref(null)
-const unsubscribeAuth = ref(null)
 const name = ref("test_name")
 const email = ref(token.email ?? "test_name@gmail.com")
 const address = ref("00 Test Avenue")
 const number = ref("00000000")
-const country = ref("Singapore")
 
 const cart = computed(() => store.getters.getItems)
 const total_price = computed(() => {
@@ -108,57 +103,12 @@ const total_price = computed(() => {
 	return total
 })
 console.log(cart.value)
-const no_stock = ref(false)
+// const no_stock = ref(false)
 const items = computed(() => cart.value.map(({ item, quantity }) => ({ [item.id]: quantity })))
-const to = ref(null)
+// const to = ref(null)
 const snackbar = ref({ on: false, message: "" })
 const loading = ref(false)
 
-const formFields = ref([
-	{
-		type: "name",
-		label: "Name",
-		placeholder: "Enter Name",
-		inputProps: { required: true },
-	},
-	{
-		type: "username",
-		label: "Username",
-		placeholder: "Enter Username",
-		inputProps: { required: true },
-	},
-	{
-		type: "email",
-		label: "Email",
-		placeholder: "Enter Email",
-		inputProps: { required: true },
-	},
-	{
-		type: "password",
-		label: "Password",
-		placeholder: "Enter Password",
-		inputProps: { required: true, autocomplete: "new-password" },
-	},
-	{
-		type: "phone_number",
-		label: "Phone Number",
-		dialCode: "+65",
-		placeholder: "Enter Phone Number",
-		inputProps: { required: true },
-	},
-	{
-		type: "custom:Country",
-		label: "Country of Residence",
-		placeholder: "Enter Country of Residence",
-		inputProps: { required: true },
-	},
-	{
-		type: "address",
-		label: "Address",
-		placeholder: "Enter Address",
-		inputProps: { required: true },
-	},
-])
 
 
 async function placeOrder() {
@@ -169,11 +119,6 @@ async function placeOrder() {
 	const { error=null, paymentMethod=null } = await stripe.value.createPaymentMethod({
 		type: "card",
 		card: card.value,
-		// billing_details: {
-		// 	name: name.value,
-		// 	email: email.value,
-		// 	phone: number.value,
-		// },
 	})
 
 	if (error) {
@@ -187,9 +132,8 @@ async function placeOrder() {
 	stripeError.value.err = false
 	stripeError.value.message = "no error"
 
-	// const { PLACE_ORDER_BASEURL } = process.env
 	try {
-		const data = await placeOrderCheckout({
+		const payload = {
 			order_data: {
 				product_ids: items.value, // [{ id: quantity }, { id: quantity }]
 				email: email.value, // ""
@@ -198,17 +142,11 @@ async function placeOrder() {
 				payment_method_id: paymentMethod.id,
 				amount: total_price.value * 100, // in cents
 			},
-		})
-		// const { data } = await axios.post(`${PLACE_ORDER_BASEURL}/v1/place-order`, {
-		// 	order_data: {
-		// 		product_ids: items.value, // [{ id: quantity }, { id: quantity }]
-		// 		email: email.value,
-		// 	},
-		// 	payment_data: {
-		// 		payment_method_id: paymentMethod.id,
-		// 		amount: total_price.value * 100, // in cents
-		// 	},
-		// })
+		}
+
+		console.log(payload)
+
+		const data = await placeOrderCheckout(payload)
 		console.log(data)
 		snackbar.value.on = true
 		snackbar.value.message = "Order successfully placed!"
@@ -218,13 +156,13 @@ async function placeOrder() {
 			router.push({ name: "Home" })
 		}, 1000)
 	} catch (err) {
-		console.error(err)
+		console.log(err)
 		snackbar.value.on = true
 		snackbar.value.message = "There was an error placing your order, please try again later."
 	}
 	setTimeout(() => {
 		snackbar.value.on = false
-	}, 1000)
+	}, 2000)
 	loading.value = false
 }
 

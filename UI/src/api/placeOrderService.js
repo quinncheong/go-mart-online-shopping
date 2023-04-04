@@ -22,12 +22,8 @@ export const getRecommendedItems = async () => {
 };
 
 export const placeOrderCheckout = async (payload={}) => {
-	try {
-		const { data } = await axios.post(PLACE_ORDER_URL, payload)
-		return data
-	} catch (err) {
-		throw new Error(err)
-	}
+	const { data } = await axios.post(PLACE_ORDER_URL, payload)
+	return data
 }
 
 // Not yet implemented

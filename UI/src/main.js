@@ -15,6 +15,7 @@ import { registerPlugins } from "@/plugins";
 
 // CSS
 import "@/assets/fonts.css";
+import "nprogress/nprogress.css"
 import store from "./store";
 
 const app = createApp(App);
