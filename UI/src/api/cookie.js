@@ -20,4 +20,13 @@ export const getToken = (name="cognito-user-jwt") => {
   }
 }
 
-export const getRaw = (name="cognito-encoded-jwt") => JSON.parse(window.localStorage.getItem(name))
+
+export const getRaw = (name="cognito-encoded-jwt") => {
+  const rawToken = JSON.parse(window.localStorage.getItem(name))
+  if (!rawToken) {
+    return null
+  } else {
+    return rawToken
+  }
+}
+

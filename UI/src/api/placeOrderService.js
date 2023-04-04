@@ -1,5 +1,7 @@
 import axios from "axios";
 import { getToken } from "@/api/cookie";
+import { getRaw } from "@/api/cookie";
+
 
 const { PLACE_ORDER_BASEURL, NODE_ENV, PROD_BASE_URL } = process.env;
 
@@ -9,6 +11,8 @@ if (token) {
 	email = token.email;
 	console.log(email);
 }
+
+let rawToken = getRaw("cognito-encoded-jwt");
 
 const PLACE_ORDER_URL =
 	NODE_ENV !== "development"
@@ -27,7 +31,15 @@ export const placeOrderCheckout = async (payload) => {
 	}
 	console.log(payload);
 
-	const response = await axios.post(`${PLACE_ORDER_URL}/checkout`, payload);
+	console.log(rawToken);
+
+	const response = await axios.post(`${PLACE_ORDER_URL}/checkout`, payload, {
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': rawToken
+		}
+	});
+
 	console.log(response);
 	if (response) {
 		return response.data;
@@ -54,7 +66,7 @@ export const queryItemsByEsk = async ({ payload }) => {
 		{ payload },
 		{
 			headers: {
-				Authorization: token,
+				Authorization: rawToken,
 			},
 		}
 	);
