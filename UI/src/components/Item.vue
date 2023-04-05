@@ -9,28 +9,28 @@
 					</v-col>
 					<v-col class="d-flex flex-column">
 						<v-card-title>
-							<h3>{{ item_name }}</h3>
+							<h2>{{ item_name }}</h2>
 						</v-card-title>
 						<v-card-subtitle class="text-left mt-2 mb-n4">
-							<span class="medium-15">Platform: {{ item_platform }}</span>
+							<span class="medium-20">{{ item_platform }}</span>
 						</v-card-subtitle>
 
 						<v-spacer />
 
-						<v-card-subtitle class="text-left mt-2 mb-n4">
-							<span class="ml-n1 medium-15"> ${{ item_price }} </span>
+						<v-card-subtitle class="text-left mt-2 mb">
+							<span class="ml-n1 medium-20">Price: ${{ item_price }} </span>
 						</v-card-subtitle>
 
 						<v-spacer />
 
 						<v-card-subtitle class="text-left">
-							<span class="medium-15">Description:</span>
+							<span class="medium-20">Description:</span>
 						</v-card-subtitle>
 
 						<v-spacer />
 
-						<v-card-subtitle class="text-left mt-n5">
-							<span class="medium-15">{{ item_desc }}</span>
+						<v-card-subtitle class="text-left mt-n6">
+							<span class="medium-20">{{ item_desc }}</span>
 						</v-card-subtitle>
 
 						<v-spacer />
@@ -38,7 +38,7 @@
 						<v-card-actions class="ml-auto">
 							<v-btn class="bg-black" rounded v-if="availableStock">
 								<v-card-subtitle @click="handleAddToCart()">
-									<span class="white-15">Add to Cart</span>
+									<span class="white-20">Add to Cart</span>
 								</v-card-subtitle>
 								<v-icon color="white">mdi-plus</v-icon>
 							</v-btn>

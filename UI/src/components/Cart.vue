@@ -31,13 +31,13 @@
 						</v-card-title>
 						<v-card-subtitle class="text-left mt-2 mb-n4">
 							<span class="ml-n1 medium-20">
-								{{ item.item.item_platform }}
+								Platform: {{ item.item.item_platform }}
 							</span>
 						</v-card-subtitle>
 						<v-spacer />
 						<v-card-subtitle class="text-left medium-20 mt-2 mb-n4">
 							<span class="ml-n1 medium-15">
-								${{ Number(item.item.item_price).toFixed(2) }}
+								Price: ${{ Number(item.item.item_price).toFixed(2) }}
 							</span>
 						</v-card-subtitle>
 						<v-spacer />
