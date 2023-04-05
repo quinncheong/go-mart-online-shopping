@@ -251,8 +251,9 @@ def place_order2():
         message = {
             "subject": "Your Order has been placed",
             "emails": [
-                "quinncheong.2019.is458.jan2023@gmail.com",
-                "alinaatxn@gmail.com",
+                # "quinncheong.2019.is458.jan2023@gmail.com",
+                # "alinaatxn@gmail.com",
+                order_data["email"],
             ],
             "body": "Your order has been successfully placed!",
         }
