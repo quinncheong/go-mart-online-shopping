@@ -29,9 +29,10 @@ if (idToken) {
 	window.location.href = x.substring(0, x.indexOf("#id_token"))
 } else {
 	const token = getToken("cognito-user-jwt")
-	console.log(token)
-	console.log(getRaw("cognito-encoded-jwt"))
+	console.log("decoded", token)
+	console.log("encoded", getRaw("cognito-encoded-jwt"))
 }
 
+console.log(Date.now())
 
 </script>
