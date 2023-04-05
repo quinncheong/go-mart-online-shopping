@@ -60,11 +60,9 @@
 								class="mx-auto buttons"
 								rounded
 							>
-								<v-card-subtitle
-									class="white-15"
-									@click="handleAddToCart(item_name)"
-									>Add to Cart</v-card-subtitle
-								>
+								<v-card-subtitle @click="handleAddToCart(item_name)">
+									<span class="white-15">Add to Cart</span>
+								</v-card-subtitle>
 								<v-icon color="white">mdi-plus</v-icon>
 							</v-btn>
 							<v-card>
