@@ -45,10 +45,10 @@
 								<h3>
 									{{ item_name }}
 								</h3>
-								<p class="medium-15 mb-n2">
+								<p class="medium-20 mb-n2">
 									{{ item_platform }}
 								</p>
-								<p class="medium-15 mb-n5 pt-1 pb-2">
+								<p class="medium-20 mb-n5 pt-1 pb-2">
 									${{ Number(item_price).toFixed(2) }}
 								</p>
 							</div>
@@ -60,11 +60,9 @@
 								class="mx-auto buttons"
 								rounded
 							>
-								<v-card-subtitle
-									class="white-15"
-									@click="handleAddToCart(item_name)"
-									>Add to Cart</v-card-subtitle
-								>
+								<v-card-subtitle @click="handleAddToCart(item_name)">
+									<span class="white-20">Add to Cart</span>
+								</v-card-subtitle>
 								<v-icon color="white">mdi-plus</v-icon>
 							</v-btn>
 							<v-card>
